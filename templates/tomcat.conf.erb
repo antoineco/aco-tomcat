@@ -1,0 +1,83 @@
+# ******************
+# Managed by Puppet
+# ******************
+# System-wide configuration file for <%= @service_name %> services
+# This will be sourced by <%= @service_name %> and any secondary service
+# Values will be overridden by service-specific configuration
+# files in /etc/sysconfig
+#
+# Use this one to change default values for all services
+# Change the service specific ones to affect only one service
+# (see, for instance, /etc/sysconfig/<%= @service_name %>)
+#
+
+# Where your java installation lives
+<% if @java_home and @java_home != '' -%>JAVA_HOME="<%= @java_home %>"
+<% else -%>JAVA_HOME="/usr/lib/jvm/jre"
+<% end -%>
+
+# Where your tomcat installation lives
+<% if @catalina_base_real and @catalina_base_real != '' -%>CATALINA_BASE="<%= @catalina_base_real %>"
+<% else -%>CATALINA_BASE="/usr/share/<%= @service_name %>"
+<% end -%>
+<% if @catalina_home_real and @catalina_home_real != '' -%>CATALINA_HOME="<%= @catalina_home_real %>"
+<% else -%>CATALINA_HOME="/usr/share/<%= @service_name %>"
+<% end -%>
+<% if @jasper_home_real and @jasper_home_real != '' -%>JASPER_HOME="<%= @jasper_home_real %>"
+<% else -%>JASPER_HOME="/usr/share/<%= @service_name %>"
+<% end -%>
+<% if @catalina_tmpdir_real and @catalina_tmpdir_real != '' -%>CATALINA_TMPDIR="<%= @catalina_tmpdir_real %>"
+<% else -%>CATALINA_TMPDIR="/var/cache/<%= @service_name %>/temp"
+<% end -%>
+
+# You can pass some parameters to java here if you wish to
+<% if @java_opts and @java_opts != '' -%>JAVA_OPTS="<%= @java_opts %>"
+<% else -%>
+#JAVA_OPTS="-Xminf0.1 -Xmaxf0.3"
+
+# Use JAVA_OPTS to set java.library.path for libtcnative.so
+#JAVA_OPTS="-Djava.library.path=/usr/lib64"
+<% end -%>
+<% if @catalina_opts and @catalina_opts != '' -%>CATALINA_OPTS="<%= @catalina_opts %>"
+<% end -%>
+
+# What user should run tomcat
+<% if @tomcat_user and @tomcat_user != '' -%>TOMCAT_USER="<%= @tomcat_user %>"
+<% else -%>TOMCAT_USER="tomcat"
+<% end -%>
+
+# You can change your tomcat locale here
+<% if @lang and @lang != '' -%>LANG="<%= @lang %>"
+<% else -%>#LANG="en_US"
+<% end -%>
+
+# Run tomcat under the Java Security Manager
+<% if @security_manager != '' -%>SECURITY_MANAGER="<%= @security_manager %>"
+<% else -%>SECURITY_MANAGER="false"
+<% end -%>
+
+# Time to wait in seconds, before killing process
+<% if @shutdown_wait and @shutdown_wait != '' -%>SHUTDOWN_WAIT="<%= @shutdown_wait %>"
+<% else -%>SHUTDOWN_WAIT="30"
+<% end -%>
+
+# Whether to annoy the user with "attempting to shut down" messages or not
+<% if @shutdown_verbose != '' -%>SHUTDOWN_VERBOSE="<%= @shutdown_verbose %>"
+<% else -%>SHUTDOWN_VERBOSE="false"
+<% end -%>
+
+# Set the TOMCAT_PID location
+<% if @catalina_pid_real and @catalina_pid_real != '' -%>CATALINA_PID="<%= @catalina_pid_real %>"
+<% else -%>CATALINA_PID="/var/run/<%= @service_name %>.pid"
+<% end -%>
+
+# Connector port is <%= @http_port %> for this <%= @service_name %> instance
+<% if @http_port and @http_port != '' -%>CONNECTOR_PORT="<%= @http_port %>"
+<% else -%>#CONNECTOR_PORT="8080"
+<% end -%>
+
+# If you wish to further customize your tomcat environment,
+# put your own definitions here
+# (i.e. LD_LIBRARY_PATH for some jdbc drivers)
+<% if @custom_fragment and @custom_fragment != '' -%><%= @custom_fragment %><% end -%>
+
