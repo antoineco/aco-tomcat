@@ -6,8 +6,6 @@ class tomcat::log4j {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
-  require ::tomcat::extras
-
   package { 'log4j': ensure => present } ->
   file { 'log4j library':
     ensure  => link,

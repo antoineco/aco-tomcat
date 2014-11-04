@@ -8,7 +8,7 @@ class tomcat::install {
 
   # main packages
   package { 'tomcat server':
-    name   => "$::tomcat::service_name",
+    name   => "$::tomcat::package_name",
     ensure => present
   }
   if $::tomcat::tomcat_native {
@@ -21,7 +21,7 @@ class tomcat::install {
     default => 'absent'
   }
   package { 'tomcat admin webapps':
-    name   => "${::tomcat::service_name}-admin-webapps",
+    name   => "${::tomcat::package_name}-admin-webapps",
     ensure => $ensure_manager_package
   }
 }

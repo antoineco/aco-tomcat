@@ -18,14 +18,14 @@ class tomcat::config {
   # Template uses:
   file {
     'tomcat global configuration':
-      path    => "${::tomcat::catalina_base_real}/conf/${::tomcat::service_name}.conf",
+      path    => "${::tomcat::catalina_base_real}/conf/${::tomcat::service_name_real}.conf",
       content => template("${module_name}/tomcat.conf.erb"),
       seltype => 'etc_t';
 
      # defining the exact same parameters in two different files may seem awkward,
      # but it avoids the randomness observed in some older releases due to buggy startup scripts
     'tomcat main instance configuration':
-      path    => "/etc/sysconfig/${::tomcat::service_name}",
+      path    => "/etc/sysconfig/${::tomcat::service_name_real}",
       content => template("${module_name}/sysconfig.erb")
   }
 

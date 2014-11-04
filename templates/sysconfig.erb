@@ -1,18 +1,18 @@
 # ******************
 # Managed by Puppet
 # ******************
-# Service-specific configuration file for <%= @service_name %>. This will be sourced by
+# Service-specific configuration file for <%= @service_name_real %>. This will be sourced by
 # the SysV init script after the global configuration file
-# /etc/<%= @service_name %>/<%= @service_name %>.conf, thus allowing values to be overridden in
+# /etc/<%= @service_name_real %>/<%= @service_name_real %>.conf, thus allowing values to be overridden in
 # a per-service manner.
 #
 # NEVER change the init script itself. To change values for all services make
-# your changes in /etc/<%= @service_name %>/<%= @service_name %>.conf
+# your changes in /etc/<%= @service_name_real %>/<%= @service_name_real %>.conf
 #
 # To change values for a specific service make your edits here.
 # To create a new service create a link from /etc/init.d/<your new service> to
-# /etc/init.d/<%= @service_name %> (do not copy the init script) and make a copy of the
-# /etc/sysconfig/<%= @service_name %> file to /etc/sysconfig/<your new service> and change
+# /etc/init.d/<%= @service_name_real %> (do not copy the init script) and make a copy of the
+# /etc/sysconfig/<%= @service_name_real %> file to /etc/sysconfig/<your new service> and change
 # the property values so the two services won't conflict. Register the new
 # service in the system as usual (see chkconfig and similars).
 #
@@ -24,16 +24,16 @@
 
 # Where your tomcat installation lives
 <% if @catalina_base_real and @catalina_base_real != '' -%>CATALINA_BASE="<%= @catalina_base_real %>"
-<% else -%>#CATALINA_BASE="/usr/share/<%= @service_name %>"
+<% else -%>#CATALINA_BASE="/usr/share/<%= @service_name_real %>"
 <% end -%>
 <% if @catalina_home_real and @catalina_home_real != '' -%>CATALINA_HOME="<%= @catalina_home_real %>"
-<% else -%>#CATALINA_HOME="/usr/share/<%= @service_name %>"
+<% else -%>#CATALINA_HOME="/usr/share/<%= @service_name_real %>"
 <% end -%>
 <% if @jasper_home_real and @jasper_home_real != '' -%>JASPER_HOME="<%= @jasper_home_real %>"
-<% else -%>#JASPER_HOME="/usr/share/<%= @service_name %>"
+<% else -%>#JASPER_HOME="/usr/share/<%= @service_name_real %>"
 <% end -%>
 <% if @catalina_tmpdir_real and @catalina_tmpdir_real != '' -%>CATALINA_TMPDIR="<%= @catalina_tmpdir_real %>"
-<% else -%>#CATALINA_TMPDIR="/var/cache/<%= @service_name %>/temp"
+<% else -%>#CATALINA_TMPDIR="/var/cache/<%= @service_name_real %>/temp"
 <% end -%>
 
 # You can pass some parameters to java here if you wish to
@@ -74,10 +74,10 @@
 
 # Set the TOMCAT_PID location
 <% if @catalina_pid_real and @catalina_pid_real != '' -%>CATALINA_PID="<%= @catalina_pid_real %>"
-<% else -%>#CATALINA_PID="/var/run/<%= @service_name %>.pid"
+<% else -%>#CATALINA_PID="/var/run/<%= @service_name_real %>.pid"
 <% end -%>
 
-# Connector port is <%= @http_port %> for this <%= @service_name %> instance
+# Connector port is <%= @http_port %> for this <%= @service_name_real %> instance
 <% if @http_port and @http_port != '' -%>CONNECTOR_PORT="<%= @http_port %>"
 <% else -%>#CONNECTOR_PORT="8080"
 <% end -%>
