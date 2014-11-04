@@ -22,11 +22,17 @@ class tomcat::config {
       content => template("${module_name}/tomcat.conf.erb"),
       seltype => 'etc_t';
 
-     # defining the exact same parameters in two different files may seem awkward,
+     # defining the exact same parameters in three different files may seem awkward,
      # but it avoids the randomness observed in some older releases due to buggy startup scripts
     'tomcat main instance configuration':
-      path    => "/etc/sysconfig/${::tomcat::service_name_real}",
-      content => template("${module_name}/sysconfig.erb")
+      ensure => link,
+      path   => "/etc/sysconfig/${::tomcat::service_name_real}",
+      target => "${::tomcat::catalina_base_real}/conf/${::tomcat::service_name_real}.conf";
+
+    'tomcat setenv.sh':
+      ensure => link,
+      path   => "${::tomcat::catalina_base_real}/bin/setenv.sh",
+      target => "${::tomcat::catalina_base_real}/conf/${::tomcat::service_name_real}.conf"
   }
 
   # generate and manage UserDatabase file

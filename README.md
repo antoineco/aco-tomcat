@@ -7,6 +7,7 @@
 3. [Setup](#setup)
 4. [Usage](#usage)
 5. [Limitations](#limitations)
+6. [To Do](#to-do)
 
 ##Overview
 
@@ -74,7 +75,7 @@ Add an additional admin for the manager
 }
 ```
 
-Enable the remote [JMX listener](http://tomcat.apache.org/tomcat-7.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener) for remote JVM monitoring
+Enable the remote [JMX listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener) for remote JVM monitoring
 
 ```puppet
 class { '::tomcat':
@@ -96,6 +97,18 @@ class { '::tomcat':
   log4j_conf_source => 'puppet:///modules/my_configs/tomcat_log4j.xml'
 }
 ```
+Use with custom packages/custom installation layouts (eg. with [Ulyaoth](https://forge.puppetlabs.com/aco/ulyaoth))
+
+```puppet
+class { '::tomcat':
+  package_name   => 'ulyaoth-tomcat8',
+  version        => '8.0.14'
+  service_name   => 'tomcat',
+  catalina_base  => '/opt/tomcat',
+  enable_manager => false,   #usually included
+  …
+}
+```
 
 ##Usage
 
@@ -106,11 +119,13 @@ Primary class and entry point of the module
 **Parameters within `tomcat`:**
 
 #####`version`
-Tomcat full version number (valid format: x.y.z)
+Tomcat full version number. The valid format is 'x.y.z'. Default depends on the distribution.
+#####`package_name`
+Tomcat package name. Default depends on the distribution.
 #####`service_name`
-Tomcat service name
+Tomcat service name. Defaults to the package name.
 #####`service_ensure`
-Whether the service should be running (valid: 'stopped'|'running')
+Whether the service should be running. Valid values are 'stopped' and 'running'.
 #####`service_enable`
 Enable service (boolean)
 #####`tomcat_native`
@@ -126,6 +141,8 @@ Admin user name
 #####`admin_password`
 Admin user password
 
+(to be continued...)
+
 ####Define: `tomcat::userdb_entry`
 
 Create tomcat UserDatabase entries
@@ -136,8 +153,15 @@ Create tomcat UserDatabase entries
 #####`password`
 #####`roles`
 
+(to be continued...)
+
 ##Limitations
 
-This module has been written with my own experience in mind and might lack a feature or two you would like to have. I don't expect the possibilities it offers to cover every single use-case of Tomcat, since this would be close to impossible to cover in a single Puppet module.  In this case simply file a feature request on GitHub, I will be more than happy to improve this module based on the suggestions of the community.
+This module has been written with my own experience in mind and might lack a feature or two you would like to have. I don't expect the possibilities it offers to cover every single use-case of Tomcat, since this would be close to impossible in a single Puppet module. In this case simply file a feature request on GitHub, I will be more than happy to improve this module based on the suggestions of the community.
 
-Feature requests and contributions are always welcome!
+##To Do
+
+* Finish the documentation (procrastination issue)
+* Allow the creation of several instances
+
+Features request and contributions are always welcome!
