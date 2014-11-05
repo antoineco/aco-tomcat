@@ -24,17 +24,17 @@ class tomcat::extras {
        -O catalina-jmx-remote-${::tomcat::version}.jar";
 
     'get catalina-ws.jar':
-      creates => "${::tomcat::catalina_base_real}/lib/catalina-ws-${::tomcat::version}.jar",
+      creates => "${::tomcat::catalina_base_real}/lib/extras/catalina-ws-${::tomcat::version}.jar",
       command => "wget http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-ws.jar\
        -O catalina-ws-${::tomcat::version}.jar";
 
     'get tomcat-juli-adapters.jar':
-      creates => "${::tomcat::catalina_base_real}/lib/tomcat-juli-adapters-${::tomcat::version}.jar",
+      creates => "${::tomcat::catalina_base_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version}.jar",
       command => "wget http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli-adapters.jar\
        -O tomcat-juli-adapters-${::tomcat::version}.jar";
 
     'get tomcat-juli-extras.jar':
-      creates => "${::tomcat::catalina_base_real}/lib/tomcat-juli-extras-${::tomcat::version}.jar",
+      creates => "${::tomcat::catalina_base_real}/lib/extras/tomcat-juli-extras-${::tomcat::version}.jar",
       command => "wget http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli.jar\
        -O tomcat-juli-extras-${::tomcat::version}.jar";
   }
