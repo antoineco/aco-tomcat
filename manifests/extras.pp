@@ -41,8 +41,9 @@ class tomcat::extras {
 
   file {
     'extras directory':
-      ensure => directory,
-      path => "${::tomcat::catalina_base_real}/lib/extras";
+      ensure  => directory,
+      path    => "${::tomcat::catalina_base_real}/lib/extras",
+      seltype => 'usr_t';
 
     'tomcat-juli.jar':
       ensure => link,
