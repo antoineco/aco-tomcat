@@ -59,5 +59,4 @@ class tomcat::log4j {
     path   => "${::tomcat::catalina_base_real}/conf/logging.properties",
     backup => true
   }
-
 }

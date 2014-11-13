@@ -11,8 +11,15 @@ class tomcat::install {
     name   => "$::tomcat::package_name",
     ensure => present
   }
-  if $::tomcat::tomcat_native {
-    package { 'tomcat-native': ensure => present }
+
+  # tomcat native library
+  $ensure_native_package = $::tomcat::tomcat_native ? {
+    true    => 'present',
+    default => 'absent'
+  }
+  package { 'tomcat native library':
+    name   => $::tomcat::tomcat_native_package_name,
+    ensure => $ensure_native_package
   }
 
   # install admin webapps

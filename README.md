@@ -101,11 +101,13 @@ Use with custom packages/custom installation layouts (eg. with [Ulyaoth](https:/
 
 ```puppet
 class { '::tomcat':
-  package_name   => 'ulyaoth-tomcat8',
-  version        => '8.0.14'
-  service_name   => 'tomcat',
-  catalina_base  => '/opt/tomcat',
-  enable_manager => false,   #usually included
+  package_name               => 'ulyaoth-tomcat8',
+  version                    => '8.0.14'
+  service_name               => 'tomcat',
+  catalina_base              => '/opt/tomcat',
+  enable_manager             => false,   #usually included
+  tomcat_native              => true,
+  tomcat_native_package_name => 'ulyaoth-tomcat-native'
   …
 }
 ```
@@ -123,13 +125,15 @@ Tomcat full version number. The valid format is 'x.y.z'. Default depends on the 
 #####`package_name`
 Tomcat package name. Default depends on the distribution.
 #####`service_name`
-Tomcat service name. Defaults to the package name.
+Tomcat service name. Defaults to `package_name`.
 #####`service_ensure`
 Whether the service should be running. Valid values are 'stopped' and 'running'.
 #####`service_enable`
 Enable service (boolean)
 #####`tomcat_native`
 Install Tomcat Native library (boolean)
+#####`tomcat_native_package_name`
+Tomcat Native library package name. Defaults to 'tomcat-native'. 
 #####`extras`
 Install extra libraries (boolean)
 #####`enable_manager`
