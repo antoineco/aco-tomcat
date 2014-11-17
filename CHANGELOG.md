@@ -1,3 +1,7 @@
+###0.0.4
+
+* Stop managing tomcat user, RPMs already take care of it
+
 ###0.0.3
 
 * The package name for Tomcat native library can now be set

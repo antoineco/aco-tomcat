@@ -61,19 +61,4 @@ class tomcat::config {
       roles    => ['manager-gui', 'manager-script', 'admin-gui', 'admin-script']
     }
   }
-
-  # make sure the tomcat user has the correct parameters
-  if !defined(User[$::tomcat::tomcat_user]) {
-    if $::tomcat::maj_version >= '7' {
-      user { $::tomcat::tomcat_user:
-        home  => $::tomcat::catalina_base_real,
-        shell => '/sbin/nologin'
-      }
-    } else {
-      user { $::tomcat::tomcat_user:
-        home  => $::tomcat::catalina_base_real,
-        shell => '/bin/sh'
-      }
-    }
-  }
 }
