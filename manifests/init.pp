@@ -20,8 +20,10 @@
 #   tomcat native library package name
 # [*extras*]
 #   install extra libraries (boolean)
-# [*enable_manager*]
+# [*admin_webapps*]
 #   install admin webapps (boolean)
+# [*admin_webapps_package_name*]
+#   admin webapps package name
 # [*create_default_admin*]
 #   create default admin user (boolean)
 # [*admin_user*]
@@ -64,10 +66,11 @@ class tomcat (
   #----------------------------------------------------------------------------------
   # security and administration
   #----------------------------------------------------------------------------------
-  $enable_manager       = true,
-  $create_default_admin = true,
-  $admin_user           = 'tomcatadmin',
-  $admin_password       = 'password',
+  $admin_webapps              = true,
+  $admin_webapps_package_name = $::tomcat::params::admin_webapps_package_name,
+  $create_default_admin       = true,
+  $admin_user                 = 'tomcatadmin',
+  $admin_password             = 'password',
   #----------------------------------------------------------------------------------
   # server configuration
   #----------------------------------------------------------------------------------
