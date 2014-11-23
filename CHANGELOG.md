@@ -1,6 +1,11 @@
+###0.0.5
+
+* Renamed `enable_manager` parameter to `admin_webapps`
+* New parameter `admin_webapps_package_name`
+
 ###0.0.4
 
-Stop managing tomcat user, RPMs already take care of it
+* Stop managing tomcat user, RPMs already take care of it
 
 ###0.0.3
 
