@@ -67,6 +67,63 @@ class tomcat::params {
           }
         }
       }
+      $admin_webapps_package_name = "${package_name}-admin-webapps"
+    }
+    'Debian' : {
+      case $::operatingsystem {
+        'Debian' : {
+          case $::operatingsystemmajrelease {
+            '7'     : {
+              $version = '7.0.28'
+              $package_name = 'tomcat7'
+              # $version = '6.0.35'
+              # $package_name = 'tomcat6'
+            }
+            '6'     : {
+              $version = '6.0.35'
+              $package_name = 'tomcat6'
+            }
+            default : {
+              fail("Unsupported OS version ${::operatingsystemmajrelease}")
+            }
+          }
+        }
+        'Ubuntu' : {
+          case $::operatingsystemmajrelease {
+            '12.04' : {
+              $version = '6.0.24'
+              $package_name = 'tomcat6'
+            }
+            '12.10' : {
+              $version = '7.0.26'
+              $package_name = 'tomcat7'
+              # $version = '6.0.35'
+              # $package_name = 'tomcat6'
+            }
+            '14.04' : {
+              $version = '7.0.52'
+              $package_name = 'tomcat7'
+              # $version = '6.0.39'
+              # $package_name = 'tomcat6'
+            }
+            '14.10' : {
+              $version = '8.0.9 '
+              $package_name = 'tomcat8'
+              # $version = '7.0.55'
+              # $package_name = 'tomcat7'
+              # $version = '6.0.41'
+              # $package_name = 'tomcat6'
+            }
+            default : {
+              fail("Unsupported OS version ${::operatingsystemmajrelease}")
+            }
+          }
+        }
+        default  : {
+          fail("Unsupported OS ${::operatingsystem}")
+        }
+      }
+      $admin_webapps_package_name = "${package_name}-admin"
     }
     default  : {
       fail("Unsupported OS family ${::osfamily}")
