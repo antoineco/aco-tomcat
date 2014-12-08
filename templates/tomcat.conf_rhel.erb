@@ -1,14 +1,14 @@
 # ******************
 # Managed by Puppet
 # ******************
-# System-wide configuration file for <%= @service_name_real %> services
-# This will be sourced by <%= @service_name_real %> and any secondary service
+# System-wide configuration file for <%= @service_name %> services
+# This will be sourced by <%= @service_name %> and any secondary service
 # Values will be overridden by service-specific configuration
 # files in /etc/sysconfig
 #
 # Use this one to change default values for all services
 # Change the service specific ones to affect only one service
-# (see, for instance, /etc/sysconfig/<%= @service_name_real %>)
+# (see, for instance, /etc/sysconfig/<%= @service_name %>)
 #
 
 # Where your java installation lives
@@ -17,17 +17,17 @@
 <% end -%>
 
 # Where your tomcat installation lives
-<% if @catalina_base_real and @catalina_base_real != '' -%>CATALINA_BASE="<%= @catalina_base_real %>"
-<% else -%>CATALINA_BASE="/usr/share/<%= @service_name_real %>"
+<% if @catalina_base and @catalina_base != '' -%>CATALINA_BASE="<%= @catalina_base %>"
+<% else -%>CATALINA_BASE="/usr/share/<%= @service_name %>"
 <% end -%>
-<% if @catalina_home_real and @catalina_home_real != '' -%>CATALINA_HOME="<%= @catalina_home_real %>"
-<% else -%>CATALINA_HOME="/usr/share/<%= @service_name_real %>"
+<% if @catalina_home and @catalina_home != '' -%>CATALINA_HOME="<%= @catalina_home %>"
+<% else -%>CATALINA_HOME="/usr/share/<%= @service_name %>"
 <% end -%>
-<% if @jasper_home_real and @jasper_home_real != '' -%>JASPER_HOME="<%= @jasper_home_real %>"
-<% else -%>JASPER_HOME="/usr/share/<%= @service_name_real %>"
+<% if @jasper_home and @jasper_home != '' -%>JASPER_HOME="<%= @jasper_home %>"
+<% else -%>JASPER_HOME="/usr/share/<%= @service_name %>"
 <% end -%>
-<% if @catalina_tmpdir_real and @catalina_tmpdir_real != '' -%>CATALINA_TMPDIR="<%= @catalina_tmpdir_real %>"
-<% else -%>CATALINA_TMPDIR="/var/cache/<%= @service_name_real %>/temp"
+<% if @catalina_tmpdir and @catalina_tmpdir != '' -%>CATALINA_TMPDIR="<%= @catalina_tmpdir %>"
+<% else -%>CATALINA_TMPDIR="/var/cache/<%= @service_name %>/temp"
 <% end -%>
 
 # You can pass some parameters to java here if you wish to
@@ -67,11 +67,11 @@
 <% end -%>
 
 # Set the TOMCAT_PID location
-<% if @catalina_pid_real and @catalina_pid_real != '' -%>CATALINA_PID="<%= @catalina_pid_real %>"
-<% else -%>CATALINA_PID="/var/run/<%= @service_name_real %>.pid"
+<% if @catalina_pid and @catalina_pid != '' -%>CATALINA_PID="<%= @catalina_pid %>"
+<% else -%>CATALINA_PID="/var/run/<%= @service_name %>.pid"
 <% end -%>
 
-# Connector port is <%= @http_port %> for this <%= @service_name_real %> instance
+# Connector port is <%= @http_port %> for this <%= @service_name %> instance
 <% if @http_port and @http_port != '' -%>CONNECTOR_PORT="<%= @http_port %>"
 <% else -%>#CONNECTOR_PORT="8080"
 <% end -%>

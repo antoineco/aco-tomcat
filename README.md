@@ -59,7 +59,7 @@ Enable the manager/host-manager webapps and configure default admin
 ```puppet
 class { '::tomcat':
   …
-  enable_manager => true,
+  admin_webapps  => true,
   admin_user     => 'tomcatmaster',
   admin_password => 'meow'
 }
@@ -105,7 +105,7 @@ class { '::tomcat':
   version                    => '8.0.14'
   service_name               => 'tomcat',
   catalina_base              => '/opt/tomcat',
-  enable_manager             => false,   #usually included
+  admin_webapps              => false,   #usually included
   tomcat_native              => true,
   tomcat_native_package_name => 'ulyaoth-tomcat-native'
   …
@@ -136,7 +136,7 @@ Install Tomcat Native library (boolean)
 Tomcat Native library package name. Defaults to 'tomcat-native'. 
 #####`extras`
 Install extra libraries (boolean)
-#####`enable_manager`
+#####`admin_webapps`
 Install admin webapps (boolean)
 #####`create_default_admin`
 Create default admin user (boolean)

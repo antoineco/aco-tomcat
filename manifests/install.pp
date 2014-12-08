@@ -28,7 +28,7 @@ class tomcat::install {
     default => 'absent'
   }
   package { 'tomcat admin webapps':
-    name   => "${::tomcat::package_name}-admin-webapps",
+    name   => $::tomcat::admin_webapps_package_name,
     ensure => $ensure_manager_package
   }
 }

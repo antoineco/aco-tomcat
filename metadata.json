@@ -1,12 +1,12 @@
 {
   "name": "aco-tomcat",
-  "summary": "Puppet module for Tomcat on RHEL variants",
+  "summary": "Puppet module for Tomcat",
   "author": "Antoine Cotten",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "Apache License, Version 2.0",
   "project_page": "https://github.com/tOnI0/aco-tomcat",
   "source": "git://github.com/tOnI0/aco-tomcat",
-  "tags": ["fedora", "rhel", "tomcat", "rpm"],
+  "tags": ["tomcat", "rpm", "apt"],
   "dependencies": [
     {
       "name": "puppetlabs/concat",
@@ -63,6 +63,22 @@
         "19",
         "20",
         "21"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "12.10",
+        "14.04",
+        "14.10",
+        "15.04"
       ]
     }
   ],
