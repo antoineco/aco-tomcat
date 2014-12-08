@@ -23,7 +23,7 @@ class tomcat::install {
   }
 
   # install admin webapps
-  $ensure_manager_package = $::tomcat::enable_manager ? {
+  $ensure_manager_package = $::tomcat::admin_webapps ? {
     true    => 'present',
     default => 'absent'
   }
