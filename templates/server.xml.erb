@@ -8,9 +8,11 @@
 <% if @maj_version == '8' -%>
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
 <% end -%>
+<% if @maj_version >= '7' -%>
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+<% end -%>
 <% if @maj_version == '7' -%>
   <Listener className="org.apache.catalina.core.JasperListener" />
-  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 <% end -%>
 <% if @maj_version == '6' -%>
   <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />

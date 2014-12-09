@@ -11,11 +11,11 @@
 
 ##Overview
 
-The tomcat module installs and configures an Apache Tomcat instance from any available YUM repository on [RHEL variants](http://en.wikipedia.org/wiki/List_of_Linux_distributions#RHEL-based), including Fedora.
+The tomcat module installs and configures an Apache Tomcat instance from the available packages in your distribution's repositories.
 
 ##Module description
 
-All RHEL-based Linux distributions provide one or more maintained packages of the Tomcat application server. These are available either from the distribution repositories or third-party sources ([JPackage](http://www.jpackage.org), [EPEL](https://fedoraproject.org/wiki/EPEL), ...). This module will install the desired version of tomcat and its dependencies from the repositories available on the target system.  
+Almost all Linux distributions provide one or more maintained packages of the Tomcat application server. These are available either from the distribution repositories or third-party sources ([JPackage](http://www.jpackage.org), [EPEL](https://fedoraproject.org/wiki/EPEL), ...). This module will install the desired version of tomcat and its dependencies from the repositories available on the target system.  
 A long list of parameters permit a fine-tuning of the server and the JVM. It is for example possible to configure manager applications, install extra tomcat libraries, configure log4j as the standard logger, or enable the remote JMX listener.
 
 ##Setup
@@ -161,7 +161,7 @@ Create tomcat UserDatabase entries
 
 ##Limitations
 
-This module has been written with my own experience in mind and might lack a feature or two you would like to have. I don't expect the possibilities it offers to cover every single use-case of Tomcat, since this would be close to impossible in a single Puppet module. In this case simply file a feature request on GitHub, I will be more than happy to improve this module based on the suggestions of the community.
+* Only supports RedHat and Debian variants/derivatives for now
 
 ##To Do
 

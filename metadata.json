@@ -75,7 +75,10 @@
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
+        "12.04",
         "12.10",
+        "13.04",
+        "13.10",
         "14.04",
         "14.10",
         "15.04"
