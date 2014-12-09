@@ -92,7 +92,7 @@ class tomcat::params {
           }
         }
         'Ubuntu' : {
-          case $::operatingsystemmajrelease {
+          case $::operatingsystemrelease {
             '12.04' : {
               $version = '7.0.26'
               $package_name = 'tomcat7'
@@ -124,7 +124,7 @@ class tomcat::params {
               # $package_name = 'tomcat6'
             }
             '14.10' : {
-              $version = '8.0.9 '
+              $version = '8.0.9'
               $package_name = 'tomcat8'
               # $version = '7.0.55'
               # $package_name = 'tomcat7'
