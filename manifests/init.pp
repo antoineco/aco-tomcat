@@ -115,7 +115,7 @@ class tomcat (
   $jasper_home      = $::tomcat::params::jasper_home,
   $catalina_tmpdir  = $::tomcat::params::catalina_tmpdir,
   $catalina_pid     = $::tomcat::params::catalina_pid,
-  $java_home        = '/usr/lib/jvm/jre',
+  $java_home        = undef,
   $java_opts        = '-server',
   $catalina_opts    = '',
   $security_manager = false,
