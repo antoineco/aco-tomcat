@@ -5,7 +5,7 @@
 # ******************
 -->
 <Server port="<%= @control_port %>" shutdown="SHUTDOWN">
-<% if @maj_version == '8' -%>
+<% if @maj_version == '8' and @min_version >= 14 -%>
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
 <% end -%>
 <% if @maj_version >= '7' -%>

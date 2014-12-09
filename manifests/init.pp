@@ -135,6 +135,7 @@ class tomcat (
   # get major version
   $array_version = split($version, '[.]')
   $maj_version = $array_version[0]
+  $min_version = $array_version[1]*10+$array_version[2]
 
   # should we force download extras libs?
   if $log4j or $jmx_listener {
