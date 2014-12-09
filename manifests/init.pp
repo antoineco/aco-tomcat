@@ -127,9 +127,10 @@ class tomcat (
   $custom_fragment  = '',
   #----------------------------------------------------------------------------------
   # log4j
-  $log4j             = false,
-  $log4j_conf_type   = 'ini',
-  $log4j_conf_source = "puppet:///modules/${module_name}/log4j.properties") inherits tomcat::params {
+  $log4j              = false,
+  $log4j_package_name = $::tomcat::params::log4j_package_name,
+  $log4j_conf_type    = 'ini',
+  $log4j_conf_source  = "puppet:///modules/${module_name}/log4j.properties") inherits tomcat::params {
 
   # get major version
   $array_version = split($version, '[.]')

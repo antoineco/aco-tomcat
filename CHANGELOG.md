@@ -2,7 +2,7 @@
 
 * Support Debian/Ubuntu
 * Renamed `enable_manager` parameter to `admin_webapps`
-* New parameter `admin_webapps_package_name`
+* New parameters `admin_webapps_package_name` and `log4j_package_name`
 
 ###0.0.4
 

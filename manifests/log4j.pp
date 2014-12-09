@@ -16,7 +16,7 @@ class tomcat::log4j {
     default  => 'liblog4j1.2-java'
   }
 
-  package { $log4j_package_name: ensure => present } ->
+  package { $::tomcat::log4j_package_name: ensure => present } ->
   file { 'log4j library':
     ensure  => link,
     owner   => 'root',
