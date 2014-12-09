@@ -8,7 +8,7 @@ class tomcat::log4j {
 
   # generate OS-specific variables
   $log4j_path = $::osfamily ? {
-    'RedHat' => "${::tomcat::catalina_base}/lib/log4j.jar",
+    'RedHat' => '/usr/share/java/log4j.jar',
     default  => '/usr/share/java/log4j-1.2.jar'
   }
   $log4j_package_name = $::osfamily ? {
@@ -21,8 +21,8 @@ class tomcat::log4j {
     ensure  => link,
     owner   => 'root',
     group   => 'root',
-    path    => $log4j_path,
-    target  => '/usr/share/java/log4j.jar',
+    path    => "${::tomcat::catalina_home}/lib/log4j.jar",
+    target  => $log4j_path,
     seltype => 'usr_t'
   }
 
@@ -32,19 +32,19 @@ class tomcat::log4j {
         ensure  => present,
         owner   => 'root',
         group   => 'root',
-        path    => "${::tomcat::catalina_base}/lib/log4j.xml",
+        path    => "${::tomcat::catalina_home}/lib/log4j.xml",
         source  => $::tomcat::log4j_conf_source,
         seltype => 'lib_t';
 
       'log4j ini configuration':
         ensure => absent,
-        path   => "${::tomcat::catalina_base}/lib/log4j.properties";
+        path   => "${::tomcat::catalina_home}/lib/log4j.properties";
 
       'log4j dtd file':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
-        path    => "${::tomcat::catalina_base}/lib/log4j.dtd",
+        path    => "${::tomcat::catalina_home}/lib/log4j.dtd",
         source  => "puppet:///modules/${module_name}/log4j.dtd",
         seltype => 'usr_t'
     }
@@ -54,17 +54,17 @@ class tomcat::log4j {
         ensure  => present,
         owner   => 'root',
         group   => 'root',
-        path    => "${::tomcat::catalina_base}/lib/log4j.properties",
+        path    => "${::tomcat::catalina_home}/lib/log4j.properties",
         source  => $::tomcat::log4j_conf_source,
         seltype => 'lib_t';
 
       'log4j xml configuration':
         ensure => absent,
-        path   => "${::tomcat::catalina_base}/lib/log4j.xml";
+        path   => "${::tomcat::catalina_home}/lib/log4j.xml";
 
       'log4j dtd file':
         ensure => absent,
-        path   => "${::tomcat::catalina_base}/lib/log4j.dtd"
+        path   => "${::tomcat::catalina_home}/lib/log4j.dtd"
     }
   }
 

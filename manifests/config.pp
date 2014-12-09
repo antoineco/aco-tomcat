@@ -19,7 +19,7 @@ class tomcat::config {
   # generate and manage server configuration
   # Template uses:
   file { 'tomcat server configuration':
-    path    => "/etc/${::tomcat::service_name}/server.xml",
+    path    => "${::tomcat::catalina_base}/conf/server.xml",
     content => template("${module_name}/server.xml.erb"),
     seltype => 'etc_t'
   }
@@ -39,7 +39,7 @@ class tomcat::config {
 
     'tomcat setenv.sh':
       ensure => link,
-      path   => "${::tomcat::catalina_base}/bin/setenv.sh",
+      path   => "${::tomcat::catalina_home}/bin/setenv.sh",
       target => $config_path
   }
 
@@ -53,7 +53,7 @@ class tomcat::config {
 
   # generate and manage UserDatabase file
   concat { 'UserDatabase':
-    path  => "/etc/${::tomcat::service_name}/tomcat-users.xml",
+    path  => "${::tomcat::catalina_base}/conf/tomcat-users.xml",
     owner => $::tomcat::tomcat_user,
     group => $::tomcat::tomcat_group,
     mode  => '0640',
