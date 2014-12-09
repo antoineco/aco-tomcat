@@ -31,5 +31,4 @@ class tomcat::install {
     name   => $::tomcat::admin_webapps_package_name_real,
     ensure => $ensure_manager_package
   }
-  notify{$::tomcat::admin_webapps_package_name_real:}
 }
