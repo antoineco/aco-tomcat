@@ -12,14 +12,14 @@ class tomcat::config {
     default  => 'deb'
   }
   $config_path = $::osfamily ? {
-    'RedHat' => "/etc/sysconfig/${::tomcat::service_name}",
-    default  => "/etc/default/${::tomcat::service_name}"
+    'RedHat' => "/etc/sysconfig/${::tomcat::service_name_real}",
+    default  => "/etc/default/${::tomcat::service_name_real}"
   }
 
   # generate and manage server configuration
   # Template uses:
   file { 'tomcat server configuration':
-    path    => "${::tomcat::catalina_base}/conf/server.xml",
+    path    => "${::tomcat::catalina_base_real}/conf/server.xml",
     content => template("${module_name}/server.xml.erb"),
     seltype => 'etc_t'
   }
@@ -39,23 +39,23 @@ class tomcat::config {
 
     'tomcat setenv.sh':
       ensure => link,
-      path   => "${::tomcat::catalina_home}/bin/setenv.sh",
+      path   => "${::tomcat::catalina_home_real}/bin/setenv.sh",
       target => $config_path
   }
 
   if $::osfamily == 'RedHat' {
     file { 'tomcat global configuration':
       ensure => link,
-      path   => "${::tomcat::catalina_base}/conf/${::tomcat::service_name}.conf",
+      path   => "${::tomcat::catalina_base_real}/conf/${::tomcat::service_name_real}.conf",
       target => $config_path
     }
   }
 
   # generate and manage UserDatabase file
   concat { 'UserDatabase':
-    path  => "${::tomcat::catalina_base}/conf/tomcat-users.xml",
-    owner => $::tomcat::tomcat_user,
-    group => $::tomcat::tomcat_group,
+    path  => "${::tomcat::catalina_base_real}/conf/tomcat-users.xml",
+    owner => $::tomcat::tomcat_user_real,
+    group => $::tomcat::tomcat_group_real,
     mode  => '0640',
   }
 

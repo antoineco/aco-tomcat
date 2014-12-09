@@ -6,7 +6,7 @@ class tomcat::service {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
-  service { $::tomcat::service_name:
+  service { $::tomcat::service_name_real:
     ensure  => $::tomcat::service_ensure,
     enable  => $::tomcat::service_enable
   }
