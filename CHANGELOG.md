@@ -1,4 +1,4 @@
-###0.0.5
+###0.1.0
 
 * Support Debian/Ubuntu
 * Renamed `enable_manager` parameter to `admin_webapps`
