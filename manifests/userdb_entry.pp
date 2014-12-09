@@ -10,7 +10,7 @@ define tomcat::userdb_entry ($username, $password, $roles) {
   validate_array($roles)
   validate_string($username, $password)
 
-  $roles_string = join($roles, ",")
+  $roles_string = join($roles, ',')
 
   # add formated fragment
   concat::fragment { "UserDatabase entry (${title})":

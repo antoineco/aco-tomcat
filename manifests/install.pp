@@ -8,8 +8,8 @@ class tomcat::install {
 
   # main packages
   package { 'tomcat server':
-    name   => "$::tomcat::package_name",
-    ensure => present
+    ensure => present,
+    name   => $::tomcat::package_name
   }
 
   # tomcat native library
@@ -18,8 +18,8 @@ class tomcat::install {
     default => 'absent'
   }
   package { 'tomcat native library':
-    name   => $::tomcat::tomcat_native_package_name,
-    ensure => $ensure_native_package
+    ensure => $ensure_native_package,
+    name   => $::tomcat::tomcat_native_package_name
   }
 
   # install admin webapps
@@ -28,7 +28,7 @@ class tomcat::install {
     default => 'absent'
   }
   package { 'tomcat admin webapps':
-    name   => $::tomcat::admin_webapps_package_name_real,
-    ensure => $ensure_manager_package
+    ensure => $ensure_manager_package,
+    name   => $::tomcat::admin_webapps_package_name_real
   }
 }

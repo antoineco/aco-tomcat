@@ -3,10 +3,10 @@
   "summary": "Puppet module for Tomcat",
   "author": "Antoine Cotten",
   "version": "0.1.0",
-  "license": "Apache License, Version 2.0",
+  "license": "Apache-2.0",
   "project_page": "https://github.com/tOnI0/aco-tomcat",
-  "source": "git://github.com/tOnI0/aco-tomcat",
-  "tags": ["tomcat", "rpm", "apt"],
+  "source": "git://github.com/tOnI0/aco-tomcat.git",
+  "tags": ["tomcat"],
   "dependencies": [
     {
       "name": "puppetlabs/concat",

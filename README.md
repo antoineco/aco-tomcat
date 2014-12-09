@@ -105,6 +105,7 @@ class { '::tomcat':
   version                    => '8.0.14'
   service_name               => 'tomcat',
   catalina_base              => '/opt/tomcat',
+  catalina_home              => '/opt/tomcat',
   admin_webapps              => false,   #usually included
   tomcat_native              => true,
   tomcat_native_package_name => 'ulyaoth-tomcat-native'

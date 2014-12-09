@@ -7,7 +7,7 @@ class tomcat::service {
   }
 
   service { $::tomcat::service_name_real:
-    ensure  => $::tomcat::service_ensure,
-    enable  => $::tomcat::service_enable
+    ensure => $::tomcat::service_ensure,
+    enable => $::tomcat::service_enable
   }
 }
