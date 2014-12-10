@@ -17,7 +17,8 @@ class tomcat::config {
   # - $config_path
   file { 'tomcat logcron':
     path    => "/etc/cron.daily/${::tomcat::service_name_real}",
-    content => template("${module_name}/logcron.erb")
+    content => template("${module_name}/logcron.erb"),
+    mode    => '0755'
   }
 
   # generate and manage server configuration
