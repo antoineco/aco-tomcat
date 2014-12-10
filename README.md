@@ -212,18 +212,20 @@ $JAVA_OPTS. Defaults to `-server`.
 #####`catalina_opts`
 $CATALINA_OPTS. Defaults to `undef`.
 #####`security_manager`
-Boolean value. Defaults to `false`.
+Whether to enable the security manager. Boolean value. Defaults to `false`.
 #####`tomcat_user`
-Defaults to `service_name`.
+Tomcat user. Defaults to `service_name`.
 #####`tomcat_group`
-Defaults to `tomcat_user`.
+Tomcat group. Defaults to `tomcat_user`.
 #####`lang`
 Tomcat locale. Defaults to `undef`.
 #####`shutdown_wait`
 How long to wait for a graceful shutdown before killing the process. Value in seconds. Defaults to `30`.
+
 *Note:* RedHat only
 #####`shutdown_verbose`
 Whether to display start/shutdown messages. Boolean value. Defaults to `false`.
+
 *Note:* RedHat only
 #####`logfile_days`
 Number of days to keep old log files. Defaults to `30`.
