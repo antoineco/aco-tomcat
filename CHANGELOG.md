@@ -1,3 +1,11 @@
+###0.2.0
+
+* New parameter `jmx_bind_address`
+* `catalina_home` now defaults to `catalina_base` on RedHat
+* Tomcat won't install if no package matches the given `version` number
+* Removed `defaulthost` parameter
+* Minor improvements in code quality, documentation and metadata 
+
 ###0.1.0
 
 * Support Debian/Ubuntu

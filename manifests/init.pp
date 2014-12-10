@@ -94,7 +94,7 @@ class tomcat (
   $ajp_port      = 8009,
   #----------------------------------------------------------------------------------
   # engine
-  $jvmroute = '',
+  $jvmroute = undef,
   #----------------------------------------------------------------------------------
   # host
   $hostname            = 'localhost',
@@ -122,14 +122,14 @@ class tomcat (
   $catalina_pid     = undef,
   $java_home        = undef,
   $java_opts        = '-server',
-  $catalina_opts    = '',
+  $catalina_opts    = undef,
   $security_manager = false,
   $tomcat_user      = undef,
   $tomcat_group     = undef,
-  $lang             = '',
+  $lang             = undef,
   $shutdown_wait    = 30,
   $shutdown_verbose = false,
-  $custom_fragment  = '',
+  $custom_fragment  = undef,
   #----------------------------------------------------------------------------------
   # logging
   #----------------------------------------------------------------------------------
