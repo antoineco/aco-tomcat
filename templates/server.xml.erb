@@ -18,7 +18,7 @@
   <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
 <% end -%>
 <% if @jmx_listener -%>
-  <Listener className="org.apache.catalina.mbeans.JmxRemoteLifecycleListener" rmiRegistryPortPlatform="<%= @jmx_registry_port %>" rmiServerPortPlatform="<%= @jmx_server_port %>" />
+  <Listener className="org.apache.catalina.mbeans.JmxRemoteLifecycleListener" rmiRegistryPortPlatform="<%= @jmx_registry_port %>" rmiServerPortPlatform="<%= @jmx_server_port %>"<% if @jmx_bind_address and @jmx_bind_address != '' -%> rmiBindAddress="<%= @jmx_bind_address %>"<% end -%> />
 <% end -%>
   <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
@@ -64,7 +64,7 @@
     <Connector port="<%= @ajp_port %>" protocol="AJP/1.3" redirectPort="<%= @ssl_port %>" />
 
 <% end -%>
-    <Engine name="Catalina" defaultHost="<%= @defaulthost %>"<% if @jvmroute and @jvmroute != '' -%> jvmRoute="<%= @jvmroute %>"<% end -%>>
+    <Engine name="Catalina" defaultHost="<%= @hostname %>"<% if @jvmroute and @jvmroute != '' -%> jvmRoute="<%= @jvmroute %>"<% end -%>>
 
       <Realm className="org.apache.catalina.realm.LockOutRealm">
         <Realm className="org.apache.catalina.realm.UserDatabaseRealm"

@@ -31,7 +31,7 @@
 # [*admin_password*]
 #   admin user password
 #
-# see README file for a description of the other parameters
+# see README file for a description of all parameters related to server configuration
 #
 # === Actions:
 #
@@ -94,22 +94,24 @@ class tomcat (
   $ajp_port      = 8009,
   #----------------------------------------------------------------------------------
   # engine
-  $defaulthost = 'localhost',
+  $jvmroute = '',
   #----------------------------------------------------------------------------------
   # host
   $hostname            = 'localhost',
-  $jvmroute            = '',
   $autodeploy          = true,
   $deployOnStartup     = true,
   $undeployoldversions = false,
   $unpackwars          = true,
-  $singlesignon_valve  = false,
-  $accesslog_valve     = true,
+  #----------------------------------------------------------------------------------
+  # valves
+  $singlesignon_valve = false,
+  $accesslog_valve    = true,
   #----------------------------------------------------------------------------------
   # jmx
   $jmx_listener      = false,
   $jmx_registry_port = 8050,
   $jmx_server_port   = 8051,
+  $jmx_bind_address  = '',
   #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------
@@ -129,7 +131,8 @@ class tomcat (
   $shutdown_verbose = false,
   $custom_fragment  = '',
   #----------------------------------------------------------------------------------
-  # log4j
+  # logging
+  #----------------------------------------------------------------------------------
   $log4j              = false,
   $log4j_package_name = $::tomcat::params::log4j_package_name,
   $log4j_conf_type    = 'ini',
@@ -158,8 +161,10 @@ class tomcat (
   }
 
   if $catalina_home == undef {
-    $catalina_home_real = "/usr/share/${service_name_real}"
-  } else {
+    $catalina_home_real = $::osfamily ? {
+      'RedHat' => $catalina_base_real,
+      default  => "/usr/share/${service_name_real}"
+    } } else {
     $catalina_home_real = $catalina_home
   }
 
@@ -198,7 +203,7 @@ class tomcat (
   # get major version
   $array_version = split($version, '[.]')
   $maj_version = $array_version[0]
-  $min_version = $array_version[1] * 10 + $array_version[2]
+  $min_version = $array_version[1] * 100 + $array_version[2]
 
   # should we force download extras libs?
   if $log4j or $jmx_listener {
