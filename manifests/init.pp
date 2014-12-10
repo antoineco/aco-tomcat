@@ -115,8 +115,8 @@ class tomcat (
   #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------
-  $catalina_base    = undef,
   $catalina_home    = undef,
+  $catalina_base    = undef,
   $jasper_home      = undef,
   $catalina_tmpdir  = undef,
   $catalina_pid     = undef,
@@ -129,6 +129,8 @@ class tomcat (
   $lang             = undef,
   $shutdown_wait    = 30,
   $shutdown_verbose = false,
+  $logfile_days     = 14,
+  $logfile_compress = true,
   $custom_fragment  = undef,
   #----------------------------------------------------------------------------------
   # logging
@@ -152,20 +154,18 @@ class tomcat (
     $admin_webapps_package_name_real = $admin_webapps_package_name
   }
 
+  if $catalina_home == undef {
+    $catalina_home_real = "/usr/share/${service_name_real}"
+  } else {
+    $catalina_home_real = $catalina_home
+  }
+
   if $catalina_base == undef {
     $catalina_base_real = $::osfamily ? {
-      'RedHat' => "/usr/share/${service_name_real}",
+      'RedHat' => $catalina_home_real,
       default  => "/var/lib/${service_name_real}"
     } } else {
     $catalina_base_real = $catalina_base
-  }
-
-  if $catalina_home == undef {
-    $catalina_home_real = $::osfamily ? {
-      'RedHat' => $catalina_base_real,
-      default  => "/usr/share/${service_name_real}"
-    } } else {
-    $catalina_home_real = $catalina_home
   }
 
   if $jasper_home == undef {
@@ -200,10 +200,20 @@ class tomcat (
     $tomcat_group_real = $tomcat_group
   }
 
+  if $::osfamily == 'Debian' {
+    $security_manager_real = $security_manager ? {
+      true    => 'yes',
+      default => 'no'
+    }
+  } else {
+    $security_manager_real = $security_manager
+  }
+
+  $logfile_compress_real = bool2num($logfile_compress)
+
   # get major version
   $array_version = split($version, '[.]')
   $maj_version = $array_version[0]
-  $min_version = $array_version[1] * 100 + $array_version[2]
 
   # should we force download extras libs?
   if $log4j or $jmx_listener {

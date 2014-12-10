@@ -1,3 +1,10 @@
+###0.2.1
+
+* New parameters `logfile_days` and `logfile_compress` (Debian only)
+* Added log rotation
+* `catalina_base` defaults to `catalina_home` on RedHat (inverted the logic)
+* merged Debian and RedHat main configuration files
+
 ###0.2.0
 
 * New parameter `jmx_bind_address`

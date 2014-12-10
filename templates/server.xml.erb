@@ -5,10 +5,10 @@
 # ******************
 -->
 <Server port="<%= @control_port %>" shutdown="SHUTDOWN">
-<% if @maj_version == '8' and @min_version >= 14 -%>
+<% if scope.function_versioncmp([@version, '8.0.14']) >= 0 -%>
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
 <% end -%>
-<% if @maj_version >= '7' -%>
+<% if scope.function_versioncmp([@maj_version, '7']) >= 0 -%>
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 <% end -%>
 <% if @maj_version == '7' -%>

@@ -7,17 +7,22 @@ class tomcat::config {
   }
 
   # generate OS-specific variables
-  $config_flavour = $::osfamily ? {
-    'RedHat' => 'rhel',
-    default  => 'deb'
-  }
   $config_path = $::osfamily ? {
     'RedHat' => "/etc/sysconfig/${::tomcat::service_name_real}",
     default  => "/etc/default/${::tomcat::service_name_real}"
   }
 
+  # generate and manage log rotation
+  # Template uses:
+  # - $config_path
+  file { 'tomcat logcron':
+    path    => "/etc/cron.daily/${::tomcat::service_name_real}",
+    content => template("${module_name}/logcron.erb")
+  }
+
   # generate and manage server configuration
   # Template uses:
+  # -
   file { 'tomcat server configuration':
     path    => "${::tomcat::catalina_base_real}/conf/server.xml",
     content => template("${module_name}/server.xml.erb"),
@@ -26,15 +31,13 @@ class tomcat::config {
 
   # generate and manage global parameters
   # Template uses:
-  #-
-  #-
-  #
+  # -
   # note: defining the exact same parameters in several files may seem awkward,
   # but it avoids the randomness observed in some older releases due to buggy startup scripts
   file {
     'tomcat main instance configuration':
       path    => $config_path,
-      content => template("${module_name}/tomcat.conf_${config_flavour}.erb"),
+      content => template("${module_name}/tomcat.conf.erb"),
       seltype => 'etc_t';
 
     'tomcat setenv.sh':

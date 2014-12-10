@@ -104,7 +104,7 @@ class { '::tomcat':
   package_name               => 'ulyaoth-tomcat8',
   version                    => '8.0.14'
   service_name               => 'tomcat',
-  catalina_base              => '/opt/tomcat',
+  catalina_home              => '/opt/tomcat',
   admin_webapps              => false,   #usually included
   tomcat_native              => true,
   tomcat_native_package_name => 'ulyaoth-tomcat-native'
@@ -120,11 +120,10 @@ Primary class and entry point of the module
 
 **Parameters within `tomcat`:**
 
-*Packages and service*
+**Packages and service**
 
 #####`version`
 Tomcat full version number. The valid format is 'x.y.z'. Default depends on the distribution.
-
 *Note:* if you define it manually please make **sure** this version if available in your system's repositories, since many parameters depend on this version number
 #####`package_name`
 Tomcat package name. Default depends on the distribution.
@@ -141,7 +140,7 @@ Tomcat Native library package name. Default depends on the distribution.
 #####`extras`
 Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.
 
-*Security and administration*
+**Security and administration**
 
 #####`admin_webapps`
 Whether to install admin webapps (manager/host-manager). Boolean value. Defaults to `true`.
@@ -154,7 +153,7 @@ Admin user name. Defaults to `tomcatadmin`.
 #####`admin_password`
 Admin user password. Defaults to `password`.
 
-*Server configuration*
+**Server configuration**
 
 #####`control_port`
 Server control port. Defaults to `8005`.
@@ -193,41 +192,47 @@ JMX/RMI server port. Defaults to `8051`.
 #####`jmx_bind_address`
 JMX/RMI server interface address. Defaults to `undef`.
 
-*Global configuration file / environment variables*
+**Global configuration file / environment variables**
 
 Please see [catalina.sh](http://svn.apache.org/repos/asf/tomcat/tc8.0.x/trunk/bin/catalina.sh) for a description of the following environment variables.
-#####`catalina_base`
-`$CATALINA_BASE`. Default depends on the platform.
 #####`catalina_home`
-`$CATALINA_HOME`. Default depends on the platform.
+$CATALINA_HOME. Default depends on the platform.
+#####`catalina_base`
+$CATALINA_BASE. Default depends on the platform.
 #####`jasper_home`
-`$JASPER_HOME`. Defaults to `catalina_home`.
+$JASPER_HOME. Defaults to `catalina_home`.
 #####`catalina_tmpdir`
-`$CATALINA_TMPDIR`. Defaults to `${catalina_home}/temp`
+$CATALINA_TMPDIR. Defaults to `${catalina_home}/temp`
 #####`catalina_pid`
-`$CATALINA_PID`. Defaults to `/var/run/${service_name}.pid`
+$CATALINA_PID. Defaults to `/var/run/${service_name}.pid`
 #####`java_home`
-`$JAVA_HOME`. Defaults to `undef`.
+$JAVA_HOME. Defaults to `undef`.
 #####`java_opts`
-`$JAVA_OPTS`. Defaults to `-server`.
+$JAVA_OPTS. Defaults to `-server`.
 #####`catalina_opts`
-`$CATALINA_OPTS`. Defaults to `undef`.
+$CATALINA_OPTS. Defaults to `undef`.
 #####`security_manager`
-`$SECURITY_MANAGER`. Defaults to `false`.
+Boolean value. Defaults to `false`.
 #####`tomcat_user`
-`$TOMCAT_USER`. Defaults to `service_name`.
+Defaults to `service_name`.
 #####`tomcat_group`
-`$TOMCAT_GROUP`. Defaults to `tomcat_user`.
+Defaults to `tomcat_user`.
 #####`lang`
-`$LANG`. Defaults to `undef`.
+Tomcat locale. Defaults to `undef`.
 #####`shutdown_wait`
-`$SHUTDOWN_WAIT`. Defaults to `30`.
+How long to wait for a graceful shutdown before killing the process. Value in seconds. Defaults to `30`.
+*Note:* RedHat only
 #####`shutdown_verbose`
-`$SHUTDOWN_VERBOSE`. Defaults to `false`.
+Whether to display start/shutdown messages. Boolean value. Defaults to `false`.
+*Note:* RedHat only
+#####`logfile_days`
+Number of days to keep old log files. Defaults to `30`.
+#####`logfile_compress`
+Whether to compress logfiles older than today's. Boolean value. Defaults to `false`.
 #####`custom_fragment`
 Custom variables, one per line.
 
-*Logging*
+**Logging**
 
 Some extra documentation about [log4j](http://logging.apache.org/log4j/)'s usage with tomcat is available on [this page](http://tomcat.apache.org/tomcat-8.0-doc/logging.html#Using_Log4j).
 #####`log4j`
