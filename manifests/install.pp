@@ -8,7 +8,7 @@ class tomcat::install {
 
   # main packages
   package { 'tomcat server':
-    ensure => $::tomcat::version,
+    ensure => present,
     name   => $::tomcat::package_name
   }
 

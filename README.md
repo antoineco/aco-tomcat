@@ -124,6 +124,8 @@ Primary class and entry point of the module
 
 #####`version`
 Tomcat full version number. The valid format is 'x.y.z'. Default depends on the distribution.
+
+*Note:* if you define it manually please make **sure** this version if available in your system's repositories, since many parameters depend on this version number
 #####`package_name`
 Tomcat package name. Default depends on the distribution.
 #####`service_name`
