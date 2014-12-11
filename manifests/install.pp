@@ -35,9 +35,11 @@ class tomcat::install {
   }
 
   # fix broken status check in some tomcat init scripts
-  file_line { 'fix broken tomcat init script':
-    path  => "/etc/init.d/${::tomcat::service_name_real}",
-    line  => '            pid="$(/usr/bin/pgrep -d , -u ${TOMCAT_USER} -G ${TOMCAT_USER} -f Dcatalina.base=${CATALINA_BASE})"',
-    match => 'pid=.*pgrep'
+  if $::osfamily == 'RedHat' and $::operatingsystemmajrelease < 7 {
+    file_line { 'fix broken tomcat init script':
+      path  => "/etc/init.d/${::tomcat::service_name_real}",
+      line  => '            pid="$(/usr/bin/pgrep -d , -u ${TOMCAT_USER} -G ${TOMCAT_USER} -f Dcatalina.base=${CATALINA_BASE})"',
+      match => 'pid=.*pgrep'
+    }
   }
 }

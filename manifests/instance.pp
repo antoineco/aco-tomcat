@@ -147,7 +147,7 @@ define tomcat::instance (
       mode    => '0755',
       content => template("${module_name}/instance/${::tomcat::service_name_real}_init_deb.erb");
     }
-  } elsif $::operatingsystem == 'Fedora' or ($::osfamily == 'RedHat' and $::operatingsystemmajrelease >= 7) {
+  } elsif $::operatingsystem == 'Fedora' or ($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' and $::operatingsystemmajrelease >= 7) {
     file { "${service_name_real} service unit":
       path    => "/usr/lib/systemd/system/${service_name_real}.service",
       owner   => 'root',
