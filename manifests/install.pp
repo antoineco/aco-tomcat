@@ -17,6 +17,7 @@ class tomcat::install {
     true    => 'present',
     default => 'absent'
   }
+
   package { 'tomcat native library':
     ensure => $ensure_native_package,
     name   => $::tomcat::tomcat_native_package_name
@@ -27,8 +28,16 @@ class tomcat::install {
     true    => 'present',
     default => 'absent'
   }
+
   package { 'tomcat admin webapps':
     ensure => $ensure_manager_package,
     name   => $::tomcat::admin_webapps_package_name_real
+  }
+
+  # fix broken status check in some tomcat init scripts
+  file_line { 'fix broken tomcat init script':
+    path  => "/etc/init.d/${::tomcat::service_name_real}",
+    line  => '            pid="$(/usr/bin/pgrep -d , -u ${TOMCAT_USER} -G ${TOMCAT_USER} -f Dcatalina.base=${CATALINA_BASE})"',
+    match => 'pid=.*pgrep'
   }
 }

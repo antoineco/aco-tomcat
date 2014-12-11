@@ -176,7 +176,7 @@ class tomcat (
 
   if $catalina_tmpdir == undef {
     $catalina_tmpdir_real = $::osfamily ? {
-      'Debian' => "\$JVM_TMP",
+      'Debian' => '$JVM_TMP',
       default  => "${catalina_base_real}/temp"
     } } else {
     $catalina_tmpdir_real = $catalina_tmpdir
