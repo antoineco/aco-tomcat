@@ -45,7 +45,7 @@ class tomcat::log4j {
         owner   => 'root',
         group   => 'root',
         path    => "${::tomcat::catalina_home_real}/lib/log4j.dtd",
-        source  => "puppet:///modules/${module_name}/log4j.dtd",
+        source  => "puppet:///modules/${module_name}/log4j/log4j.dtd",
         seltype => 'usr_t'
     }
   } else {

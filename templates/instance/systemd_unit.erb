@@ -1,0 +1,24 @@
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=syslog.target network.target
+
+[Service]
+Type=forking
+<% if @service_start -%>
+ExecStart=<%= @service_start %>
+<% else -%>
+ExecStart=/usr/sbin/tomcat-sysd start
+<% end -%>
+<% if @service_stop -%>
+ExecStop=<%= @service_stop %>
+<% else -%>
+ExecStop=/usr/sbin/tomcat-sysd stop
+<% end -%>
+SuccessExitStatus=143
+User=<%= scope['::tomcat::tomcat_user_real'] %>
+Group=<%= scope['::tomcat::tomcat_group_real'] %>
+EnvironmentFile=-/etc/sysconfig/<%= @service_name_real %>
+
+
+[Install]
+WantedBy=multi-user.target

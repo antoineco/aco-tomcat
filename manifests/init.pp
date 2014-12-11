@@ -58,87 +58,87 @@ class tomcat (
   #----------------------------------------------------------------------------------
   # packages and service
   #----------------------------------------------------------------------------------
-  $version                    = $::tomcat::params::version,
-  $package_name               = $::tomcat::params::package_name,
-  $service_name               = undef,
-  $service_ensure             = 'running',
-  $service_enable             = true,
-  $tomcat_native              = false,
+  $version              = $::tomcat::params::version,
+  $package_name         = $::tomcat::params::package_name,
+  $service_name         = undef,
+  $service_ensure       = 'running',
+  $service_enable       = true,
+  $tomcat_native        = false,
   $tomcat_native_package_name = $::tomcat::params::tomcat_native_package_name,
-  $extras                     = false,
+  $extras               = false,
   #----------------------------------------------------------------------------------
   # security and administration
   #----------------------------------------------------------------------------------
-  $admin_webapps              = true,
+  $admin_webapps        = true,
   $admin_webapps_package_name = undef,
-  $create_default_admin       = true,
-  $admin_user                 = 'tomcatadmin',
-  $admin_password             = 'password',
-  #----------------------------------------------------------------------------------
-  # server configuration
-  #----------------------------------------------------------------------------------
-  $control_port        = 8005,
-  # executors
-  $threadpool_executor = false,
-  # http connector
-  $http_connector      = true,
-  $http_port           = 8080,
-  $use_threadpool      = false,
-  #----------------------------------------------------------------------------------
-  # ssl connector
-  $ssl_connector = false,
-  $ssl_port      = 8443,
-  #----------------------------------------------------------------------------------
-  # ajp connector
-  $ajp_connector = true,
-  $ajp_port      = 8009,
-  #----------------------------------------------------------------------------------
-  # engine
-  $jvmroute = undef,
-  #----------------------------------------------------------------------------------
-  # host
-  $hostname            = 'localhost',
-  $autodeploy          = true,
-  $deployOnStartup     = true,
-  $undeployoldversions = false,
-  $unpackwars          = true,
-  #----------------------------------------------------------------------------------
-  # valves
-  $singlesignon_valve = false,
-  $accesslog_valve    = true,
-  #----------------------------------------------------------------------------------
-  # jmx
-  $jmx_listener      = false,
-  $jmx_registry_port = 8050,
-  $jmx_server_port   = 8051,
-  $jmx_bind_address  = '',
-  #----------------------------------------------------------------------------------
-  # global configuration file
-  #----------------------------------------------------------------------------------
-  $catalina_home    = undef,
-  $catalina_base    = undef,
-  $jasper_home      = undef,
-  $catalina_tmpdir  = undef,
-  $catalina_pid     = undef,
-  $java_home        = undef,
-  $java_opts        = '-server',
-  $catalina_opts    = undef,
-  $security_manager = false,
-  $tomcat_user      = undef,
-  $tomcat_group     = undef,
-  $lang             = undef,
-  $shutdown_wait    = 30,
-  $shutdown_verbose = false,
-  $logfile_days     = 14,
-  $logfile_compress = true,
-  $custom_fragment  = undef,
+  $create_default_admin = true,
+  $admin_user           = 'tomcatadmin',
+  $admin_password       = 'password',
   #----------------------------------------------------------------------------------
   # logging
   #----------------------------------------------------------------------------------
-  $log4j              = false,
-  $log4j_package_name = $::tomcat::params::log4j_package_name,
-  $log4j_conf_type    = 'ini',
-  $log4j_conf_source  = "puppet:///modules/${module_name}/log4j.properties") inherits tomcat::params {
+  $log4j                = false,
+  $log4j_package_name   = $::tomcat::params::log4j_package_name,
+  $log4j_conf_type      = 'ini',
+  $log4j_conf_source    = "puppet:///modules/${module_name}/log4j/log4j.properties",
+  #----------------------------------------------------------------------------------
+  # server configuration
+  #----------------------------------------------------------------------------------
+  $control_port         = 8005,
+  # executors
+  $threadpool_executor  = false,
+  # http connector
+  $http_connector       = true,
+  $http_port            = 8080,
+  $use_threadpool       = false,
+  #----------------------------------------------------------------------------------
+  # ssl connector
+  $ssl_connector        = false,
+  $ssl_port             = 8443,
+  #----------------------------------------------------------------------------------
+  # ajp connector
+  $ajp_connector        = true,
+  $ajp_port             = 8009,
+  #----------------------------------------------------------------------------------
+  # engine
+  $jvmroute             = undef,
+  #----------------------------------------------------------------------------------
+  # host
+  $hostname             = 'localhost',
+  $autodeploy           = true,
+  $deployOnStartup      = true,
+  $undeployoldversions  = false,
+  $unpackwars           = true,
+  #----------------------------------------------------------------------------------
+  # valves
+  $singlesignon_valve   = false,
+  $accesslog_valve      = true,
+  #----------------------------------------------------------------------------------
+  # jmx
+  $jmx_listener         = false,
+  $jmx_registry_port    = 8050,
+  $jmx_server_port      = 8051,
+  $jmx_bind_address     = '',
+  #----------------------------------------------------------------------------------
+  # global configuration file
+  #----------------------------------------------------------------------------------
+  $catalina_home        = undef,
+  $catalina_base        = undef,
+  $jasper_home          = undef,
+  $catalina_tmpdir      = undef,
+  $catalina_pid         = undef,
+  $java_home            = undef,
+  $java_opts            = '-server',
+  $catalina_opts        = undef,
+  $security_manager     = false,
+  $tomcat_user          = undef,
+  $tomcat_group         = undef,
+  $lang                 = undef,
+  $shutdown_wait        = 30,
+  $shutdown_verbose     = false,
+  $logfile_days         = 14,
+  $logfile_compress     = true,
+  $custom_fragment      = undef) inherits tomcat::params {
   # autogenerated defaults
   if $service_name == undef {
     $service_name_real = $package_name
@@ -175,8 +175,10 @@ class tomcat (
   }
 
   if $catalina_tmpdir == undef {
-    $catalina_tmpdir_real = "${catalina_home_real}/temp"
-  } else {
+    $catalina_tmpdir_real = $::osfamily ? {
+      'Debian' => "\$JVM_TMP",
+      default  => "${catalina_base_real}/temp"
+    } } else {
     $catalina_tmpdir_real = $catalina_tmpdir
   }
 
@@ -204,8 +206,7 @@ class tomcat (
     $security_manager_real = $security_manager ? {
       true    => 'yes',
       default => 'no'
-    }
-  } else {
+    } } else {
     $security_manager_real = $security_manager
   }
 

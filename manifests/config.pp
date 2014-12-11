@@ -17,7 +17,7 @@ class tomcat::config {
   # - $config_path
   file { 'tomcat logcron':
     path    => "/etc/cron.daily/${::tomcat::service_name_real}",
-    content => template("${module_name}/logcron.erb"),
+    content => template("${module_name}/common/logcron.erb"),
     mode    => '0755'
   }
 
@@ -26,20 +26,18 @@ class tomcat::config {
   # -
   file { 'tomcat server configuration':
     path    => "${::tomcat::catalina_base_real}/conf/server.xml",
-    content => template("${module_name}/server.xml.erb"),
-    seltype => 'etc_t'
+    content => template("${module_name}/common/server.xml.erb")
   }
 
   # generate and manage global parameters
   # Template uses:
   # -
-  # note: defining the exact same parameters in several files may seem awkward,
-  # but it avoids the randomness observed in some older releases due to buggy startup scripts
+  # note: defining the exact same parameters in two files may seem awkward,
+  # but it avoids the randomness observed in some releases due to buggy startup scripts
   file {
-    'tomcat main instance configuration':
+    'tomcat environment variables':
       path    => $config_path,
-      content => template("${module_name}/tomcat.conf.erb"),
-      seltype => 'etc_t';
+      content => template("${module_name}/common/setenv.erb");
 
     'tomcat setenv.sh':
       ensure => link,
@@ -48,36 +46,36 @@ class tomcat::config {
   }
 
   if $::osfamily == 'RedHat' {
-    file { 'tomcat global configuration':
-      ensure => link,
-      path   => "${::tomcat::catalina_base_real}/conf/${::tomcat::service_name_real}.conf",
-      target => $config_path
+    file { 'tomcat default variables':
+      path    => "${::tomcat::catalina_base_real}/conf/${::tomcat::service_name_real}.conf",
+      content => "# See ${$config_path}"
     }
   }
 
   # generate and manage UserDatabase file
-  concat { 'UserDatabase':
+  concat { 'main UserDatabase':
     path  => "${::tomcat::catalina_base_real}/conf/tomcat-users.xml",
     owner => $::tomcat::tomcat_user_real,
     group => $::tomcat::tomcat_group_real,
     mode  => '0640',
   }
 
-  concat::fragment { 'UserDatabase header':
-    target  => 'UserDatabase',
-    content => template("${module_name}/UserDatabase_header.erb"),
+  concat::fragment { 'main UserDatabase header':
+    target  => 'main UserDatabase',
+    content => template("${module_name}/common/UserDatabase_header.erb"),
     order   => 01
   }
 
-  concat::fragment { 'UserDatabase footer':
-    target  => 'UserDatabase',
-    content => template("${module_name}/UserDatabase_footer.erb"),
+  concat::fragment { 'main UserDatabase footer':
+    target  => 'main UserDatabase',
+    content => template("${module_name}/common/UserDatabase_footer.erb"),
     order   => 03
   }
 
   # configure authorized access
   unless !$::tomcat::create_default_admin {
-    ::tomcat::userdb_entry { $::tomcat::admin_user:
+    ::tomcat::userdb_entry { "main ${::tomcat::admin_user}":
+      database => 'main UserDatabase',
       username => $::tomcat::admin_user,
       password => $::tomcat::admin_password,
       roles    => ['manager-gui', 'manager-script', 'admin-gui', 'admin-script']

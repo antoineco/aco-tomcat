@@ -1,0 +1,50 @@
+# ******************
+# Managed by Puppet
+# ******************
+
+<% if @instance %>SERVICE_NAME="<%= @service_name_real %>"
+
+<% end -%>
+<% if @java_home and @java_home != '' %>JAVA_HOME="<%= @java_home %>"
+<% end -%>
+CATALINA_BASE="<%= @catalina_base_real %>"
+CATALINA_HOME="<%= @catalina_home_real %>"
+JASPER_HOME="<%= @jasper_home_real %>"
+CATALINA_TMPDIR="<%= @catalina_tmpdir_real %>"
+<% if @catalina_pid_real and @catalina_pid_real != '' %>CATALINA_PID="<%= @catalina_pid_real %>"
+<% end -%>
+
+<% if @java_opts and @java_opts != '' %>JAVA_OPTS="<%= @java_opts %>"
+<% end -%>
+<% if @catalina_opts and @catalina_opts != '' %>CATALINA_OPTS="<%= @catalina_opts %>"
+<% end -%>
+
+<% if scope['::osfamily'] == 'Debian' -%>
+<% if scope['::tomcat::tomcat_user_real'] and scope['::tomcat::tomcat_user_real'] != '' %>TOMCAT<%= @maj_version %>_USER="<%= scope['::tomcat::tomcat_user_real'] %>"
+<% end -%>
+<% if scope['::tomcat::tomcat_group_real'] and scope['::tomcat::tomcat_group_real'] != '' %>TOMCAT<%= @maj_version %>_GROUP="<%= scope['::tomcat::tomcat_group_real'] %>"
+<% end -%>
+
+<% else -%>
+<% if scope['::tomcat::tomcat_user_real'] and scope['::tomcat::tomcat_user_real'] != '' %>TOMCAT_USER="<%= scope['::tomcat::tomcat_user_real'] %>"
+<% end -%>
+<% if scope['::tomcat::tomcat_group_real'] and scope['::tomcat::tomcat_group_real'] != '' %>TOMCAT_GROUP="<%= scope['::tomcat::tomcat_group_real'] %>"
+<% end -%>
+
+<% end -%>
+<% if @lang and @lang != '' -%>LANG="<%= @lang %>"<% end -%>
+<% if scope['::osfamily'] == 'Debian' -%>
+TOMCAT<%= @maj_version %>_SECURITY="<%= @security_manager_real %>"
+<% else -%>
+SECURITY_MANAGER="<%= @security_manager_real %>"
+<% end -%>
+
+<% if scope['::osfamily'] == 'RedHat' -%>
+SHUTDOWN_WAIT="<%= @shutdown_wait %>"
+SHUTDOWN_VERBOSE="<%= @shutdown_verbose %>"
+<% end -%>
+LOGFILE_DAYS="<%= @logfile_days %>"
+LOGFILE_COMPRESS="<%= @logfile_compress_real %>"
+
+# Custom variables
+<% if @custom_fragment and @custom_fragment != '' -%><%= @custom_fragment %><% end -%>

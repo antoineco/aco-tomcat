@@ -1,0 +1,16 @@
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/tomcat-sysd start
+ExecStop=/usr/sbin/tomcat-sysd stop
+SuccessExitStatus=143
+User=tomcat
+Group=tomcat
+EnvironmentFile=-/etc/sysconfig/
+
+
+[Install]
+WantedBy=multi-user.target
