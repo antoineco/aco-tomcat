@@ -1,6 +1,17 @@
+###0.3.0
+
+**Warning:** this release is a big step forward, please read the documentation carefully
+
+* New type `tomcat::instance`, allows creation of individual instances
+* Old `log4j` parameter now split between `log4j` (package) and `log4j_enable` (conf)
+* New parameters `apr_listener`, `apr_sslengine`
+* Reorganized files and templates
+* Fixed broken init script (service status check)
+* Use `nanliu/archive` module to download extra libraries
+
 ###0.2.1
 
-* New parameters `logfile_days` and `logfile_compress` (Debian only)
+* New parameters `logfile_days` and `logfile_compress`
 * Added log rotation
 * `catalina_base` defaults to `catalina_home` on RedHat (inverted the logic)
 * merged Debian and RedHat main configuration files

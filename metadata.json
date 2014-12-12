@@ -2,11 +2,11 @@
   "name": "aco-tomcat",
   "summary": "Puppet module for Tomcat",
   "author": "Antoine Cotten",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "license": "Apache-2.0",
   "project_page": "https://github.com/tOnI0/aco-tomcat",
   "source": "git://github.com/tOnI0/aco-tomcat.git",
-  "tags": ["tomcat"],
+  "tags": ["tomcat", "java", "apache"],
   "dependencies": [
     {
       "name": "puppetlabs/concat",
@@ -15,6 +15,10 @@
     {
       "name": "puppetlabs/stdlib",
       "version_requirement": ">= 1.0.0"
+    },
+    {
+      "name": "nanliu/archive",
+      "version_requirement": ">= 0.1.7"
     }
   ],
   "operatingsystem_support": [

@@ -11,21 +11,22 @@
 
 ##Overview
 
-The tomcat module installs and configures an Apache Tomcat instance from the available packages in your distribution's repositories.
+The tomcat module installs and configures Apache Tomcat instances from the available packages in your distribution's repositories.
 
 ##Module description
 
 Almost all Linux distributions provide one or more maintained packages of the Tomcat application server. These are available either from the distribution repositories or third-party sources ([JPackage](http://www.jpackage.org), [EPEL](https://fedoraproject.org/wiki/EPEL), ...). This module will install the desired version of tomcat and its dependencies from the repositories available on the target system.  
-A long list of parameters permit a fine-tuning of the server and the JVM. It is for example possible to configure admin applications, install extra tomcat libraries, configure log4j as the standard logger, or enable the remote JMX listener.
+A long list of parameters permit a fine-tuning of the server and the JVM. It is for example possible to configure admin applications, install extra tomcat libraries, configure log4j as the standard logger, or enable the remote JMX listener.  
+The creation of individual instances is also supported via a custom type.
 
 ##Setup
 
 tomcat will affect the following parts of your system:
 
 * tomcat packages and dependencies
-* tomcat service
-* server and instance configuration
-* tomcat user database and authorized users (defined type)
+* tomcat service(s)
+* instances configuration
+* tomcat user database(s) and authorized users (defined type)
 
 Including the main class is enough to install the default version of tomcat provided by your distribution, and run it with default settings.
 
@@ -102,10 +103,11 @@ Use with custom packages/custom installation layouts (eg. with [Ulyaoth](https:/
 ```puppet
 class { '::tomcat':
   package_name               => 'ulyaoth-tomcat8',
-  version                    => '8.0.14'
+  version                    => '8.0.15'
   service_name               => 'tomcat',
   catalina_home              => '/opt/tomcat',
-  admin_webapps              => false,   #usually included
+  catalina_pid               => '$CATALINA_TMPDIR/$SERVICE_NAME.pid',
+  admin_webapps_package_name => 'ulyaoth-tomcat8-admin',
   tomcat_native              => true,
   tomcat_native_package_name => 'ulyaoth-tomcat-native'
   …
@@ -123,8 +125,9 @@ Primary class and entry point of the module
 **Packages and service**
 
 #####`version`
-Tomcat full version number. The valid format is 'x.y.z'. Default depends on the distribution.
-*Note:* if you define it manually please make **sure** this version if available in your system's repositories, since many parameters depend on this version number
+Tomcat full version number. The valid format is 'x.y.z'. Default depends on the distribution.  
+*Note:* if you define it manually please make **sure** this version if available in your system's repositories, since many parameters depend on this version number  
+A list of available versions in each supported distribution is present withing the `params` class.
 #####`package_name`
 Tomcat package name. Default depends on the distribution.
 #####`service_name`
@@ -138,7 +141,10 @@ Whether to install the Tomcat Native library. Boolean value. Defaults to `false`
 #####`tomcat_native_package_name`
 Tomcat Native library package name. Default depends on the distribution. 
 #####`extras`
-Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.
+Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.  
+**Warning:** enabled globally if defined within the global context
+#####`log4j`
+Whether to install the log4j library. Boolean value. Defaults to `true`.
 
 **Security and administration**
 
@@ -220,12 +226,10 @@ Tomcat group. Defaults to `tomcat_user`.
 #####`lang`
 Tomcat locale. Defaults to `undef`.
 #####`shutdown_wait`
-How long to wait for a graceful shutdown before killing the process. Value in seconds. Defaults to `30`.
-
+How long to wait for a graceful shutdown before killing the process. Value in seconds. Defaults to `30`.  
 *Note:* RedHat only
 #####`shutdown_verbose`
-Whether to display start/shutdown messages. Boolean value. Defaults to `false`.
-
+Whether to display start/shutdown messages. Boolean value. Defaults to `false`.  
 *Note:* RedHat only
 #####`logfile_days`
 Number of days to keep old log files. Defaults to `30`.
@@ -237,8 +241,9 @@ Custom variables, one per line.
 **Logging**
 
 Some extra documentation about [log4j](http://logging.apache.org/log4j/)'s usage with tomcat is available on [this page](http://tomcat.apache.org/tomcat-8.0-doc/logging.html#Using_Log4j).
-#####`log4j`
-Whether to use log4j rather than java.util.logging for Tomcat internal logging. Boolean value. Defaults to `false`.
+#####`log4j_enable`
+Whether to use log4j rather than *java.util.logging* for Tomcat internal logging. Boolean value. Defaults to `false`.  
+**Warning:** enabled globally if defined within the global context
 #####`log4j_package_name`
 Log4j package name. Default depends on the distribution.
 #####`log4j_conf_type`
@@ -259,12 +264,25 @@ User password (string)
 #####`roles`
 User roles (array of strings)
 
+####Define: `tomcat::userdb_entry`
+
+Create tomcat UserDatabase entries
+
+**Parameters within `tomcat::userdb_entry`:**
+
+#####`username`
+User name (string)
+#####`password`
+User password (string)
+#####`roles`
+User roles (array of strings)
+
 ##Limitations
 
 * Only supports RedHat and Debian variants/derivatives (for now)
 
 ##To Do
 
-* Allow the creation of several instances
+* Support SuSE Linux
 
 Features request and contributions are always welcome!
