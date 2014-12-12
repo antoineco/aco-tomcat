@@ -11,13 +11,8 @@ class tomcat::log4j {
     'RedHat' => '/usr/share/java/log4j.jar',
     default  => '/usr/share/java/log4j-1.2.jar'
   }
-  $log4j_package_name = $::osfamily ? {
-    'RedHat' => 'log4j',
-    default  => 'liblog4j1.2-java'
-  }
 
-  package { $::tomcat::log4j_package_name: ensure => present } ->
-  file { 'log4j library':
+  file { 'global log4j library':
     ensure  => link,
     owner   => 'root',
     group   => 'root',
@@ -28,7 +23,7 @@ class tomcat::log4j {
 
   if $::tomcat::log4j_conf_type == 'xml' {
     file {
-      'log4j xml configuration':
+      'global log4j xml configuration':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
@@ -36,11 +31,11 @@ class tomcat::log4j {
         source  => $::tomcat::log4j_conf_source,
         seltype => 'lib_t';
 
-      'log4j ini configuration':
+      'global log4j ini configuration':
         ensure => absent,
         path   => "${::tomcat::catalina_home_real}/lib/log4j.properties";
 
-      'log4j dtd file':
+      'global log4j dtd file':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
@@ -50,7 +45,7 @@ class tomcat::log4j {
     }
   } else {
     file {
-      'log4j ini configuration':
+      'global log4j ini configuration':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
@@ -58,17 +53,17 @@ class tomcat::log4j {
         source  => $::tomcat::log4j_conf_source,
         seltype => 'lib_t';
 
-      'log4j xml configuration':
+      'global log4j xml configuration':
         ensure => absent,
         path   => "${::tomcat::catalina_home_real}/lib/log4j.xml";
 
-      'log4j dtd file':
+      'global log4j dtd file':
         ensure => absent,
         path   => "${::tomcat::catalina_home_real}/lib/log4j.dtd"
     }
   }
 
-  file { 'logging configuration':
+  file { 'global logging configuration':
     ensure => absent,
     path   => "${::tomcat::catalina_base_real}/conf/logging.properties",
     backup => true

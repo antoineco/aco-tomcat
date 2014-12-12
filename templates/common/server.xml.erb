@@ -20,7 +20,9 @@
 <% if @jmx_listener -%>
   <Listener className="org.apache.catalina.mbeans.JmxRemoteLifecycleListener" rmiRegistryPortPlatform="<%= @jmx_registry_port %>" rmiServerPortPlatform="<%= @jmx_server_port %>"<% if @jmx_bind_address and @jmx_bind_address != '' -%> rmiBindAddress="<%= @jmx_bind_address %>"<% end -%> />
 <% end -%>
-  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+<% if @apr_listener -%>
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" <% if @apr_sslengine and @apr_sslengine != '' -%>SSLEngine="<%= @apr_sslengine %>" <% end -%>/>
+<% end -%>
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
 
@@ -36,18 +38,13 @@
 
 <% if @threadpool_executor -%>
     <Executor name="tomcatThreadPool" namePrefix="catalina-exec-"
-        maxThreads="150" minSpareThreads="4"/>
+        maxThreads="150" minSpareThreads="4" />
 
 <% end -%>
 <% if @http_connector -%>
-<% if @use_threadpool and @threadpool_executor -%>
-    <Connector executor="tomcatThreadPool"
-               port="<%= @http_port %>" protocol="HTTP/1.1"
-<% else -%>
     <Connector port="<%= @http_port %>" protocol="HTTP/1.1"
-<% end -%>
                connectionTimeout="20000"
-               redirectPort="<%= @ssl_port %>" />
+               redirectPort="<%= @ssl_port %>" <% if @use_threadpool and @threadpool_executor -%>executor="tomcatThreadPool" <% end -%>/>
 
 <% end -%>
 <% if @ssl_connector -%>

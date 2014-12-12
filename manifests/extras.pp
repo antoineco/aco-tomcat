@@ -6,37 +6,30 @@ class tomcat::extras {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
-  if !defined(Package['wget']) {
-    package { 'wget': ensure => present }
+  Archive {
+    cleanup => false,
+    require => File['extras directory']
   }
 
-  Exec {
-    path    => '/usr/bin',
-    cwd     => "${::tomcat::catalina_home_real}/lib/extras",
-    timeout => 0,
-    require => [Package['wget'], File['extras directory']]
-  }
+  archive {
+    'catalina-jmx-remote.jar':
+      path   => "${::tomcat::catalina_home_real}/lib/extras/catalina-jmx-remote-${::tomcat::version}.jar",
+      source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-jmx-remote.jar"
+    ;
 
-  exec {
-    'get catalina-jmx-remote.jar':
-      creates => "${::tomcat::catalina_home_real}/lib/extras/catalina-jmx-remote-${::tomcat::version}.jar",
-      command => "wget http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-jmx-remote.jar\
-       -O catalina-jmx-remote-${::tomcat::version}.jar";
+    'catalina-ws.jar':
+      path   => "${::tomcat::catalina_home_real}/lib/extras/catalina-ws-${::tomcat::version}.jar",
+      source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-ws.jar"
+    ;
 
-    'get catalina-ws.jar':
-      creates => "${::tomcat::catalina_home_real}/lib/extras/catalina-ws-${::tomcat::version}.jar",
-      command => "wget http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-ws.jar\
-       -O catalina-ws-${::tomcat::version}.jar";
+    'tomcat-juli-adapters.jar':
+      path   => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version}.jar",
+      source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli-adapters.jar"
+    ;
 
-    'get tomcat-juli-adapters.jar':
-      creates => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version}.jar",
-      command => "wget http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli-adapters.jar\
-       -O tomcat-juli-adapters-${::tomcat::version}.jar";
-
-    'get tomcat-juli-extras.jar':
-      creates => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-extras-${::tomcat::version}.jar",
-      command => "wget http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli.jar\
-       -O tomcat-juli-extras-${::tomcat::version}.jar";
+    'tomcat-juli-extras.jar':
+      path   => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-extras-${::tomcat::version}.jar",
+      source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli.jar"
   }
 
   file {

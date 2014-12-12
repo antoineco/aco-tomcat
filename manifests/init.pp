@@ -1,6 +1,6 @@
 # == Class: tomcat
 #
-# This module installs the Tomcat application server from available repositories on RHEL variants
+# This module installs the Tomcat application server from available repositories
 #
 # === Parameters:
 #
@@ -63,9 +63,10 @@ class tomcat (
   $service_name         = undef,
   $service_ensure       = 'running',
   $service_enable       = true,
-  $tomcat_native        = false,
+  $tomcat_native        = true,
   $tomcat_native_package_name = $::tomcat::params::tomcat_native_package_name,
   $extras               = false,
+  $log4j                = true,
   #----------------------------------------------------------------------------------
   # security and administration
   #----------------------------------------------------------------------------------
@@ -77,16 +78,28 @@ class tomcat (
   #----------------------------------------------------------------------------------
   # logging
   #----------------------------------------------------------------------------------
-  $log4j                = false,
+  $log4j_enable         = false,
   $log4j_package_name   = $::tomcat::params::log4j_package_name,
   $log4j_conf_type      = 'ini',
   $log4j_conf_source    = "puppet:///modules/${module_name}/log4j/log4j.properties",
   #----------------------------------------------------------------------------------
   # server configuration
   #----------------------------------------------------------------------------------
+  # listeners
+  $apr_listener         = false,
+  $apr_sslengine        = 'on',
+  # jmx
+  $jmx_listener         = false,
+  $jmx_registry_port    = 8050,
+  $jmx_server_port      = 8051,
+  $jmx_bind_address     = '',
+  #----------------------------------------------------------------------------------
+  # server
   $control_port         = 8005,
-  # executors
+  #----------------------------------------------------------------------------------
+  # executor
   $threadpool_executor  = false,
+  #----------------------------------------------------------------------------------
   # http connector
   $http_connector       = true,
   $http_port            = 8080,
@@ -113,12 +126,6 @@ class tomcat (
   # valves
   $singlesignon_valve   = false,
   $accesslog_valve      = true,
-  #----------------------------------------------------------------------------------
-  # jmx
-  $jmx_listener         = false,
-  $jmx_registry_port    = 8050,
-  $jmx_server_port      = 8051,
-  $jmx_bind_address     = '',
   #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------
@@ -217,7 +224,7 @@ class tomcat (
   $maj_version = $array_version[0]
 
   # should we force download extras libs?
-  if $log4j or $jmx_listener {
+  if $log4j_enable or $jmx_listener {
     $extras_real = true
   } else {
     $extras_real = $extras
@@ -235,7 +242,7 @@ class tomcat (
   Class['::tomcat::install'] ~>
   Class['::tomcat::service']
 
-  if $log4j {
+  if $log4j_enable {
     class { 'tomcat::log4j':
       require => Class['::tomcat::install'],
       notify  => Class['::tomcat::service']

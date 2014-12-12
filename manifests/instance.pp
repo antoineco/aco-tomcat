@@ -1,5 +1,24 @@
 # == Define: tomcat::userdb_entry
 #
+# Creates tomcat individual instances
+#
+# === Parameters:
+#
+# see README file for a description of all parameters
+#
+# === Actions:
+#
+# * Create tomcat instance
+#
+# === Requires:
+#
+# * tomcat class
+#
+# === Sample Usage:
+#
+#  ::tomcat::instance {
+#  }
+#
 define tomcat::instance (
   $root_path            = '/opt/tomcat_instances',
   $service_name         = undef,
@@ -7,6 +26,7 @@ define tomcat::instance (
   $service_enable       = true,
   $service_start        = undef,
   $service_stop         = undef,
+  $extras               = false,
   #----------------------------------------------------------------------------------
   # security and administration
   #----------------------------------------------------------------------------------
@@ -17,15 +37,27 @@ define tomcat::instance (
   #----------------------------------------------------------------------------------
   # logging
   #----------------------------------------------------------------------------------
-  $log4j                = false,
+  $log4j_enable         = false,
   $log4j_conf_type      = 'ini',
   $log4j_conf_source    = "puppet:///modules/${module_name}/log4j/log4j.properties",
   #----------------------------------------------------------------------------------
   # server configuration
   #----------------------------------------------------------------------------------
+  # listeners
+  $apr_listener         = false,
+  $apr_sslengine        = 'on',
+  # jmx
+  $jmx_listener         = false,
+  $jmx_registry_port    = 8052,
+  $jmx_server_port      = 8053,
+  $jmx_bind_address     = '',
+  #----------------------------------------------------------------------------------
+  # server
   $control_port         = 8006,
-  # executors
+  #----------------------------------------------------------------------------------
+  # executor
   $threadpool_executor  = false,
+  #----------------------------------------------------------------------------------
   # http connector
   $http_connector       = true,
   $http_port            = 8081,
@@ -53,12 +85,6 @@ define tomcat::instance (
   $singlesignon_valve   = false,
   $accesslog_valve      = true,
   #----------------------------------------------------------------------------------
-  # jmx
-  $jmx_listener         = false,
-  $jmx_registry_port    = 8052,
-  $jmx_server_port      = 8053,
-  $jmx_bind_address     = '',
-  #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------
   $catalina_home        = undef,
@@ -81,6 +107,7 @@ define tomcat::instance (
     fail('You must include the tomcat base class before using any tomcat defined resources')
   }
 
+  # enable 'instance' context
   $instance = true
 
   # -----------------------#
@@ -134,6 +161,13 @@ define tomcat::instance (
   }
 
   $logfile_compress_real = bool2num($logfile_compress)
+
+  # should we force download extras libs?
+  if $log4j_enable or $jmx_listener {
+    $extras_real = true
+  } else {
+    $extras_real = $extras
+  }
 
   # --------#
   # service #
@@ -332,13 +366,12 @@ define tomcat::instance (
   # admin webapps #
   # --------------#
 
-  # generate OS-specific variables
-  $admin_webapps_path = $::osfamily ? {
-    'RedHat' => '${catalina.home}/webapps',
-    default  => "/usr/share/${::tomcat::admin_webapps_package_name_real}"
-  }
+  if $admin_webapps { # generate OS-specific variables
+    $admin_webapps_path = $::osfamily ? {
+      'RedHat' => "\${catalina.home}/webapps",
+      default  => "/usr/share/${::tomcat::admin_webapps_package_name_real}"
+    }
 
-  if $admin_webapps {
     file { "instance ${name} Catalina dir":
       ensure  => directory,
       path    => "${catalina_base_real}/conf/Catalina",
@@ -363,38 +396,126 @@ define tomcat::instance (
   # logging #
   # --------#
 
-  if $log4j_conf_type == 'xml' {
-    file {
-      "instance ${name} log4j xml configuration":
-        ensure => present,
-        path   => "${catalina_base_real}/lib/log4j.xml",
-        source => $log4j_conf_source,
-        notify => Service[$service_name_real];
+  if $log4j_enable {
+    # no need to duplicate libraries if enabled globally
+    unless $::tomcat::log4j_enable {
+      # generate OS-specific variables
+      $log4j_path = $::osfamily ? {
+        'RedHat' => '/usr/share/java/log4j.jar',
+        default  => '/usr/share/java/log4j-1.2.jar'
+      }
 
-      "instance ${name} log4j ini configuration":
-        ensure => absent,
-        path   => "${catalina_base_real}/lib/log4j.properties";
-
-      "instance ${name} log4j dtd file":
-        ensure => present,
-        path   => "${catalina_base_real}/lib/log4j.dtd",
-        source => "puppet:///modules/${module_name}/log4j/log4j.dtd"
+      file { "instance ${name} log4j library":
+        ensure => link,
+        path   => "${catalina_base_real}/lib/log4j.jar",
+        target => $log4j_path,
+        notify => Service[$service_name_real]
+      }
     }
-  } else {
+
+    if $log4j_conf_type == 'xml' {
+      file {
+        "instance ${name} log4j xml configuration":
+          ensure => present,
+          path   => "${catalina_base_real}/lib/log4j.xml",
+          source => $log4j_conf_source,
+          notify => Service[$service_name_real];
+
+        "instance ${name} log4j ini configuration":
+          ensure => absent,
+          path   => "${catalina_base_real}/lib/log4j.properties";
+
+        "instance ${name} log4j dtd file":
+          ensure => present,
+          path   => "${catalina_base_real}/lib/log4j.dtd",
+          source => "puppet:///modules/${module_name}/log4j/log4j.dtd"
+      }
+    } else {
+      file {
+        "instance ${name} log4j ini configuration":
+          ensure => present,
+          path   => "${catalina_base_real}/lib/log4j.properties",
+          source => $log4j_conf_source,
+          notify => Service[$service_name_real];
+
+        "instance ${name} log4j xml configuration":
+          ensure => absent,
+          path   => "${catalina_base_real}/lib/log4j.xml";
+
+        "instance ${name} log4j dtd file":
+          ensure => absent,
+          path   => "${catalina_base_real}/lib/log4j.dtd"
+      }
+    }
+
+    file { "instance ${name} logging configuration":
+      ensure => absent,
+      path   => "${catalina_base_real}/conf/logging.properties",
+      backup => true
+    }
+  }
+
+  # -------#
+  # extras #
+  # -------#
+
+  if $extras_real and !$::tomcat::extras_real { # no need to duplicate libraries if enabled globally
+    Archive {
+      cleanup => false,
+      require => File["instance ${name} extras directory"],
+      notify  => Service[$service_name_real]
+    }
+
+    archive {
+      "instance ${name} catalina-jmx-remote.jar":
+        path   => "${catalina_base_real}/lib/extras/catalina-jmx-remote-${::tomcat::version}.jar",
+        source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-jmx-remote.jar"
+      ;
+
+      "instance ${name} catalina-ws.jar":
+        path   => "${catalina_base_real}/lib/extras/catalina-ws-${::tomcat::version}.jar",
+        source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-ws.jar"
+      ;
+
+      "instance ${name} tomcat-juli-adapters.jar":
+        path   => "${catalina_base_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version}.jar",
+        source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli-adapters.jar"
+      ;
+
+      "instance ${name} tomcat-juli-extras.jar":
+        path   => "${catalina_base_real}/lib/extras/tomcat-juli-extras-${::tomcat::version}.jar",
+        source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli.jar"
+    }
+
     file {
-      "instance ${name} log4j ini configuration":
-        ensure => present,
-        path   => "${catalina_base_real}/lib/log4j.properties",
-        source => $::tomcat::log4j_conf_source,
-        notify => Service[$service_name_real];
+      "instance ${name} extras directory":
+        ensure => directory,
+        path   => "${catalina_base_real}/lib/extras";
 
-      "instance ${name} log4j xml configuration":
-        ensure => absent,
-        path   => "${catalina_base_real}/lib/log4j.xml";
+      "instance ${name} tomcat-juli.jar":
+        ensure => link,
+        path   => "${catalina_base_real}/bin/tomcat-juli.jar",
+        target => "${catalina_base_real}/lib/tomcat-juli-extras.jar";
 
-      "instance ${name} log4j dtd file":
-        ensure => absent,
-        path   => "${catalina_base_real}/lib/log4j.dtd"
+      "instance ${name} catalina-jmx-remote.jar":
+        ensure => link,
+        path   => "${catalina_base_real}/lib/catalina-jmx-remote.jar",
+        target => "extras/catalina-jmx-remote-${::tomcat::version}.jar";
+
+      "instance ${name} catalina-ws.jar":
+        ensure => link,
+        path   => "${catalina_base_real}/lib/catalina-ws.jar",
+        target => "extras/catalina-ws-${::tomcat::version}.jar";
+
+      "instance ${name} tomcat-juli-adapters.jar":
+        ensure => link,
+        path   => "${catalina_base_real}/lib/tomcat-juli-adapters.jar",
+        target => "extras/tomcat-juli-adapters-${::tomcat::version}.jar";
+
+      "instance ${name} tomcat-juli-extras.jar":
+        ensure => link,
+        path   => "${catalina_base_real}/lib/tomcat-juli-extras.jar",
+        target => "extras/tomcat-juli-extras-${::tomcat::version}.jar"
     }
   }
 }
