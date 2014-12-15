@@ -6,6 +6,10 @@
 2. [Module Description](#module-description)
 3. [Setup](#setup)
 4. [Usage](#usage)
+  * [Class: tomcat](#class-tomcat)
+  * [Define: tomcat::instance](#define-tomcatinstance)
+  * [Common parameters](#common-parameters)
+  * [Define: tomcat::userdb_entry](#define-tomcatuserdb_entry)
 5. [Limitations](#limitations)
 6. [To Do](#to-do)
 
