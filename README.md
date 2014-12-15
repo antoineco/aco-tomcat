@@ -118,6 +118,28 @@ class { '::tomcat':
 }
 ```
 
+Disable default instance and setup 2 individual instances
+
+```puppet
+class { '::tomcat':
+  service_ensure => 'stopped',
+  service_enable => false,
+  log4j          => true
+}
+tomcat::instance { 'instance1':
+  control_port  => 8005,
+  http_port     => 8080,
+  ajp_connector => false,
+  java_home     => '/usr/java/jre1.7.0_65',
+  java_opts     => '-server -Xmx2048m -Xms256m -XX:+UseConcMarkSweepGC',
+}
+tomcat::instance { 'instance2':
+  control_port  => 8006,
+  http_port     => 8081,
+  log4j_enable  => true
+}
+```
+
 ##Usage
 
 This module distinguishes two different contexts:
