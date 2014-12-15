@@ -160,8 +160,6 @@ define tomcat::instance (
     $security_manager_real = $security_manager
   }
 
-  $logfile_compress_real = bool2num($logfile_compress)
-
   # should we force download extras libs?
   if $log4j_enable or $jmx_listener {
     $extras_real = true

@@ -215,8 +215,6 @@ class tomcat (
     $security_manager_real = $security_manager
   }
 
-  $logfile_compress_real = bool2num($logfile_compress)
-
   # get major version
   $array_version = split($version, '[.]')
   $maj_version = $array_version[0]
