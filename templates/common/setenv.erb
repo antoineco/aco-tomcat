@@ -6,6 +6,7 @@
 
 <% end -%>
 <% if @java_home and @java_home != '' %>JAVA_HOME="<%= @java_home %>"
+
 <% end -%>
 CATALINA_BASE="<%= @catalina_base_real %>"
 CATALINA_HOME="<%= @catalina_home_real %>"
@@ -42,9 +43,7 @@ SECURITY_MANAGER="<%= @security_manager_real %>"
 <% if scope['::osfamily'] == 'RedHat' -%>
 SHUTDOWN_WAIT="<%= @shutdown_wait %>"
 SHUTDOWN_VERBOSE="<%= @shutdown_verbose %>"
-<% end -%>
-LOGFILE_DAYS="<%= @logfile_days %>"
-LOGFILE_COMPRESS="<%= @logfile_compress_real %>"
 
+<% end -%>
 # Custom variables
 <% if @custom_fragment and @custom_fragment != '' -%><%= @custom_fragment %><% end -%>

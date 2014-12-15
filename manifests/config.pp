@@ -12,21 +12,13 @@ class tomcat::config {
     default  => "/etc/default/${::tomcat::service_name_real}"
   }
 
-  # generate and manage log rotation
-  # Template uses:
-  # - $config_path
-  file { 'tomcat logcron':
-    path    => "/etc/cron.daily/${::tomcat::service_name_real}",
-    content => template("${module_name}/common/logcron.erb"),
-    mode    => '0755'
-  }
-
   # generate and manage server configuration
   # Template uses:
   # -
   file { 'tomcat server configuration':
     path    => "${::tomcat::catalina_base_real}/conf/server.xml",
-    content => template("${module_name}/common/server.xml.erb")
+    content => template("${module_name}/common/server.xml.erb"),
+    notify  => Service[$::tomcat::service_name_real]
   }
 
   # generate and manage global parameters
@@ -37,7 +29,8 @@ class tomcat::config {
   file {
     'tomcat environment variables':
       path    => $config_path,
-      content => template("${module_name}/common/setenv.erb");
+      content => template("${module_name}/common/setenv.erb"),
+      notify  => Service[$::tomcat::service_name_real];
 
     'tomcat setenv.sh':
       ensure => link,
@@ -54,10 +47,11 @@ class tomcat::config {
 
   # generate and manage UserDatabase file
   concat { 'main UserDatabase':
-    path  => "${::tomcat::catalina_base_real}/conf/tomcat-users.xml",
-    owner => $::tomcat::tomcat_user_real,
-    group => $::tomcat::tomcat_group_real,
-    mode  => '0640',
+    path   => "${::tomcat::catalina_base_real}/conf/tomcat-users.xml",
+    owner  => $::tomcat::tomcat_user_real,
+    group  => $::tomcat::tomcat_group_real,
+    mode   => '0640',
+    notify => Service[$::tomcat::service_name_real]
   }
 
   concat::fragment { 'main UserDatabase header':

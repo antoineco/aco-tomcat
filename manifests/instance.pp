@@ -16,7 +16,9 @@
 #
 # === Sample Usage:
 #
-#  ::tomcat::instance {
+#  ::tomcat::instance { 'myapp':
+#    root_path    => '/home/tomcat/apps',
+#    control_port => 9005
 #  }
 #
 define tomcat::instance (
@@ -99,8 +101,6 @@ define tomcat::instance (
   $lang                 = undef,
   $shutdown_wait        = 30,
   $shutdown_verbose     = false,
-  $logfile_days         = 14,
-  $logfile_compress     = true,
   $custom_fragment      = undef) {
   # The base class must be included first
   if !defined(Class['tomcat']) {
@@ -284,15 +284,6 @@ define tomcat::instance (
     default  => "/etc/default/${service_name_real}"
   }
 
-  # generate and manage log rotation
-  # Template uses:
-  # - $config_path
-  file { "instance ${name} logcron":
-    path    => "/etc/cron.daily/${service_name_real}",
-    content => template("${module_name}/common/logcron.erb"),
-    mode    => '0755'
-  }
-
   # generate and manage server configuration
   # Template uses:
   #-
@@ -316,8 +307,7 @@ define tomcat::instance (
     "instance ${name} setenv.sh":
       ensure => link,
       path   => "${catalina_base_real}/bin/setenv.sh",
-      target => $config_path,
-      notify => Service[$service_name_real]
+      target => $config_path
   }
 
   if $::osfamily == 'RedHat' {

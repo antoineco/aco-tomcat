@@ -5,6 +5,7 @@
 * New type `tomcat::instance`, allows creation of individual instances
 * Old `log4j` parameter now split between `log4j` (package) and `log4j_enable` (conf)
 * New parameters `apr_listener`, `apr_sslengine`
+* Removed parameters `logfile_days` and `logfile_compress`
 * Reorganized files and templates
 * Fixed broken init script (service status check)
 * Use `nanliu/archive` module to download extra libraries

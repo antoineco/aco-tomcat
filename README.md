@@ -116,6 +116,12 @@ class { '::tomcat':
 
 ##Usage
 
+This module distinguishes two different contexts:
+* global: default instance and global libraries
+* instance: individual tomcat instance
+
+Both contexts have a lot of parameters in common
+
 ####Class: `tomcat`
 
 Primary class and entry point of the module
@@ -130,21 +136,42 @@ Tomcat full version number. The valid format is 'x.y.z'. Default depends on the 
 A list of available versions in each supported distribution is present withing the `params` class.
 #####`package_name`
 Tomcat package name. Default depends on the distribution.
+#####`tomcat_native`
+Whether to install the Tomcat Native library. Boolean value. Defaults to `false`.
+#####`tomcat_native_package_name`
+Tomcat Native library package name. Default depends on the distribution. 
+#####`log4j`
+Whether to install the log4j library. Boolean value. Defaults to `true`.
+
+See also [Common parameters](#common-parameters)
+
+####Define: `tomcat::instance`
+
+Create a tomcat instance
+
+**Parameters within `tomcat::instance`:**
+
+#####`root_path`
+Absolute path to the root of all tomcat instances. Defaults to `/opt/tomcat_instances`.  
+*Note:* the instance will be installed in `${root_path}/${title}` and $CATALINA_BASE will be set to that folder.
+
+See also [Common parameters](#common-parameters)
+
+####Common parameters
+
+Common parameters to `tomcat` and `tomcat::instance`
+
+**Packages and service**
+
 #####`service_name`
 Tomcat service name. Defaults to `package_name`.
 #####`service_ensure`
 Whether the service should be running. Valid values are `stopped` and `running`. Defaults to `running`.
 #####`service_enable`
 Whether to enable the tomcat service. Boolean value. Defaults to `true`.
-#####`tomcat_native`
-Whether to install the Tomcat Native library. Boolean value. Defaults to `false`.
-#####`tomcat_native_package_name`
-Tomcat Native library package name. Default depends on the distribution. 
 #####`extras`
 Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.  
 **Warning:** enabled globally if defined within the global context
-#####`log4j`
-Whether to install the log4j library. Boolean value. Defaults to `true`.
 
 **Security and administration**
 
@@ -162,23 +189,23 @@ Admin user password. Defaults to `password`.
 **Server configuration**
 
 #####`control_port`
-Server control port. Defaults to `8005`.
+Server control port. Defaults to `8005` (global) / `8006` (instance).
 #####`threadpool_executor`
 Whether to enable the [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`.
 #####`http_connector`
 Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`.
 #####`http_port`
-HTTP connector port. Defaults to `8080`.
+HTTP connector port. Defaults to `8080` (global) / `8081` (instance).
 #####`use_threadpool`
 Whether to use the previously described Executor within the HTTP connector.	 Boolean value. Defaults to `false`.
 #####`ssl_connector`
 Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#SSL_Support). Boolean value. Defaults to `false`.
 #####`ssl_port`
-SSL connector port. Defaults to `8443`.
+SSL connector port. Defaults to `8443` (global) / `8444` (instance).
 #####`ajp_connector`
 Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp). Boolean value. Defaults to `true`.
 #####`ajp_port`
-AJP connector port. Defaults to `8009`.
+AJP connector port. Defaults to `8009` (global) / `8010` (instance).
 #####`jvmroute`
 Engine's [jvmRoute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes) attribute. Defaults to `undef`.
 #####`hostname`
@@ -192,9 +219,9 @@ Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-8.0-doc
 #####`jmx_listener`
 Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener)
 #####`jmx_registry_port`
-JMX/RMI registry port. Defaults to `8050`.
+JMX/RMI registry port. Defaults to `8050` (global) / `8052` (instance).
 #####`jmx_server_port`
-JMX/RMI server port. Defaults to `8051`.
+JMX/RMI server port. Defaults to `8051` (global) / `8053` (instance).
 #####`jmx_bind_address`
 JMX/RMI server interface address. Defaults to `undef`.
 
@@ -231,10 +258,6 @@ How long to wait for a graceful shutdown before killing the process. Value in se
 #####`shutdown_verbose`
 Whether to display start/shutdown messages. Boolean value. Defaults to `false`.  
 *Note:* RedHat only
-#####`logfile_days`
-Number of days to keep old log files. Defaults to `30`.
-#####`logfile_compress`
-Whether to compress logfiles older than today's. Boolean value. Defaults to `false`.
 #####`custom_fragment`
 Custom variables, one per line.
 
@@ -250,19 +273,6 @@ Log4j package name. Default depends on the distribution.
 Log4j configuration type. Valid values are `ini` and `xml`. Defaults to `ini`.
 #####`log4j_conf_source`
 Where to get log4j's configuration from. A [sample file](https://raw.githubusercontent.com/tOnI0/aco-tomcat/master/files/log4j.properties) is provided with this module. Defaults to the sample file `log4j.properties`.
-
-####Define: `tomcat::userdb_entry`
-
-Create tomcat UserDatabase entries
-
-**Parameters within `tomcat::userdb_entry`:**
-
-#####`username`
-User name (string)
-#####`password`
-User password (string)
-#####`roles`
-User roles (array of strings)
 
 ####Define: `tomcat::userdb_entry`
 

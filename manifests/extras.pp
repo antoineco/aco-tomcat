@@ -8,7 +8,8 @@ class tomcat::extras {
 
   Archive {
     cleanup => false,
-    require => File['extras directory']
+    require => File['global extras directory'],
+    notify  => Service[$::tomcat::service_name_real]
   }
 
   archive {
@@ -33,7 +34,7 @@ class tomcat::extras {
   }
 
   file {
-    'extras directory':
+    'global extras directory':
       ensure  => directory,
       path    => "${::tomcat::catalina_home_real}/lib/extras",
       seltype => 'usr_t';
