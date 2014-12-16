@@ -17,7 +17,7 @@ ExecStop=/usr/sbin/tomcat-sysd stop
 SuccessExitStatus=143
 User=<%= scope['::tomcat::tomcat_user_real'] %>
 Group=<%= scope['::tomcat::tomcat_group_real'] %>
-EnvironmentFile=-/etc/sysconfig/<%= @service_name_real %>
+EnvironmentFile=-<%= @config_path_real %>
 
 
 [Install]
