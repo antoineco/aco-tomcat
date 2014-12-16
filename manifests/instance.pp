@@ -521,25 +521,25 @@ define tomcat::instance (
     # http connector
     if $http_connector {
       firewall { "${http_port} accept - tomcat (${name})":
-        port   => $::tomcat::http_port,
+        port   => $http_port,
         proto  => 'tcp',
         action => 'accept'
       }
     }
 
     # ajp connector
-    if $::tomcat::ajp_connector {
+    if $ajp_connector {
       firewall { "${ajp_port} accept - tomcat (${name})":
-        port   => $::tomcat::ajp_port,
+        port   => $ajp_port,
         proto  => 'tcp',
         action => 'accept'
       }
     }
 
     # ssl connector
-    if $::tomcat::ssl_connector {
+    if $ssl_connector {
       firewall { "${ssl_port} accept - tomcat (${name})":
-        port   => $::tomcat::ssl_port,
+        port   => $ssl_port,
         proto  => 'tcp',
         action => 'accept'
       }
