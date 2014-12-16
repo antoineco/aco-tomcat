@@ -194,7 +194,7 @@ Common parameters to `tomcat` and `tomcat::instance`
 **Packages and service**
 
 #####`service_name`
-Tomcat service name. Defaults to `package_name`.
+Tomcat service name. Defaults to `package_name` (global) / `${package_name}_${title}` (instance).
 #####`service_ensure`
 Whether the service should be running. Valid values are `stopped` and `running`. Defaults to `running`.
 #####`service_enable`
@@ -306,7 +306,7 @@ Whether to use log4j rather than *java.util.logging* for Tomcat internal logging
 #####`log4j_conf_type`
 Log4j configuration type. Valid values are `ini` and `xml`. Defaults to `ini`.
 #####`log4j_conf_source`
-Where to get log4j's configuration from. A [sample file](https://raw.githubusercontent.com/tOnI0/aco-tomcat/master/files/log4j.properties) is provided with this module. Defaults to the sample file `log4j.properties`.
+Where to get log4j's configuration from. A [sample file](https://raw.githubusercontent.com/tOnI0/aco-tomcat/master/files/log4j/log4j.properties) is provided with this module. Defaults to the sample file `log4j.properties`.
 
 ####Define: `tomcat::userdb_entry`
 
