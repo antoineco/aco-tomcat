@@ -544,5 +544,14 @@ define tomcat::instance (
         action => 'accept'
       }
     }
+
+    # jmx
+    if $jmx_listener {
+      firewall { "${jmx_registry_port}/${jmx_server_port} accept - tomcat (${name})":
+        port   => [$jmx_registry_port, $jmx_server_port],
+        proto  => 'tcp',
+        action => 'accept'
+      }
+    }
   }
 }

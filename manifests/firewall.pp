@@ -32,4 +32,13 @@ class tomcat::firewall {
       action => 'accept'
     }
   }
+
+  # jmx
+  if $::tomcat::jmx_listener {
+    firewall { "${::tomcat::jmx_registry_port}/${::tomcat::jmx_server_port} accept - tomcat":
+      port   => [$::tomcat::jmx_registry_port, $::tomcat::jmx_server_port],
+      proto  => 'tcp',
+      action => 'accept'
+    }
+  }
 }
