@@ -5,6 +5,11 @@ class tomcat::log4j {
   if !defined(Class['tomcat']) {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
+  
+  # warn user if log4j is not installed
+  unless $::tomcat::log4j {
+    warning('Logging with log4j will not work unless the log4j library is installed')
+  }
 
   # generate OS-specific variables
   $log4j_path = $::osfamily ? {

@@ -28,7 +28,7 @@ define tomcat::instance (
   $service_enable       = true,
   $service_start        = undef,
   $service_stop         = undef,
-  $extras               = false,
+  $enable_extras        = false,
   #----------------------------------------------------------------------------------
   # security and administration
   #----------------------------------------------------------------------------------
@@ -89,14 +89,15 @@ define tomcat::instance (
   #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------
+  $config_path          = undef,
   $catalina_home        = undef,
   $catalina_base        = undef,
   $jasper_home          = undef,
   $catalina_tmpdir      = undef,
   $catalina_pid         = undef,
   $java_home            = undef,
-  $java_opts            = '-server',
-  $catalina_opts        = undef,
+  $java_opts            = ['-server'],
+  $catalina_opts        = [],
   $security_manager     = false,
   $lang                 = undef,
   $shutdown_wait        = 30,
@@ -118,6 +119,14 @@ define tomcat::instance (
     $service_name_real = "${::tomcat::service_name_real}_${name}"
   } else {
     $service_name_real = $service_name
+  }
+
+  if $config_path == undef {
+    $config_path_real = $::osfamily ? {
+      'RedHat' => "/etc/sysconfig/${service_name_real}",
+      default  => "/etc/default/${service_name_real}"
+    } } else {
+    $config_path_real = $config_path
   }
 
   if $catalina_home == undef {
@@ -152,6 +161,9 @@ define tomcat::instance (
     $catalina_pid_real = $catalina_pid
   }
 
+  $java_opts_real = join($java_opts, ' ')
+  $catalina_opts_real = join($catalina_opts, ' ')
+
   if $::osfamily == 'Debian' {
     $security_manager_real = $security_manager ? {
       true    => 'yes',
@@ -162,9 +174,9 @@ define tomcat::instance (
 
   # should we force download extras libs?
   if $log4j_enable or $jmx_listener {
-    $extras_real = true
+    $enable_extras_real = true
   } else {
-    $extras_real = $extras
+    $enable_extras_real = $enable_extras
   }
 
   # --------#
@@ -276,12 +288,6 @@ define tomcat::instance (
   # configuration files #
   # --------------------#
 
-  # generate OS-specific variables
-  $config_path = $::osfamily ? {
-    'RedHat' => "/etc/sysconfig/${service_name_real}",
-    default  => "/etc/default/${service_name_real}"
-  }
-
   # generate and manage server configuration
   # Template uses:
   #-
@@ -296,22 +302,16 @@ define tomcat::instance (
   #-
   # note: defining the exact same parameters in several files may seem awkward,
   # but it avoids the randomness observed in some older releases due to buggy startup scripts
-  file {
-    "instance ${name} environment variables":
-      path    => $config_path,
-      content => template("${module_name}/common/setenv.erb"),
-      notify  => Service[$service_name_real];
-
-    "instance ${name} setenv.sh":
-      ensure => link,
-      path   => "${catalina_base_real}/bin/setenv.sh",
-      target => $config_path
+  file { "instance ${name} environment variables":
+    path    => $config_path_real,
+    content => template("${module_name}/common/setenv.erb"),
+    notify  => Service[$service_name_real]
   }
 
   if $::osfamily == 'RedHat' {
     file { "instance ${name} default variables":
       path    => "${catalina_base_real}/conf/${service_name_real}.conf",
-      content => "# See ${$config_path}"
+      content => "# See ${config_path_real}"
     }
   }
 
@@ -385,6 +385,11 @@ define tomcat::instance (
   # --------#
 
   if $log4j_enable {
+    # warn user if log4j is not installed
+    unless $::tomcat::log4j {
+      warning('Logging with log4j will not work unless the log4j library is installed')
+    }
+
     # no need to duplicate libraries if enabled globally
     unless $::tomcat::log4j_enable {
       # generate OS-specific variables
@@ -447,7 +452,7 @@ define tomcat::instance (
   # extras #
   # -------#
 
-  if $extras_real and !$::tomcat::extras_real { # no need to duplicate libraries if enabled globally
+  if $enable_extras_real and !$::tomcat::enable_extras_real { # no need to duplicate libraries if enabled globally
     Archive {
       cleanup => false,
       require => File["instance ${name} extras directory"],

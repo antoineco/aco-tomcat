@@ -6,12 +6,6 @@ class tomcat::config {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
-  # generate OS-specific variables
-  $config_path = $::osfamily ? {
-    'RedHat' => "/etc/sysconfig/${::tomcat::service_name_real}",
-    default  => "/etc/default/${::tomcat::service_name_real}"
-  }
-
   # generate and manage server configuration
   # Template uses:
   # -
@@ -28,20 +22,15 @@ class tomcat::config {
   # but it avoids the randomness observed in some releases due to buggy startup scripts
   file {
     'tomcat environment variables':
-      path    => $config_path,
+      path    => $::tomcat::config_path_real,
       content => template("${module_name}/common/setenv.erb"),
-      notify  => Service[$::tomcat::service_name_real];
-
-    'tomcat setenv.sh':
-      ensure => link,
-      path   => "${::tomcat::catalina_home_real}/bin/setenv.sh",
-      target => $config_path
+      notify  => Service[$::tomcat::service_name_real]
   }
 
   if $::osfamily == 'RedHat' {
     file { 'tomcat default variables':
       path    => "${::tomcat::catalina_base_real}/conf/${::tomcat::service_name_real}.conf",
-      content => "# See ${$config_path}"
+      content => "# See ${::tomcat::config_path_real}"
     }
   }
 

@@ -109,6 +109,7 @@ class { '::tomcat':
   package_name               => 'ulyaoth-tomcat8',
   version                    => '8.0.15'
   service_name               => 'tomcat',
+  config_path                => '/opt/tomcat/bin/setenv.sh',
   catalina_home              => '/opt/tomcat',
   catalina_pid               => '$CATALINA_TMPDIR/$SERVICE_NAME.pid',
   admin_webapps_package_name => 'ulyaoth-tomcat8-admin',
@@ -167,7 +168,9 @@ Whether to install the Tomcat Native library. Boolean value. Defaults to `false`
 #####`tomcat_native_package_name`
 Tomcat Native library package name. Default depends on the distribution. 
 #####`log4j`
-Whether to install the log4j library. Boolean value. Defaults to `true`.
+Whether to install the log4j library. Boolean value. Defaults to `false`.
+#####`log4j_package_name`
+Log4j package name. Default depends on the distribution.
 
 See also [Common parameters](#common-parameters)
 
@@ -197,7 +200,7 @@ Whether the service should be running. Valid values are `stopped` and `running`.
 Whether to enable the tomcat service. Boolean value. Defaults to `true`.
 #####`extras`
 Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.  
-**Warning:** enabled globally if defined within the global context
+*Warning:* enabled globally if defined within the global context
 
 **Security and administration**
 
@@ -253,7 +256,11 @@ JMX/RMI server interface address. Defaults to `undef`.
 
 **Global configuration file / environment variables**
 
+#####`config_path`
+Absolute path to the environment configuration (*setenv*). Default depends on the platform.
+
 Please see [catalina.sh](http://svn.apache.org/repos/asf/tomcat/tc8.0.x/trunk/bin/catalina.sh) for a description of the following environment variables.
+
 #####`catalina_home`
 $CATALINA_HOME. Default depends on the platform.
 #####`catalina_base`
@@ -267,9 +274,9 @@ $CATALINA_PID. Defaults to `/var/run/${service_name}.pid`
 #####`java_home`
 $JAVA_HOME. Defaults to `undef`.
 #####`java_opts`
-$JAVA_OPTS. Defaults to `-server`.
+$JAVA_OPTS. Array. Defaults to `['-server']`.
 #####`catalina_opts`
-$CATALINA_OPTS. Defaults to `undef`.
+$CATALINA_OPTS. Array. Defaults to `[]`.
 #####`security_manager`
 Whether to enable the security manager. Boolean value. Defaults to `false`.
 #####`tomcat_user`
@@ -292,9 +299,7 @@ Custom variables, one per line.
 Some extra documentation about [log4j](http://logging.apache.org/log4j/)'s usage with tomcat is available on [this page](http://tomcat.apache.org/tomcat-8.0-doc/logging.html#Using_Log4j).
 #####`log4j_enable`
 Whether to use log4j rather than *java.util.logging* for Tomcat internal logging. Boolean value. Defaults to `false`.  
-**Warning:** enabled globally if defined within the global context
-#####`log4j_package_name`
-Log4j package name. Default depends on the distribution.
+*Warning:* enabled globally if defined within the global context
 #####`log4j_conf_type`
 Log4j configuration type. Valid values are `ini` and `xml`. Defaults to `ini`.
 #####`log4j_conf_source`

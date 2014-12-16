@@ -63,10 +63,11 @@ class tomcat (
   $service_name         = undef,
   $service_ensure       = 'running',
   $service_enable       = true,
-  $tomcat_native        = true,
+  $tomcat_native        = false,
   $tomcat_native_package_name = $::tomcat::params::tomcat_native_package_name,
-  $extras               = false,
-  $log4j                = true,
+  $log4j                = false,
+  $log4j_package_name   = $::tomcat::params::log4j_package_name,
+  $enable_extras        = false,
   #----------------------------------------------------------------------------------
   # security and administration
   #----------------------------------------------------------------------------------
@@ -79,7 +80,6 @@ class tomcat (
   # logging
   #----------------------------------------------------------------------------------
   $log4j_enable         = false,
-  $log4j_package_name   = $::tomcat::params::log4j_package_name,
   $log4j_conf_type      = 'ini',
   $log4j_conf_source    = "puppet:///modules/${module_name}/log4j/log4j.properties",
   #----------------------------------------------------------------------------------
@@ -129,14 +129,15 @@ class tomcat (
   #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------
+  $config_path          = undef,
   $catalina_home        = undef,
   $catalina_base        = undef,
   $jasper_home          = undef,
   $catalina_tmpdir      = undef,
   $catalina_pid         = undef,
   $java_home            = undef,
-  $java_opts            = '-server',
-  $catalina_opts        = undef,
+  $java_opts            = ['-server'],
+  $catalina_opts        = [],
   $security_manager     = false,
   $tomcat_user          = undef,
   $tomcat_group         = undef,
@@ -157,6 +158,15 @@ class tomcat (
       default  => "${package_name}-admin"
     } } else {
     $admin_webapps_package_name_real = $admin_webapps_package_name
+  }
+  
+  if $config_path == undef {
+    $config_path_real = $::osfamily ? {
+      'RedHat' => "/etc/sysconfig/${service_name_real}",
+      default  => "/etc/default/${service_name_real}"
+    }
+  } else {
+    $config_path_real = $config_path
   }
 
   if $catalina_home == undef {
@@ -192,6 +202,9 @@ class tomcat (
   } else {
     $catalina_pid_real = $catalina_pid
   }
+  
+  $java_opts_real = join($java_opts, ' ')
+  $catalina_opts_real = join($catalina_opts, ' ')
 
   if $tomcat_user == undef {
     $tomcat_user_real = $::osfamily ? {
@@ -221,14 +234,14 @@ class tomcat (
 
   # should we force download extras libs?
   if $log4j_enable or $jmx_listener {
-    $extras_real = true
+    $enable_extras_real = true
   } else {
-    $extras_real = $extras
+    $enable_extras_real = $enable_extras
   }
   
-  # dependency
+  # module dependency
   if !defined(Class['archive']) {
-    include archive
+    include ::archive
   }
 
   # start the real action
@@ -248,7 +261,7 @@ class tomcat (
     }
   }
 
-  if $extras_real {
+  if $enable_extras_real {
     class { 'tomcat::extras':
       require => Class['::tomcat::install']
     }

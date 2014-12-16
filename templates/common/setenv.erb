@@ -15,9 +15,9 @@ CATALINA_TMPDIR="<%= @catalina_tmpdir_real %>"
 <% if @catalina_pid_real and @catalina_pid_real != '' %>CATALINA_PID="<%= @catalina_pid_real %>"
 <% end -%>
 
-<% if @java_opts and @java_opts != '' %>JAVA_OPTS="<%= @java_opts %>"
+<% if @java_opts and @java_opts != [] %>JAVA_OPTS="<%= @java_opts_real %>"
 <% end -%>
-<% if @catalina_opts and @catalina_opts != '' %>CATALINA_OPTS="<%= @catalina_opts %>"
+<% if @catalina_opts and @catalina_opts != [] %>CATALINA_OPTS="<%= @catalina_opts_real %>"
 <% end -%>
 
 <% if scope['::osfamily'] == 'Debian' -%>

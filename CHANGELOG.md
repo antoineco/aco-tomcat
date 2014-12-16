@@ -1,3 +1,10 @@
+###0.3.1
+
+* `java_opts` and `catalina_opts` are now array parameters
+* Path to "setenv" file can be set using `config_path`
+* `extras` renamed to `enable_extras`
+* `tomcat_native` and `log4j` default to false
+
 ###0.3.0
 
 **Warning:** this release is a big step forward, please read the documentation carefully
@@ -32,7 +39,7 @@
 
 ###0.0.4
 
-* Stop managing tomcat user, RPMs already take care of it
+Stop managing tomcat user, RPMs already take care of it
 
 ###0.0.3
 
