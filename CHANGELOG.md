@@ -1,3 +1,7 @@
+###0.3.2
+
+New parameter `manage_firewall`
+
 ###0.3.1
 
 * `java_opts` and `catalina_opts` are now array parameters

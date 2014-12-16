@@ -135,9 +135,10 @@ tomcat::instance { 'instance1':
   java_opts     => '-server -Xmx2048m -Xms256m -XX:+UseConcMarkSweepGC',
 }
 tomcat::instance { 'instance2':
-  control_port  => 8006,
-  http_port     => 8081,
-  log4j_enable  => true
+  control_port    => 8006,
+  http_port       => 8081,
+  log4j_enable    => true,
+  manage_firewall => true
 }
 ```
 
@@ -198,9 +199,11 @@ Tomcat service name. Defaults to `package_name`.
 Whether the service should be running. Valid values are `stopped` and `running`. Defaults to `running`.
 #####`service_enable`
 Whether to enable the tomcat service. Boolean value. Defaults to `true`.
-#####`extras`
+#####`enable_extras`
 Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.  
 *Warning:* enabled globally if defined within the global context
+#####`manage_firewall`
+Whether to automatically manage firewall rules. Boolean value. Defaults to `false`.
 
 **Security and administration**
 
