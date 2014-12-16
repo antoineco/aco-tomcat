@@ -18,7 +18,11 @@
 #   install tomcat native library (boolean)
 # [*tomcat_native_package_name*]
 #   tomcat native library package name
-# [*extras*]
+# [*log4j*]
+#   install log4j libraries (boolean)
+# [*log4j_package_name*]
+#   log4j package name
+# [*enable_extras*]
 #   install extra libraries (boolean)
 # [*admin_webapps*]
 #   install admin webapps (boolean)
