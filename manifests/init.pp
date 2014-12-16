@@ -24,6 +24,8 @@
 #   log4j package name
 # [*enable_extras*]
 #   install extra libraries (boolean)
+# [*manage_firewall*]
+#   manage firewall rules (boolean)
 # [*admin_webapps*]
 #   install admin webapps (boolean)
 # [*admin_webapps_package_name*]
@@ -72,6 +74,7 @@ class tomcat (
   $log4j                = false,
   $log4j_package_name   = $::tomcat::params::log4j_package_name,
   $enable_extras        = false,
+  $manage_firewall      = false,
   #----------------------------------------------------------------------------------
   # security and administration
   #----------------------------------------------------------------------------------
@@ -269,5 +272,9 @@ class tomcat (
     class { 'tomcat::extras':
       require => Class['::tomcat::install']
     }
+  }
+
+  if $manage_firewall {
+    include ::tomcat::firewall
   }
 }

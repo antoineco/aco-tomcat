@@ -29,6 +29,7 @@ define tomcat::instance (
   $service_start        = undef,
   $service_stop         = undef,
   $enable_extras        = false,
+  $manage_firewall      = false,
   #----------------------------------------------------------------------------------
   # security and administration
   #----------------------------------------------------------------------------------
@@ -509,6 +510,39 @@ define tomcat::instance (
         ensure => link,
         path   => "${catalina_base_real}/lib/tomcat-juli-extras.jar",
         target => "extras/tomcat-juli-extras-${::tomcat::version}.jar"
+    }
+  }
+
+  # ---------#
+  # firewall #
+  # ---------#
+
+  if $manage_firewall {
+    # http connector
+    if $http_connector {
+      firewall { "${http_port} accept - tomcat (${name})":
+        port   => $::tomcat::http_port,
+        proto  => 'tcp',
+        action => 'accept'
+      }
+    }
+
+    # ajp connector
+    if $::tomcat::ajp_connector {
+      firewall { "${ajp_port} accept - tomcat (${name})":
+        port   => $::tomcat::ajp_port,
+        proto  => 'tcp',
+        action => 'accept'
+      }
+    }
+
+    # ssl connector
+    if $::tomcat::ssl_connector {
+      firewall { "${ssl_port} accept - tomcat (${name})":
+        port   => $::tomcat::ssl_port,
+        proto  => 'tcp',
+        action => 'accept'
+      }
     }
   }
 }
