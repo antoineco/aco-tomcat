@@ -1,3 +1,11 @@
+###0.4.0
+
+* Support installation from archive
+* Use `nanliu/staging` instead of `nanliu/archive` to download and extract files
+* Improved systemd support
+* `create_default_admin` defaults to `false`
+* Numerous improvements in code and documentation
+
 ###0.3.2
 
 New parameter `manage_firewall`

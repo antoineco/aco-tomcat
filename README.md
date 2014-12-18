@@ -45,7 +45,7 @@ Use a non-default JVM and run it with custom options
 ```puppet
 class { '::tomcat':
   java_home => '/usr/java/jre1.7.0_65',
-  java_opts => '-server -Xmx2048m -Xms256m -XX:+UseConcMarkSweepGC'
+  java_opts => ['-server', '-Xmx2048m', '-Xms256m', '-XX:+UseConcMarkSweepGC']
 }
 ```
 
@@ -88,7 +88,7 @@ class { '::tomcat':
   jmx_listener      => true,
   jmx_registry_port => '8050',
   jmx_server_port   => '8051',
-  catalina_opts     => '-Dcom.sun.management.jmxremote'
+  catalina_opts     => ['-Dcom.sun.management.jmxremote', '-Dcom.sun.management.jmxremote.ssl=false', '-Dcom.sun.management.jmxremote.authenticate=false']
 }
 ```
 
@@ -132,7 +132,7 @@ tomcat::instance { 'instance1':
   http_port     => 8080,
   ajp_connector => false,
   java_home     => '/usr/java/jre1.7.0_65',
-  java_opts     => '-server -Xmx2048m -Xms256m -XX:+UseConcMarkSweepGC',
+  java_opts     => ['-server', '-Xms256m', '-Xmx2048m', '-XX:+UseConcMarkSweepGC'],
 }
 tomcat::instance { 'instance2':
   control_port    => 8006,
@@ -160,10 +160,12 @@ Primary class and entry point of the module
 
 #####`version`
 Tomcat full version number. The valid format is 'x.y.z'. Default depends on the distribution.  
-*Note:* if you define it manually please make **sure** this version if available in your system's repositories, since many parameters depend on this version number  
+*Note:* if you install tomcat from package and define this value manually, please make **sure** this version of tomcat if available in your system's repositories, since several sub-parameters depend on it  
 A list of available versions in each supported distribution is present withing the `params` class.
+#####`archive_source`
+Source of the tomcat server archive, if installed from archive. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version}/bin/apache-tomcat-${version}.tar.gz`
 #####`package_name`
-Tomcat package name. Default depends on the distribution.
+Tomcat package name. Ignored if installed from archive. Default depends on the distribution.
 #####`tomcat_native`
 Whether to install the Tomcat Native library. Boolean value. Defaults to `false`.
 #####`tomcat_native_package_name`
@@ -181,17 +183,19 @@ Create a tomcat instance
 
 **Parameters within `tomcat::instance`:**
 
-#####`root_path`
-Absolute path to the root of all tomcat instances. Defaults to `/opt/tomcat_instances`.  
-*Note:* the instance will be installed in `${root_path}/${title}` and $CATALINA_BASE will be set to that folder.
-
-See also [Common parameters](#common-parameters)
+No instance-specific parameters. See [Common parameters](#common-parameters)
 
 ####Common parameters
 
-Common parameters to `tomcat` and `tomcat::instance`
+Parameters common to both `tomcat` and `tomcat::instance`
 
 **Packages and service**
+
+#####`root_path`
+Absolute path to the root of all tomcat instances. This parameter is ignored in the global context, unless tomcat was installed from archive. Defaults to `/opt` (global) / `/opt/tomcat_instances` (instance).  
+*Notes:*
+* main instance will be installed in `${root_path}/tomcat-${version}` (if installed from archive) and both $CATALINA_HOME and $CATALINA_BASE will be set to that folder 
+* other instances will be installed in `${root_path}/${title}` (in all cases) and $CATALINA_BASE will be set to that folder
 
 #####`service_name`
 Tomcat service name. Defaults to `package_name` (global) / `${package_name}_${title}` (instance).
@@ -199,6 +203,10 @@ Tomcat service name. Defaults to `package_name` (global) / `${package_name}_${ti
 Whether the service should be running. Valid values are `stopped` and `running`. Defaults to `running`.
 #####`service_enable`
 Whether to enable the tomcat service. Boolean value. Defaults to `true`.
+#####`service_start`
+Optional override command for starting the service. Default depends on the platform.
+#####`service_stop`
+Optional override command for stopping the service. Default depends on the platform.
 #####`enable_extras`
 Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.  
 *Warning:* enabled globally if defined within the global context
@@ -208,11 +216,11 @@ Whether to automatically manage firewall rules. Boolean value. Defaults to `fals
 **Security and administration**
 
 #####`admin_webapps`
-Whether to install admin webapps (manager/host-manager). Boolean value. Defaults to `true`.
+Whether to enable admin webapps (manager/host-manager). This will also install the required packages if tomcat was installed from package. This parameter is ignored if tomcat was installed from archive, since tomcat archives always contain these apps. Boolean value. Defaults to `true`.
 #####`admin_webapps_package_name`
 Admin webapps package name. Default depends on the distribution.
 #####`create_default_admin`
-Whether to create default admin user (roles: 'manager-gui', 'manager-script', 'admin-gui' and 'admin-script'). Boolean value. Defaults to `true`.
+Whether to create default admin user (roles: 'manager-gui', 'manager-script', 'admin-gui' and 'admin-script'). Boolean value. Defaults to `false`.
 #####`admin_user`
 Admin user name. Defaults to `tomcatadmin`.
 #####`admin_password`
@@ -328,5 +336,7 @@ User roles (array of strings)
 ##To Do
 
 * Support SuSE Linux
+* Proper startup script for distributions which do not have systemd
+* Parameters validation
 
 Features request and contributions are always welcome!

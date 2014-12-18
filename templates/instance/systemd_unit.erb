@@ -4,16 +4,8 @@ After=syslog.target network.target
 
 [Service]
 Type=forking
-<% if @service_start -%>
-ExecStart=<%= @service_start %>
-<% else -%>
-ExecStart=/usr/sbin/tomcat-sysd start
-<% end -%>
-<% if @service_stop -%>
-ExecStop=<%= @service_stop %>
-<% else -%>
-ExecStop=/usr/sbin/tomcat-sysd stop
-<% end -%>
+ExecStart=<%= @service_start_real %>
+ExecStop=<%= @service_stop_real %>
 SuccessExitStatus=143
 User=<%= scope['::tomcat::tomcat_user_real'] %>
 Group=<%= scope['::tomcat::tomcat_group_real'] %>

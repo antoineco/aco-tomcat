@@ -4,7 +4,32 @@
 #
 # === Parameters:
 #
-# see README file for a description of all parameters
+# [*root_path*]
+#   common root installation path for all instances
+# [*service_name*]
+#   tomcat service name
+# [*service_ensure*]
+#   whether the service should be running (valid: 'stopped'|'running')
+# [*service_enable*]
+#   enable service (boolean)
+# [*service_start*]
+#   override service startup command
+# [*service_stop*]
+#   override service shutdown command
+# [*enable_extras*]
+#   install extra libraries (boolean)
+# [*manage_firewall*]
+#   manage firewall rules (boolean)
+# [*admin_webapps*]
+#   enable admin webapps (boolean)
+# [*create_default_admin*]
+#   create default admin user (boolean)
+# [*admin_user*]
+#   admin user name
+# [*admin_password*]
+#   admin user password
+#
+# see README file for a description of all parameters related to server configuration
 #
 # === Actions:
 #
@@ -34,7 +59,7 @@ define tomcat::instance (
   # security and administration
   #----------------------------------------------------------------------------------
   $admin_webapps        = true,
-  $create_default_admin = true,
+  $create_default_admin = false,
   $admin_user           = 'tomcatadmin',
   $admin_password       = 'password',
   #----------------------------------------------------------------------------------
@@ -117,17 +142,11 @@ define tomcat::instance (
   # -----------------------#
 
   if $service_name == undef {
-    $service_name_real = "${::tomcat::service_name_real}_${name}"
-  } else {
-    $service_name_real = $service_name
-  }
-
-  if $config_path == undef {
-    $config_path_real = $::osfamily ? {
-      'RedHat' => "/etc/sysconfig/${service_name_real}",
-      default  => "/etc/default/${service_name_real}"
+    $service_name_real = $::tomcat::installation_support ? {
+      'package' => "${::tomcat::package_name}_${name}",
+      default   => "${::tomcat::service_name_real}_${name}"
     } } else {
-    $config_path_real = $config_path
+    $service_name_real = $service_name
   }
 
   if $catalina_home == undef {
@@ -149,17 +168,56 @@ define tomcat::instance (
   }
 
   if $catalina_tmpdir == undef {
-    $catalina_tmpdir_real = $::osfamily ? {
-      'Debian' => '$JVM_TMP',
-      default  => "${catalina_base_real}/temp"
-    } } else {
+    case $::tomcat::installation_support {
+      'package' : {
+        $catalina_tmpdir_real = $::osfamily ? {
+          'Debian' => '$JVM_TMP',
+          default  => "${catalina_base_real}/temp"
+        } }
+      default   : {
+        $catalina_tmpdir_real = "${catalina_base_real}/temp"
+      }
+    }
+  } else {
     $catalina_tmpdir_real = $catalina_tmpdir
   }
 
   if $catalina_pid == undef {
-    $catalina_pid_real = "/var/run/${service_name_real}.pid"
+    case $::tomcat::installation_support {
+      'package' : { $catalina_pid_real = "/var/run/${service_name_real}.pid" }
+      default   : { $catalina_pid_real = "${catalina_tmpdir_real}/${service_name_real}.pid" }
+    }
   } else {
     $catalina_pid_real = $catalina_pid
+  }
+
+  if $config_path == undef {
+    case $::tomcat::installation_support {
+      'package' : {
+        $config_path_real = $::osfamily ? {
+          'RedHat' => "/etc/sysconfig/${service_name_real}",
+          default  => "/etc/default/${service_name_real}"
+        } }
+      default   : {
+        $config_path_real = "${catalina_base_real}/bin/setenv.sh"
+      }
+    }
+  } else {
+    $config_path_real = $config_path
+  }
+
+  if $service_start == undef {
+    case $::tomcat::installation_support {
+      'package' : { $service_start_real = '/usr/sbin/tomcat-sysd stop' }
+      default   : { $service_start_real = "${catalina_home_real}/bin/catalina.sh start" }
+    }
+  }
+
+  if $service_stop == undef {
+    case $::tomcat::installation_support {
+      'package' : { $service_stop_real = '/usr/sbin/tomcat-sysd stop' }
+      default   : { $service_stop_real = "${catalina_home_real}/bin/catalina.sh stop" }
+    }
   }
 
   $java_opts_real = join($java_opts, ' ')
@@ -184,36 +242,71 @@ define tomcat::instance (
   # service #
   # --------#
 
-  if $::osfamily == 'Debian' and $tomcat::maj_version > 6 {
-    file { "${service_name_real} service unit":
-      path    => "/etc/init.d/${service_name_real}",
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0755',
-      content => template("${module_name}/instance/${::tomcat::service_name_real}_init_deb.erb");
-    }
-  } elsif $::operatingsystem == 'Fedora' or ($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' and $::operatingsystemmajrelease >= 7) {
-    file { "${service_name_real} service unit":
-      path    => "/usr/lib/systemd/system/${service_name_real}.service",
-      owner   => 'root',
-      group   => 'root',
-      content => template("${module_name}/instance/systemd_unit.erb")
-    }
-  } else {
-    file { "${service_name_real} service unit":
-      ensure  => link,
-      path    => "/etc/init.d/${service_name_real}",
-      owner   => 'root',
-      group   => 'root',
-      target  => $::tomcat::service_name_real,
-      seltype => 'etc_t'
-    }
-  }
+  case $::tomcat::installation_support {
+    'package' : {
+      # manage startup script/unit
+      if $::osfamily == 'Debian' and $tomcat::maj_version > 6 {
+        file { "${service_name_real} service unit":
+          path    => "/etc/init.d/${service_name_real}",
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0755',
+          content => template("${module_name}/instance/tomcat${::tomcat::maj_version}_init_deb.erb");
+        }
+      } elsif $::operatingsystem == 'Fedora' or ($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' and $::operatingsystemmajrelease >= 7) {
+        file { "${service_name_real} service unit":
+          path    => "/usr/lib/systemd/system/${service_name_real}.service",
+          owner   => 'root',
+          group   => 'root',
+          content => template("${module_name}/instance/systemd_unit.erb")
+        }
+      } else {
+        file { "${service_name_real} service unit":
+          ensure => link,
+          path   => "/etc/init.d/${service_name_real}",
+          owner  => 'root',
+          group  => 'root',
+          target => $::tomcat::service_name_real
+        }
+      }
 
-  service { $service_name_real:
-    ensure  => $service_ensure,
-    enable  => $service_enable,
-    require => File["${service_name_real} service unit"];
+      service { $service_name_real:
+        ensure  => $service_ensure,
+        enable  => $service_enable,
+        require => File["${service_name_real} service unit"]
+      }
+    }
+    default   : {
+      if $::operatingsystem == 'Fedora' or ($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' and $::operatingsystemmajrelease >= 7) {
+        file { "${service_name_real} service unit":
+          path    => "/usr/lib/systemd/system/${service_name_real}.service",
+          owner   => 'root',
+          group   => 'root',
+          content => template("${module_name}/instance/systemd_unit.erb")
+        }
+
+        service { $service_name_real:
+          ensure  => $service_ensure,
+          enable  => $service_enable,
+          require => File["${service_name_real} service unit"];
+        }
+      } else { # temporary solution until a proper init script is included
+        $catalina_script = "${catalina_home_real}/bin/catalina.sh"
+        $start_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_script} start'"
+        $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_script} stop'"
+        $status_command = "/usr/bin/pgrep -d , -u ${::tomcat::tomcat_user_real} -G ${::tomcat::tomcat_group_real} -f Dcatalina.base=${catalina_base_real}"
+
+        # generate tomcat service
+        service { $service_name_real:
+          ensure   => $service_ensure,
+          enable   => $service_enable,
+          provider => 'base',
+          start    => $start_command,
+          stop     => $stop_command,
+          status   => $status_command
+        }
+      }
+    }
   }
 
   # ---------------------#
@@ -273,7 +366,7 @@ define tomcat::instance (
       path   => "${catalina_base_real}/temp"
   }
 
-  if $::osfamily == 'Debian' {
+  if $::osfamily == 'Debian' and $::tomcat::installation_support == 'package' {
     file { "instance ${name} conf/policy.d directory":
       ensure  => directory,
       path    => "${catalina_base_real}/conf/policy.d",
@@ -295,6 +388,9 @@ define tomcat::instance (
   file { "instance ${name} server configuration":
     path    => "${catalina_base_real}/conf/server.xml",
     content => template("${module_name}/common/server.xml.erb"),
+    owner   => $::tomcat::tomcat_user_real,
+    group   => $::tomcat::tomcat_group_real,
+    mode    => '0600',
     notify  => Service[$service_name_real]
   }
 
@@ -306,6 +402,9 @@ define tomcat::instance (
   file { "instance ${name} environment variables":
     path    => $config_path_real,
     content => template("${module_name}/common/setenv.erb"),
+    owner   => $::tomcat::tomcat_user_real,
+    group   => $::tomcat::tomcat_group_real,
+    mode    => '0644',
     notify  => Service[$service_name_real]
   }
 
@@ -325,7 +424,7 @@ define tomcat::instance (
     path   => "${catalina_base_real}/conf/tomcat-users.xml",
     owner  => $::tomcat::tomcat_user_real,
     group  => $::tomcat::tomcat_group_real,
-    mode   => '0640',
+    mode   => '0600',
     notify => Service[$service_name_real]
   }
 
@@ -454,30 +553,29 @@ define tomcat::instance (
   # -------#
 
   if $enable_extras_real and !$::tomcat::enable_extras_real { # no need to duplicate libraries if enabled globally
-    Archive {
-      cleanup => false,
+    Staging::File {
       require => File["instance ${name} extras directory"],
       notify  => Service[$service_name_real]
     }
 
-    archive {
+    staging::file {
       "instance ${name} catalina-jmx-remote.jar":
-        path   => "${catalina_base_real}/lib/extras/catalina-jmx-remote-${::tomcat::version}.jar",
+        target => "${catalina_base_real}/lib/extras/catalina-jmx-remote-${::tomcat::version}.jar",
         source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-jmx-remote.jar"
       ;
 
       "instance ${name} catalina-ws.jar":
-        path   => "${catalina_base_real}/lib/extras/catalina-ws-${::tomcat::version}.jar",
+        target => "${catalina_base_real}/lib/extras/catalina-ws-${::tomcat::version}.jar",
         source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-ws.jar"
       ;
 
       "instance ${name} tomcat-juli-adapters.jar":
-        path   => "${catalina_base_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version}.jar",
+        target => "${catalina_base_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version}.jar",
         source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli-adapters.jar"
       ;
 
       "instance ${name} tomcat-juli-extras.jar":
-        path   => "${catalina_base_real}/lib/extras/tomcat-juli-extras-${::tomcat::version}.jar",
+        target => "${catalina_base_real}/lib/extras/tomcat-juli-extras-${::tomcat::version}.jar",
         source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli.jar"
     }
 

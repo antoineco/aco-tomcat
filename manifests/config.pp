@@ -12,6 +12,9 @@ class tomcat::config {
   file { 'tomcat server configuration':
     path    => "${::tomcat::catalina_base_real}/conf/server.xml",
     content => template("${module_name}/common/server.xml.erb"),
+    owner   => $::tomcat::tomcat_user_real,
+    group   => $::tomcat::tomcat_group_real,
+    mode    => '0600',
     notify  => Service[$::tomcat::service_name_real]
   }
 
@@ -24,6 +27,9 @@ class tomcat::config {
     'tomcat environment variables':
       path    => $::tomcat::config_path_real,
       content => template("${module_name}/common/setenv.erb"),
+      owner   => $::tomcat::tomcat_user_real,
+      group   => $::tomcat::tomcat_group_real,
+      mode    => '0644',
       notify  => Service[$::tomcat::service_name_real]
   }
 
@@ -39,7 +45,7 @@ class tomcat::config {
     path   => "${::tomcat::catalina_base_real}/conf/tomcat-users.xml",
     owner  => $::tomcat::tomcat_user_real,
     group  => $::tomcat::tomcat_group_real,
-    mode   => '0640',
+    mode   => '0600',
     notify => Service[$::tomcat::service_name_real]
   }
 

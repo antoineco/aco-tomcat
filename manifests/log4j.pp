@@ -18,48 +18,44 @@ class tomcat::log4j {
   }
 
   file { 'global log4j library':
-    ensure  => link,
-    owner   => 'root',
-    group   => 'root',
-    path    => "${::tomcat::catalina_home_real}/lib/log4j.jar",
-    target  => $log4j_path,
-    seltype => 'usr_t',
-    notify  => Service[$::tomcat::service_name_real]
+    ensure => link,
+    owner  => 'root',
+    group  => 'root',
+    path   => "${::tomcat::catalina_home_real}/lib/log4j.jar",
+    target => $log4j_path,
+    notify => Service[$::tomcat::service_name_real]
   }
 
   if $::tomcat::log4j_conf_type == 'xml' {
     file {
       'global log4j xml configuration':
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
-        path    => "${::tomcat::catalina_home_real}/lib/log4j.xml",
-        source  => $::tomcat::log4j_conf_source,
-        seltype => 'lib_t',
-        notify  => Service[$::tomcat::service_name_real];
+        ensure => present,
+        owner  => 'root',
+        group  => 'root',
+        path   => "${::tomcat::catalina_home_real}/lib/log4j.xml",
+        source => $::tomcat::log4j_conf_source,
+        notify => Service[$::tomcat::service_name_real];
 
       'global log4j ini configuration':
         ensure => absent,
         path   => "${::tomcat::catalina_home_real}/lib/log4j.properties";
 
       'global log4j dtd file':
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
-        path    => "${::tomcat::catalina_home_real}/lib/log4j.dtd",
-        source  => "puppet:///modules/${module_name}/log4j/log4j.dtd",
-        seltype => 'usr_t'
+        ensure => present,
+        owner  => 'root',
+        group  => 'root',
+        path   => "${::tomcat::catalina_home_real}/lib/log4j.dtd",
+        source => "puppet:///modules/${module_name}/log4j/log4j.dtd"
     }
   } else {
     file {
       'global log4j ini configuration':
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
-        path    => "${::tomcat::catalina_home_real}/lib/log4j.properties",
-        source  => $::tomcat::log4j_conf_source,
-        seltype => 'lib_t',
-        notify  => Service[$::tomcat::service_name_real];
+        ensure => present,
+        owner  => 'root',
+        group  => 'root',
+        path   => "${::tomcat::catalina_home_real}/lib/log4j.properties",
+        source => $::tomcat::log4j_conf_source,
+        notify => Service[$::tomcat::service_name_real];
 
       'global log4j xml configuration':
         ensure => absent,
