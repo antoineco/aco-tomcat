@@ -15,11 +15,11 @@
 
 ##Overview
 
-The tomcat module installs and configures Apache Tomcat instances from the available packages in your distribution's repositories.
+The tomcat module installs and configures Apache Tomcat instances from either the packages available in your distribution's repositories, or from any archive file you provide to it.
 
 ##Module description
 
-Almost all Linux distributions provide one or more maintained packages of the Tomcat application server. These are available either from the distribution repositories or third-party sources ([JPackage](http://www.jpackage.org), [EPEL](https://fedoraproject.org/wiki/EPEL), ...). This module will install the desired version of tomcat and its dependencies from the repositories available on the target system.  
+This module will install the desired version of the Apache Tomcat Web Application Container from almost any possible source, including the repositories available on the target system (distribution repositories or third-party sources like [JPackage](http://www.jpackage.org) and [EPEL](https://fedoraproject.org/wiki/EPEL)  
 A long list of parameters permit a fine-tuning of the server and the JVM. It is for example possible to configure admin applications, install extra tomcat libraries, configure log4j as the standard logger, or enable the remote JMX listener.  
 The creation of individual instances is also supported via a custom type.
 
@@ -39,6 +39,15 @@ include ::tomcat
 ```
 
 ####A couple of examples
+
+Install from archive instead of package
+
+```puppet
+class { '::tomcat':
+  installation_support => 'archive',
+  version              => '8.0.15'
+}
+```
 
 Use a non-default JVM and run it with custom options
 
@@ -158,12 +167,14 @@ Primary class and entry point of the module
 
 **Packages and service**
 
+#####`installation_support`
+What type of source to install from. The module will download the necessary files by itself. Valid values are `package` and `archive`. Defaults to `package`.
+#####`archive_source`
+Source of the tomcat server archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version}/bin/apache-tomcat-${version}.tar.gz`
 #####`version`
 Tomcat full version number. The valid format is 'x.y.z'. Default depends on the distribution.  
 *Note:* if you install tomcat from package and define this value manually, please make **sure** this version of tomcat if available in your system's repositories, since several sub-parameters depend on it  
 A list of available versions in each supported distribution is present withing the `params` class.
-#####`archive_source`
-Source of the tomcat server archive, if installed from archive. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version}/bin/apache-tomcat-${version}.tar.gz`
 #####`package_name`
 Tomcat package name. Ignored if installed from archive. Default depends on the distribution.
 #####`tomcat_native`

@@ -1,3 +1,8 @@
+###0.4.1
+
+* Document missing parameter `installation_support`
+* Improve documentation
+
 ###0.4.0
 
 * Support installation from archive
