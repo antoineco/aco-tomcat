@@ -281,10 +281,17 @@ class tomcat (
   $catalina_opts_real = join($catalina_opts, ' ')
 
   if $tomcat_user == undef {
-    $tomcat_user_real = $::osfamily ? {
-      'Debian' => $package_name,
-      default  => 'tomcat'
-    } } else {
+    case $installation_support {
+      'package' : {
+        $tomcat_user_real = $::osfamily ? {
+          'Debian' => $service_name_real,
+          default  => 'tomcat'
+        } }
+      default   : {
+        $tomcat_user_real = $service_name_real
+      }
+    }
+  } else {
     $tomcat_user_real = $tomcat_user
   }
 
