@@ -5,13 +5,14 @@
 1. [Overview](#overview)
 2. [Module Description](#module-description)
 3. [Setup](#setup)
+  * [A couple of examples](#a-couple-of-examples)
 4. [Usage](#usage)
-  * [Class: tomcat](#class-tomcat)
-  * [Define: tomcat::instance](#define-tomcatinstance)
-  * [Common parameters](#common-parameters)
-  * [Define: tomcat::userdb_entry](#define-tomcatuserdb_entry)
-5. [Limitations](#limitations)
-6. [To Do](#to-do)
+  * [Classes and Defined Types](#classes-and-defined-types)
+    * [Class: tomcat](#class-tomcat)
+    * [Define: tomcat::instance](#define-tomcatinstance)
+    * [Common parameters](#common-parameters)
+    * [Define: tomcat::userdb_entry](#define-tomcatuserdb_entry)
+5. [To Do](#to-do)
 
 ##Overview
 
@@ -19,7 +20,7 @@ The tomcat module installs and configures Apache Tomcat instances from either th
 
 ##Module description
 
-This module will install the desired version of the Apache Tomcat Web Application Container from almost any possible source, including the repositories available on the target system (distribution repositories or third-party sources like [JPackage](http://www.jpackage.org) and [EPEL](https://fedoraproject.org/wiki/EPEL)  
+This module will install the desired version of the Apache Tomcat Web Application Container from almost any possible source, including the repositories available on the target system (distribution repositories or third-party sources like [JPackage](http://www.jpackage.org) and [EPEL](https://fedoraproject.org/wiki/EPEL))  
 A long list of parameters permit a fine-tuning of the server and the JVM. It is for example possible to configure admin applications, install extra tomcat libraries, configure log4j as the standard logger, or enable the remote JMX listener.  
 The creation of individual instances is also supported via a custom type.
 
@@ -46,6 +47,25 @@ Install from archive instead of package
 class { '::tomcat':
   installation_support => 'archive',
   version              => '8.0.15'
+}
+```
+
+Disable default instance and setup 2 individual instances
+
+```puppet
+class { '::tomcat':
+  service_ensure => 'stopped',
+  service_enable => false
+}
+tomcat::instance { 'instance1':
+  control_port  => 8005,
+  http_port     => 8080,
+  ajp_connector => false
+}
+tomcat::instance { 'instance2':
+  control_port    => 8006,
+  http_port       => 8081,
+  manage_firewall => true
 }
 ```
 
@@ -107,6 +127,7 @@ Use log4j for Tomcat internal logging and provide a custom XML configuration fil
 class { '::tomcat':
   …
   log4j             => true,
+  log4j_enable      => true,
   log4j_conf_type   => 'xml',
   log4j_conf_source => 'puppet:///modules/my_configs/tomcat_log4j.xml'
 }
@@ -128,36 +149,15 @@ class { '::tomcat':
 }
 ```
 
-Disable default instance and setup 2 individual instances
-
-```puppet
-class { '::tomcat':
-  service_ensure => 'stopped',
-  service_enable => false,
-  log4j          => true
-}
-tomcat::instance { 'instance1':
-  control_port  => 8005,
-  http_port     => 8080,
-  ajp_connector => false,
-  java_home     => '/usr/java/jre1.7.0_65',
-  java_opts     => ['-server', '-Xms256m', '-Xmx2048m', '-XX:+UseConcMarkSweepGC'],
-}
-tomcat::instance { 'instance2':
-  control_port    => 8006,
-  http_port       => 8081,
-  log4j_enable    => true,
-  manage_firewall => true
-}
-```
-
 ##Usage
 
 This module distinguishes two different contexts:
 * global: default instance and global libraries
 * instance: individual tomcat instance
 
-Both contexts have a lot of parameters in common
+Both contexts share most of their parameters.
+
+###Classes and Defined Types
 
 ####Class: `tomcat`
 
@@ -340,13 +340,8 @@ User password (string)
 #####`roles`
 User roles (array of strings)
 
-##Limitations
-
-* Only supports RedHat and Debian variants/derivatives (for now)
-
 ##To Do
 
-* Support SuSE Linux
 * Proper startup script for distributions which do not have systemd
 * Parameters validation
 

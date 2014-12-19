@@ -1,3 +1,11 @@
+###0.5.0
+
+* Support SuSE OS family
+* Configures instance admin webapps properly when installed from archive
+* Does not uninstall unrequired libraries anymore (native, log4j)
+* Improve warning logging
+* Cleanup
+
 ###0.4.1
 
 * Document missing parameter `installation_support`

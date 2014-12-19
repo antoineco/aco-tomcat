@@ -8,7 +8,7 @@ class tomcat::config {
 
   # generate and manage server configuration
   # Template uses:
-  # -
+  #-
   file { 'tomcat server configuration':
     path    => "${::tomcat::catalina_base_real}/conf/server.xml",
     content => template("${module_name}/common/server.xml.erb"),
@@ -20,20 +20,20 @@ class tomcat::config {
 
   # generate and manage global parameters
   # Template uses:
-  # -
+  #-
   # note: defining the exact same parameters in two files may seem awkward,
   # but it avoids the randomness observed in some releases due to buggy startup scripts
-  file {
-    'tomcat environment variables':
-      path    => $::tomcat::config_path_real,
-      content => template("${module_name}/common/setenv.erb"),
-      owner   => $::tomcat::tomcat_user_real,
-      group   => $::tomcat::tomcat_group_real,
-      mode    => '0644',
-      notify  => Service[$::tomcat::service_name_real]
+  file { 'tomcat environment variables':
+    path    => $::tomcat::config_path_real,
+    content => template("${module_name}/common/setenv.erb"),
+    owner   => $::tomcat::tomcat_user_real,
+    group   => $::tomcat::tomcat_group_real,
+    mode    => '0644',
+    notify  => Service[$::tomcat::service_name_real]
   }
 
   if $::osfamily == 'RedHat' {
+    # make sure system variables are in the right place
     file { 'tomcat default variables':
       path    => "${::tomcat::catalina_base_real}/conf/${::tomcat::service_name_real}.conf",
       content => "# See ${::tomcat::config_path_real}"

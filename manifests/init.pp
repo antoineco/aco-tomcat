@@ -188,8 +188,8 @@ class tomcat (
 
   if $admin_webapps_package_name == undef {
     $admin_webapps_package_name_real = $::osfamily ? {
-      'RedHat' => "${package_name}-admin-webapps",
-      default  => "${package_name}-admin"
+      'Debian' => "${package_name}-admin",
+      default  => "${package_name}-admin-webapps"
     } } else {
     $admin_webapps_package_name_real = $admin_webapps_package_name
   }
@@ -206,8 +206,8 @@ class tomcat (
     case $installation_support {
       'package' : {
         $catalina_base_real = $::osfamily ? {
-          'RedHat' => $catalina_home_real,
-          default  => "/var/lib/${service_name_real}"
+          'Debian' => "/var/lib/${service_name_real}",
+          default  => $catalina_home_real
         } }
       default   : {
         $catalina_base_real = $catalina_home_real
@@ -251,8 +251,9 @@ class tomcat (
     case $installation_support {
       'package' : {
         $config_path_real = $::osfamily ? {
-          'RedHat' => "/etc/sysconfig/${service_name_real}",
-          default  => "/etc/default/${service_name_real}"
+          'Debian'   => "/etc/default/${service_name_real}",
+          'Suse' => "/etc/${service_name_real}/${service_name_real}.conf",
+          default    => "/etc/sysconfig/${service_name_real}"
         } }
       default   : {
         $config_path_real = "${catalina_base_real}/bin/setenv.sh"
@@ -281,8 +282,8 @@ class tomcat (
 
   if $tomcat_user == undef {
     $tomcat_user_real = $::osfamily ? {
-      'RedHat' => 'tomcat',
-      default  => $package_name
+      'Debian' => $package_name,
+      default  => 'tomcat'
     } } else {
     $tomcat_user_real = $tomcat_user
   }

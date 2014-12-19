@@ -1,0 +1,18 @@
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=network.target
+
+[Service]
+Type=simple
+EnvironmentFile=-<%= @config_path_real %>
+User=<%= scope['::tomcat::tomcat_user_real'] %>
+Group=<%= scope['::tomcat::tomcat_group_real'] %>
+ExecStart=<%= @service_start_real %>
+ExecStop=<%= @service_stop_real %>
+StandardOutput=syslog
+SyslogIdentifier=%n
+SyslogFacility=daemon
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

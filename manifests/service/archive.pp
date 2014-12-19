@@ -9,20 +9,30 @@ class tomcat::service::archive {
   }
 
   # systemd is prefered if supported
-  if $::operatingsystem == 'Fedora' or ($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' and $::operatingsystemmajrelease >= 7) {
-    file { "${::tomcat::service_name_real} service unit":
-      path    => "/usr/lib/systemd/system/${::tomcat::service_name_real}.service",
-      owner   => 'root',
-      group   => 'root',
-      content => template("${module_name}/instance/systemd_unit.erb")
+  if $::tomcat::params::systemd {
+    if $::operatingsystem == 'OpenSuSE' {
+      file { "${::tomcat::service_name_real} service unit":
+        path    => "/usr/lib/systemd/system/${::tomcat::service_name_real}.service",
+        owner   => 'root',
+        group   => 'root',
+        content => template("${module_name}/instance/systemd_unit_suse.erb")
+      }
+    } else { # RHEL 7+ or Fedora
+      file { "${::tomcat::service_name_real} service unit":
+        path    => "/usr/lib/systemd/system/${::tomcat::service_name_real}.service",
+        owner   => 'root',
+        group   => 'root',
+        content => template("${module_name}/instance/systemd_unit_rhel.erb")
+      }
     }
 
     service { $::tomcat::service_name_real:
-      ensure  => $::tomcat::service_ensure,
-      enable  => $::tomcat::service_enable,
-      require => File["${::tomcat::service_name_real} service unit"]
+      ensure   => $::tomcat::service_ensure,
+      enable   => $::tomcat::service_enable,
+      require  => File["${::tomcat::service_name_real} service unit"];
     }
-  } else { # temporary solution until a proper init script is included
+    # temporary solution until a proper init script is included
+  } else {
     $catalina_script = "${::tomcat::catalina_home_real}/bin/catalina.sh"
     $start_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_script} start'"
     $stop_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_script} stop'"
@@ -31,7 +41,7 @@ class tomcat::service::archive {
     service { $::tomcat::service_name_real:
       ensure   => $::tomcat::service_ensure,
       enable   => $::tomcat::service_enable,
-      provider => 'base',
+      provider => base,
       start    => $start_command,
       stop     => $stop_command,
       status   => $status_command

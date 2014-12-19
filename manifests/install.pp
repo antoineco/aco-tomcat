@@ -14,34 +14,18 @@ class tomcat::install {
   }
 
   # tomcat native library
-  $ensure_native_package = $::tomcat::tomcat_native ? {
-    true    => 'present',
-    default => 'absent'
-  }
-  package { 'tomcat native library':
-    ensure => $ensure_native_package,
-    name   => $::tomcat::tomcat_native_package_name
+  if $::tomcat::tomcat_native {
+    package { 'tomcat native library':
+      ensure => present,
+      name   => $::tomcat::tomcat_native_package_name
+    }
   }
 
   # log4j library
-  $ensure_log4j_package = $::tomcat::log4j ? {
-    true    => 'present',
-    default => 'absent'
-  }
-  package { 'tomcat log4j library':
-    ensure => $ensure_log4j_package,
-    name   => $::tomcat::log4j_package_name
-  }
-
-  # install admin webapps
-  if $tomcat::installation_support == 'package' {
-    $ensure_manager_package = $::tomcat::admin_webapps ? {
-      true    => 'present',
-      default => 'absent'
-    }
-    package { 'tomcat admin webapps':
-      ensure => $ensure_manager_package,
-      name   => $::tomcat::admin_webapps_package_name_real
+  if $::tomcat::log4j {
+    package { 'tomcat log4j library':
+      ensure => present,
+      name   => $::tomcat::log4j_package_name
     }
   }
 }

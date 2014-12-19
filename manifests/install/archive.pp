@@ -43,4 +43,9 @@ class tomcat::install::archive {
     ensure => directory,
     path   => "/var/log/${::tomcat::service_name_real}"
   }
+
+  # warn if admin webapps were selected for installation
+  if $::tomcat::admin_webapps {
+    warning("tomcat archives always contain admin webapps, ignoring parameter 'admin_webapps'")
+  }
 }

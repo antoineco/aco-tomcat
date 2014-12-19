@@ -2,7 +2,7 @@
   "name": "aco-tomcat",
   "summary": "Puppet module for Tomcat",
   "author": "Antoine Cotten",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "license": "Apache-2.0",
   "project_page": "https://github.com/tOnI0/aco-tomcat",
   "source": "git://github.com/tOnI0/aco-tomcat.git",
@@ -71,6 +71,37 @@
         "19",
         "20",
         "21"
+      ]
+    },
+    {
+      "operatingsystem": "SuSE",
+      "operatingsystemrelease": [
+        "11.2",
+        "11.3",
+        "12.0"
+      ]
+    },
+    {
+      "operatingsystem": "OpenSuSE",
+      "operatingsystemrelease": [
+        "12.3",
+        "13"
+      ]
+    },
+    {
+      "operatingsystem": "SLES",
+      "operatingsystemrelease": [
+        "11.2",
+        "11.3",
+        "12.0"
+      ]
+    },
+    {
+      "operatingsystem": "SLED",
+      "operatingsystemrelease": [
+        "11.2",
+        "11.3",
+        "12"
       ]
     },
     {

@@ -13,8 +13,8 @@ class tomcat::log4j {
 
   # generate OS-specific variables
   $log4j_path = $::osfamily ? {
-    'RedHat' => '/usr/share/java/log4j.jar',
-    default  => '/usr/share/java/log4j-1.2.jar'
+    'Debian' => '/usr/share/java/log4j-1.2.jar',
+    default  => '/usr/share/java/log4j.jar'
   }
 
   file { 'global log4j library':

@@ -8,6 +8,11 @@ class tomcat::service {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
+  if $::operatingsystem == 'OpenSuSE' {
+    Service { # not explicit on OpenSuSE
+      provider => systemd }
+  }
+
   case $::tomcat::installation_support {
     'package' : { contain ::tomcat::service::package }
     default   : { contain ::tomcat::service::archive }

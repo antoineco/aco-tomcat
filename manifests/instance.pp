@@ -195,8 +195,8 @@ define tomcat::instance (
     case $::tomcat::installation_support {
       'package' : {
         $config_path_real = $::osfamily ? {
-          'RedHat' => "/etc/sysconfig/${service_name_real}",
-          default  => "/etc/default/${service_name_real}"
+          'Debian' => "/etc/default/${service_name_real}",
+          default  => "/etc/sysconfig/${service_name_real}"
         } }
       default   : {
         $config_path_real = "${catalina_base_real}/bin/setenv.sh"
@@ -232,7 +232,7 @@ define tomcat::instance (
   }
 
   # should we force download extras libs?
-  if $log4j_enable or $jmx_listener {
+  if ($log4j_enable or $jmx_listener) and !$::tomcat::enable_extras_real {
     $enable_extras_real = true
   } else {
     $enable_extras_real = $enable_extras
@@ -241,6 +241,11 @@ define tomcat::instance (
   # --------#
   # service #
   # --------#
+
+  if $::operatingsystem == 'OpenSuSE' {
+    Service { # not explicit on OpenSuSE
+      provider => systemd }
+  }
 
   case $::tomcat::installation_support {
     'package' : {
@@ -253,12 +258,19 @@ define tomcat::instance (
           mode    => '0755',
           content => template("${module_name}/instance/tomcat${::tomcat::maj_version}_init_deb.erb");
         }
+      } elsif $::operatingsystem == 'OpenSuSE' {
+        file { "${service_name_real} service unit":
+          path    => "/usr/lib/systemd/system/${service_name_real}.service",
+          owner   => 'root',
+          group   => 'root',
+          content => template("${module_name}/instance/systemd_unit_suse.erb")
+        }
       } elsif $::operatingsystem == 'Fedora' or ($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' and $::operatingsystemmajrelease >= 7) {
         file { "${service_name_real} service unit":
           path    => "/usr/lib/systemd/system/${service_name_real}.service",
           owner   => 'root',
           group   => 'root',
-          content => template("${module_name}/instance/systemd_unit.erb")
+          content => template("${module_name}/instance/systemd_unit_rhel.erb")
         }
       } else {
         file { "${service_name_real} service unit":
@@ -276,13 +288,24 @@ define tomcat::instance (
         require => File["${service_name_real} service unit"]
       }
     }
+    # archive
     default   : {
-      if $::operatingsystem == 'Fedora' or ($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' and $::operatingsystemmajrelease >= 7) {
-        file { "${service_name_real} service unit":
-          path    => "/usr/lib/systemd/system/${service_name_real}.service",
-          owner   => 'root',
-          group   => 'root',
-          content => template("${module_name}/instance/systemd_unit.erb")
+      # systemd is prefered if supported
+      if $::tomcat::params::systemd {
+        if $::operatingsystem == 'OpenSuSE' {
+          file { "${service_name_real} service unit":
+            path    => "/usr/lib/systemd/system/${service_name_real}.service",
+            owner   => 'root',
+            group   => 'root',
+            content => template("${module_name}/instance/systemd_unit_suse.erb")
+          }
+        } else { # RHEL 7+ or Fedora
+          file { "${service_name_real} service unit":
+            path    => "/usr/lib/systemd/system/${service_name_real}.service",
+            owner   => 'root',
+            group   => 'root',
+            content => template("${module_name}/instance/systemd_unit_rhel.erb")
+          }
         }
 
         service { $service_name_real:
@@ -290,7 +313,8 @@ define tomcat::instance (
           enable  => $service_enable,
           require => File["${service_name_real} service unit"];
         }
-      } else { # temporary solution until a proper init script is included
+        # temporary solution until a proper init script is included
+      } else {
         $catalina_script = "${catalina_home_real}/bin/catalina.sh"
         $start_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_script} start'"
         $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_script} stop'"
@@ -300,7 +324,7 @@ define tomcat::instance (
         service { $service_name_real:
           ensure   => $service_ensure,
           enable   => $service_enable,
-          provider => 'base',
+          provider => base,
           start    => $start_command,
           stop     => $stop_command,
           status   => $status_command
@@ -408,13 +432,6 @@ define tomcat::instance (
     notify  => Service[$service_name_real]
   }
 
-  if $::osfamily == 'RedHat' {
-    file { "instance ${name} default variables":
-      path    => "${catalina_base_real}/conf/${service_name_real}.conf",
-      content => "# See ${config_path_real}"
-    }
-  }
-
   # ------#
   # users #
   # ------#
@@ -441,7 +458,7 @@ define tomcat::instance (
   }
 
   # configure authorized access
-  unless !$::tomcat::create_default_admin {
+  unless !$create_default_admin {
     ::tomcat::userdb_entry { "instance ${name} ${::tomcat::admin_user}":
       database => "instance ${name} UserDatabase",
       username => $admin_user,
@@ -455,9 +472,15 @@ define tomcat::instance (
   # --------------#
 
   if $admin_webapps { # generate OS-specific variables
-    $admin_webapps_path = $::osfamily ? {
-      'RedHat' => "\${catalina.home}/webapps",
-      default  => "/usr/share/${::tomcat::admin_webapps_package_name_real}"
+    case $::tomcat::installation_support {
+      'package' : {
+        $admin_webapps_path = $::osfamily ? {
+          'Debian' => "/usr/share/${::tomcat::admin_webapps_package_name_real}",
+          default  => "\${catalina.home}/webapps"
+        } }
+      default   : {
+        $admin_webapps_path = "\${catalina.home}/webapps"
+      }
     }
 
     file { "instance ${name} Catalina dir":
@@ -487,15 +510,17 @@ define tomcat::instance (
   if $log4j_enable {
     # warn user if log4j is not installed
     unless $::tomcat::log4j {
-      warning('Logging with log4j will not work unless the log4j library is installed')
+      warning("instance ${name}: logging with log4j will not work unless the log4j library is installed")
     }
 
     # no need to duplicate libraries if enabled globally
-    unless $::tomcat::log4j_enable {
+    if $::tomcat::log4j_enable {
+      warning("instance ${name}: log4j is already enabled globally, ignoring parameter 'log4j_enable'")
+    } else {
       # generate OS-specific variables
       $log4j_path = $::osfamily ? {
-        'RedHat' => '/usr/share/java/log4j.jar',
-        default  => '/usr/share/java/log4j-1.2.jar'
+        'Debian' => '/usr/share/java/log4j-1.2.jar',
+        default  => '/usr/share/java/log4j.jar'
       }
 
       file { "instance ${name} log4j library":
@@ -552,62 +577,66 @@ define tomcat::instance (
   # extras #
   # -------#
 
-  if $enable_extras_real and !$::tomcat::enable_extras_real { # no need to duplicate libraries if enabled globally
-    Staging::File {
-      require => File["instance ${name} extras directory"],
-      notify  => Service[$service_name_real]
-    }
+  if $enable_extras_real {
+    if $::tomcat::enable_extras_real { # no need to duplicate libraries if enabled globally
+      warning('extra libraries already enabled globally, ignoring parameter \'enable_extras\'')
+    } else {
+      Staging::File {
+        require => File["instance ${name} extras directory"],
+        notify  => Service[$service_name_real]
+      }
 
-    staging::file {
-      "instance ${name} catalina-jmx-remote.jar":
-        target => "${catalina_base_real}/lib/extras/catalina-jmx-remote-${::tomcat::version}.jar",
-        source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-jmx-remote.jar"
-      ;
+      staging::file {
+        "instance ${name} catalina-jmx-remote.jar":
+          target => "${catalina_base_real}/lib/extras/catalina-jmx-remote-${::tomcat::version}.jar",
+          source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-jmx-remote.jar"
+        ;
 
-      "instance ${name} catalina-ws.jar":
-        target => "${catalina_base_real}/lib/extras/catalina-ws-${::tomcat::version}.jar",
-        source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-ws.jar"
-      ;
+        "instance ${name} catalina-ws.jar":
+          target => "${catalina_base_real}/lib/extras/catalina-ws-${::tomcat::version}.jar",
+          source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/catalina-ws.jar"
+        ;
 
-      "instance ${name} tomcat-juli-adapters.jar":
-        target => "${catalina_base_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version}.jar",
-        source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli-adapters.jar"
-      ;
+        "instance ${name} tomcat-juli-adapters.jar":
+          target => "${catalina_base_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version}.jar",
+          source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli-adapters.jar"
+        ;
 
-      "instance ${name} tomcat-juli-extras.jar":
-        target => "${catalina_base_real}/lib/extras/tomcat-juli-extras-${::tomcat::version}.jar",
-        source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli.jar"
-    }
+        "instance ${name} tomcat-juli-extras.jar":
+          target => "${catalina_base_real}/lib/extras/tomcat-juli-extras-${::tomcat::version}.jar",
+          source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version}/bin/extras/tomcat-juli.jar"
+      }
 
-    file {
-      "instance ${name} extras directory":
-        ensure => directory,
-        path   => "${catalina_base_real}/lib/extras";
+      file {
+        "instance ${name} extras directory":
+          ensure => directory,
+          path   => "${catalina_base_real}/lib/extras";
 
-      "instance ${name} tomcat-juli.jar":
-        ensure => link,
-        path   => "${catalina_base_real}/bin/tomcat-juli.jar",
-        target => "${catalina_base_real}/lib/tomcat-juli-extras.jar";
+        "instance ${name} tomcat-juli.jar":
+          ensure => link,
+          path   => "${catalina_base_real}/bin/tomcat-juli.jar",
+          target => "${catalina_base_real}/lib/tomcat-juli-extras.jar";
 
-      "instance ${name} catalina-jmx-remote.jar":
-        ensure => link,
-        path   => "${catalina_base_real}/lib/catalina-jmx-remote.jar",
-        target => "extras/catalina-jmx-remote-${::tomcat::version}.jar";
+        "instance ${name} catalina-jmx-remote.jar":
+          ensure => link,
+          path   => "${catalina_base_real}/lib/catalina-jmx-remote.jar",
+          target => "extras/catalina-jmx-remote-${::tomcat::version}.jar";
 
-      "instance ${name} catalina-ws.jar":
-        ensure => link,
-        path   => "${catalina_base_real}/lib/catalina-ws.jar",
-        target => "extras/catalina-ws-${::tomcat::version}.jar";
+        "instance ${name} catalina-ws.jar":
+          ensure => link,
+          path   => "${catalina_base_real}/lib/catalina-ws.jar",
+          target => "extras/catalina-ws-${::tomcat::version}.jar";
 
-      "instance ${name} tomcat-juli-adapters.jar":
-        ensure => link,
-        path   => "${catalina_base_real}/lib/tomcat-juli-adapters.jar",
-        target => "extras/tomcat-juli-adapters-${::tomcat::version}.jar";
+        "instance ${name} tomcat-juli-adapters.jar":
+          ensure => link,
+          path   => "${catalina_base_real}/lib/tomcat-juli-adapters.jar",
+          target => "extras/tomcat-juli-adapters-${::tomcat::version}.jar";
 
-      "instance ${name} tomcat-juli-extras.jar":
-        ensure => link,
-        path   => "${catalina_base_real}/lib/tomcat-juli-extras.jar",
-        target => "extras/tomcat-juli-extras-${::tomcat::version}.jar"
+        "instance ${name} tomcat-juli-extras.jar":
+          ensure => link,
+          path   => "${catalina_base_real}/lib/tomcat-juli-extras.jar",
+          target => "extras/tomcat-juli-extras-${::tomcat::version}.jar"
+      }
     }
   }
 
