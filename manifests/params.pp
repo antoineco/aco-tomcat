@@ -94,9 +94,6 @@ class tomcat::params {
             '13.2'  : {
               $version = '7.0.55'
               $package_name = 'tomcat'
-              # = JAVA repo =
-              # $version = '7.0.55'
-              # $package_name = 'tomcat'
             }
             default : {
               fail("Unsupported OS version ${::operatingsystemrelease}")
