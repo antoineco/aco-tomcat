@@ -45,8 +45,8 @@ Install from archive instead of package
 
 ```puppet
 class { '::tomcat':
-  installation_support => 'archive',
-  version              => '8.0.15'
+  install_from => 'archive',
+  version      => '8.0.15'
 }
 ```
 
@@ -119,6 +119,7 @@ class { '::tomcat':
   jmx_listener      => true,
   jmx_registry_port => '8050',
   jmx_server_port   => '8051',
+  jmx_bind_address  => $ipaddress_eth0,
   catalina_opts     => ['-Dcom.sun.management.jmxremote', '-Dcom.sun.management.jmxremote.ssl=false', '-Dcom.sun.management.jmxremote.authenticate=false']
 }
 ```
@@ -169,22 +170,27 @@ Primary class and entry point of the module
 
 **Packages and service**
 
-#####`installation_support`
+#####`install_from`
 What type of source to install from. The module will download the necessary files by itself. Valid values are `package` and `archive`. Defaults to `package`.
+
 #####`archive_source`
 Source of the tomcat server archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version}/bin/apache-tomcat-${version}.tar.gz`
+
 #####`version`
-Tomcat full version number. The valid format is 'x.y.z'. Default depends on the distribution.  
-*Note:* if you install tomcat from package and define this value manually, please make **sure** this version of tomcat if available in your system's repositories, since several sub-parameters depend on it  
-A list of available versions in each supported distribution is present withing the `params` class.
+Tomcat full version number. The valid format is 'x.y.z'. If you install tomcat from package and define this value manually, make **sure** this version of tomcat if available in your system's repositories, since several sub-parameters depend on it. Default depends on the distribution.
+
 #####`package_name`
 Tomcat package name. Ignored if installed from archive. Default depends on the distribution.
+
 #####`tomcat_native`
 Whether to install the Tomcat Native library. Boolean value. Defaults to `false`.
+
 #####`tomcat_native_package_name`
 Tomcat Native library package name. Default depends on the distribution. 
+
 #####`log4j`
 Whether to install the log4j library. Boolean value. Defaults to `false`.
+
 #####`log4j_package_name`
 Log4j package name. Default depends on the distribution.
 
@@ -207,22 +213,34 @@ Parameters common to both `tomcat` and `tomcat::instance`
 #####`root_path`
 Absolute path to the root of all tomcat instances. This parameter is ignored in the global context, unless tomcat was installed from archive. Defaults to `/opt` (global) / `/opt/tomcat_instances` (instance).  
 *Notes:*
-* main instance will be installed in `${root_path}/tomcat-${version}` (if installed from archive) and both $CATALINA_HOME and $CATALINA_BASE will be set to that folder 
+* the main instance will be installed in `${root_path}/tomcat-${version}` (if installed from archive) and both $CATALINA_HOME and $CATALINA_BASE will be set to that folder 
 * other instances will be installed in `${root_path}/${title}` (in all cases) and $CATALINA_BASE will be set to that folder
 
 #####`service_name`
 Tomcat service name. Defaults to `package_name` (global) / `${package_name}_${title}` (instance).
+
 #####`service_ensure`
 Whether the service should be running. Valid values are `stopped` and `running`. Defaults to `running`.
+
 #####`service_enable`
 Whether to enable the tomcat service. Boolean value. Defaults to `true`.
+
 #####`service_start`
 Optional override command for starting the service. Default depends on the platform.
+
 #####`service_stop`
 Optional override command for stopping the service. Default depends on the platform.
+
+#####`tomcat_user`
+Tomcat user. Defaults to `tomcat` / `service_name` (Debian).
+
+#####`tomcat_group`
+Tomcat group. Defaults to `tomcat_user`.
+
 #####`enable_extras`
 Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.  
-*Warning:* enabled globally if defined within the global context
+*Warning:* extra libraries are enabled globally if defined within the global context
+
 #####`manage_firewall`
 Whether to automatically manage firewall rules. Boolean value. Defaults to `false`.
 
@@ -230,12 +248,16 @@ Whether to automatically manage firewall rules. Boolean value. Defaults to `fals
 
 #####`admin_webapps`
 Whether to enable admin webapps (manager/host-manager). This will also install the required packages if tomcat was installed from package. This parameter is ignored if tomcat was installed from archive, since tomcat archives always contain these apps. Boolean value. Defaults to `true`.
+
 #####`admin_webapps_package_name`
 Admin webapps package name. Default depends on the distribution.
+
 #####`create_default_admin`
 Whether to create default admin user (roles: 'manager-gui', 'manager-script', 'admin-gui' and 'admin-script'). Boolean value. Defaults to `false`.
+
 #####`admin_user`
 Admin user name. Defaults to `tomcatadmin`.
+
 #####`admin_password`
 Admin user password. Defaults to `password`.
 
@@ -243,38 +265,55 @@ Admin user password. Defaults to `password`.
 
 #####`control_port`
 Server control port. Defaults to `8005` (global) / `8006` (instance).
+
 #####`threadpool_executor`
 Whether to enable the [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`.
+
 #####`http_connector`
 Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`.
+
 #####`http_port`
 HTTP connector port. Defaults to `8080` (global) / `8081` (instance).
+
 #####`use_threadpool`
 Whether to use the previously described Executor within the HTTP connector.	 Boolean value. Defaults to `false`.
+
 #####`ssl_connector`
 Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#SSL_Support). Boolean value. Defaults to `false`.
+
 #####`ssl_port`
 SSL connector port. Defaults to `8443` (global) / `8444` (instance).
+
 #####`ajp_connector`
 Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp). Boolean value. Defaults to `true`.
+
 #####`ajp_port`
 AJP connector port. Defaults to `8009` (global) / `8010` (instance).
+
 #####`jvmroute`
 Engine's [jvmRoute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes) attribute. Defaults to `undef`.
+
 #####`hostname`
 Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html). Defaults to `localhost`.
+
 #####`autodeploy`, `deployOnStartup`, `undeployoldversions`, `unpackwars`
 Host's [common attributes](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html#Common_Attributes). Use tomcat's defaults (see doc).
+
 #####`singlesignon_valve`
 Whether to enable the [Single Sign On Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Single_Sign_On_Valve). Boolean value. Defaults to `false`.
+
 #####`accesslog_valve`
 Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Access_Log_Valve). Boolean value. Defaults to `true`.
+
 #####`jmx_listener`
 Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener)
+
 #####`jmx_registry_port`
 JMX/RMI registry port. Defaults to `8050` (global) / `8052` (instance).
+
 #####`jmx_server_port`
 JMX/RMI server port. Defaults to `8051` (global) / `8053` (instance).
+
 #####`jmx_bind_address`
 JMX/RMI server interface address. Defaults to `undef`.
 
@@ -286,46 +325,76 @@ Absolute path to the environment configuration (*setenv*). Default depends on th
 Please see [catalina.sh](http://svn.apache.org/repos/asf/tomcat/tc8.0.x/trunk/bin/catalina.sh) for a description of the following environment variables.
 
 #####`catalina_home`
-$CATALINA_HOME. Default depends on the platform.
+$CATALINA_HOME. Default:
+* package: *platform specific*
+* archive: `${root_path}/tomcat-${version}`
+
 #####`catalina_base`
-$CATALINA_BASE. Default depends on the platform.
+$CATALINA_BASE. Default:
+* package: *platform specific*
+* archive: `${root_path}/${title}`
+
 #####`jasper_home`
 $JASPER_HOME. Defaults to `catalina_home`.
+
 #####`catalina_tmpdir`
-$CATALINA_TMPDIR. Defaults to `${catalina_home}/temp`
+$CATALINA_TMPDIR. Defaults to `${catalina_base}/temp`
+
 #####`catalina_pid`
-$CATALINA_PID. Defaults to `/var/run/${service_name}.pid`
-#####`java_home`
-$JAVA_HOME. Defaults to `undef`.
-#####`java_opts`
-$JAVA_OPTS. Array. Defaults to `['-server']`.
+$CATALINA_PID. Default:
+* package: `/var/run/${service_name}.pid`
+* archive: `${catalina_tmpdir}/${service_name}.pid`
+
 #####`catalina_opts`
 $CATALINA_OPTS. Array. Defaults to `[]`.
+
+#####`java_home`
+$JAVA_HOME. Defaults to `undef`.
+
+#####`java_opts`
+$JAVA_OPTS. Array. Defaults to `['-server']`.
+
+#####`jpda_enable`
+Enable JPDA debugger. Boolean value. Effective only if installed from archive. Defaults to `false`.
+
+#####`jpda_transport`
+$JPDA_TRANSPORT. Defaults to `undef`.
+
+#####`jpda_address`
+$JPDA_ADDRESS. Defaults to `undef`.
+
+#####`jpda_suspend`
+$JPDA_SUSPEND. Defaults to `undef`.
+
+#####`jpda_opts`
+$JPDA_OPTS. Array. Defaults to `[]`.
+
 #####`security_manager`
 Whether to enable the security manager. Boolean value. Defaults to `false`.
-#####`tomcat_user`
-Tomcat user. Defaults to `service_name`.
-#####`tomcat_group`
-Tomcat group. Defaults to `tomcat_user`.
+
 #####`lang`
 Tomcat locale. Defaults to `undef`.
+
 #####`shutdown_wait`
-How long to wait for a graceful shutdown before killing the process. Value in seconds. Defaults to `30`.  
-*Note:* RedHat only
+How long to wait for a graceful shutdown before killing the process. Value in seconds. Only available on RedHat 6- systems and if installed from package. Defaults to `30`.
+
 #####`shutdown_verbose`
-Whether to display start/shutdown messages. Boolean value. Defaults to `false`.  
-*Note:* RedHat only
+Whether to display start/shutdown messages. Boolean value. Only available on RedHat 6- systems and if installed from package. Defaults to `false`.
+
 #####`custom_fragment`
-Custom variables, one per line.
+Custom environment variables, one per line.
 
 **Logging**
 
 Some extra documentation about [log4j](http://logging.apache.org/log4j/)'s usage with tomcat is available on [this page](http://tomcat.apache.org/tomcat-8.0-doc/logging.html#Using_Log4j).
+
 #####`log4j_enable`
 Whether to use log4j rather than *java.util.logging* for Tomcat internal logging. Boolean value. Defaults to `false`.  
-*Warning:* enabled globally if defined within the global context
+*Warning:* log4j is enabled globally if defined within the global context
+
 #####`log4j_conf_type`
 Log4j configuration type. Valid values are `ini` and `xml`. Defaults to `ini`.
+
 #####`log4j_conf_source`
 Where to get log4j's configuration from. A [sample file](https://raw.githubusercontent.com/tOnI0/aco-tomcat/master/files/log4j/log4j.properties) is provided with this module. Defaults to the sample file `log4j.properties`.
 
@@ -337,8 +406,10 @@ Create tomcat UserDatabase entries
 
 #####`username`
 User name (string)
+
 #####`password`
 User password (string)
+
 #####`roles`
 User roles (array of strings)
 

@@ -116,15 +116,26 @@ define tomcat::instance (
   # global configuration file
   #----------------------------------------------------------------------------------
   $config_path          = undef,
+  # catalina
   $catalina_home        = undef,
   $catalina_base        = undef,
   $jasper_home          = undef,
   $catalina_tmpdir      = undef,
   $catalina_pid         = undef,
+  $catalina_opts        = [],
+  # java
   $java_home            = undef,
   $java_opts            = ['-server'],
-  $catalina_opts        = [],
+  # debug
+  $jpda_enable          = false,
+  $jpda_transport       = undef,
+  $jpda_address         = undef,
+  $jpda_suspend         = undef,
+  $jpda_opts            = [],
+  # other
   $security_manager     = false,
+  $tomcat_user          = undef,
+  $tomcat_group         = undef,
   $lang                 = undef,
   $shutdown_wait        = 30,
   $shutdown_verbose     = false,
@@ -142,7 +153,7 @@ define tomcat::instance (
   # -----------------------#
 
   if $service_name == undef {
-    $service_name_real = $::tomcat::installation_support ? {
+    $service_name_real = $::tomcat::install_from ? {
       'package' => "${::tomcat::package_name}_${name}",
       default   => "${::tomcat::service_name_real}_${name}"
     } } else {
@@ -168,7 +179,7 @@ define tomcat::instance (
   }
 
   if $catalina_tmpdir == undef {
-    case $::tomcat::installation_support {
+    case $::tomcat::install_from {
       'package' : {
         $catalina_tmpdir_real = $::osfamily ? {
           'Debian' => '$JVM_TMP',
@@ -183,7 +194,7 @@ define tomcat::instance (
   }
 
   if $catalina_pid == undef {
-    case $::tomcat::installation_support {
+    case $::tomcat::install_from {
       'package' : { $catalina_pid_real = "/var/run/${service_name_real}.pid" }
       default   : { $catalina_pid_real = "${catalina_tmpdir_real}/${service_name_real}.pid" }
     }
@@ -192,7 +203,7 @@ define tomcat::instance (
   }
 
   if $config_path == undef {
-    case $::tomcat::installation_support {
+    case $::tomcat::install_from {
       'package' : {
         $config_path_real = $::osfamily ? {
           'Debian' => "/etc/default/${service_name_real}",
@@ -207,21 +218,32 @@ define tomcat::instance (
   }
 
   if $service_start == undef {
-    case $::tomcat::installation_support {
+    case $::tomcat::install_from {
       'package' : { $service_start_real = '/usr/sbin/tomcat-sysd stop' }
-      default   : { $service_start_real = "${catalina_home_real}/bin/catalina.sh start" }
+      default   : {
+        $start_cmd = $jpda_enable ? {
+          true    => 'jpda start',
+          default => 'start'
+        }
+        $service_start_real = "${catalina_home_real}/bin/catalina.sh ${start_cmd}"
+      }
     }
+  } else {
+    $service_start_real = $service_start
   }
 
   if $service_stop == undef {
-    case $::tomcat::installation_support {
+    case $::tomcat::install_from {
       'package' : { $service_stop_real = '/usr/sbin/tomcat-sysd stop' }
       default   : { $service_stop_real = "${catalina_home_real}/bin/catalina.sh stop" }
     }
+  } else {
+    $service_stop_real = $service_stop
   }
 
   $java_opts_real = join($java_opts, ' ')
   $catalina_opts_real = join($catalina_opts, ' ')
+  $jpda_opts_real = join($jpda_opts, ' ')
 
   if $::osfamily == 'Debian' {
     $security_manager_real = $security_manager ? {
@@ -247,7 +269,7 @@ define tomcat::instance (
       provider => systemd }
   }
 
-  case $::tomcat::installation_support {
+  case $::tomcat::install_from {
     'package' : {
       # manage startup script/unit
       if $::osfamily == 'Debian' and $tomcat::maj_version > 6 {
@@ -315,9 +337,11 @@ define tomcat::instance (
         }
         # temporary solution until a proper init script is included
       } else {
-        $catalina_script = "${catalina_home_real}/bin/catalina.sh"
-        $start_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_script} start'"
-        $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_script} stop'"
+        $start_command = $jpda_enable ? {
+          true    => "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_home_real}/bin/catalina.sh jpda start'",
+          default => "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_home_real}/bin/catalina.sh start'"
+        }
+        $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_home_real}/bin/catalina.sh jpda stop'"
         $status_command = "/usr/bin/pgrep -d , -u ${::tomcat::tomcat_user_real} -G ${::tomcat::tomcat_group_real} -f Dcatalina.base=${catalina_base_real}"
 
         # generate tomcat service
@@ -391,7 +415,7 @@ define tomcat::instance (
       path   => "${catalina_base_real}/temp"
   }
 
-  if $::osfamily == 'Debian' and $::tomcat::installation_support == 'package' {
+  if $::osfamily == 'Debian' and $::tomcat::install_from == 'package' {
     file { "instance ${name} conf/policy.d directory":
       ensure  => directory,
       path    => "${catalina_base_real}/conf/policy.d",
@@ -421,8 +445,6 @@ define tomcat::instance (
   # generate and manage global parameters
   # Template uses:
   #-
-  # note: defining the exact same parameters in several files may seem awkward,
-  # but it avoids the randomness observed in some older releases due to buggy startup scripts
   file { "instance ${name} environment variables":
     path    => $config_path_real,
     content => template("${module_name}/common/setenv.erb"),
@@ -471,7 +493,7 @@ define tomcat::instance (
   # --------------#
 
   if $admin_webapps { # generate OS-specific variables
-    case $::tomcat::installation_support {
+    case $::tomcat::install_from {
       'package' : {
         $admin_webapps_path = $::osfamily ? {
           'Debian' => "/usr/share/${::tomcat::admin_webapps_package_name_real}",

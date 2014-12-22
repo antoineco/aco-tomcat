@@ -45,5 +45,14 @@ SHUTDOWN_WAIT="<%= @shutdown_wait %>"
 SHUTDOWN_VERBOSE="<%= @shutdown_verbose %>"
 
 <% end -%>
+<% if @jpda_transport and @jpda_transport != '' %>JPDA_TRANSPORT="<%= @jpda_transport %>"
+<% end -%>
+<% if @jpda_address and @jpda_address != '' %>JPDA_ADDRESS="<%= @jpda_address %>"
+<% end -%>
+<% if @jpda_suspend and @jpda_suspend != '' %>JPDA_SUSPEND="<%= @jpda_suspend %>"
+<% end -%>
+<% if @jpda_opts and @jpda_opts != [] %>JPDA_OPTS="<%= @jpda_opts_real %>"
+<% end -%>
+
 # Custom variables
 <% if @custom_fragment and @custom_fragment != '' -%><%= @custom_fragment %><% end -%>

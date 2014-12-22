@@ -33,9 +33,11 @@ class tomcat::service::archive {
     }
     # temporary solution until a proper init script is included
   } else {
-    $catalina_script = "${::tomcat::catalina_home_real}/bin/catalina.sh"
-    $start_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_script} start'"
-    $stop_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_script} stop'"
+    $start_command = $::tomcat::jpda_enable ? {
+      true    => "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${::tomcat::catalina_home_real}/bin/catalina.sh jpda start'",
+      default => "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${::tomcat::catalina_home_real}/bin/catalina.sh start'"
+    }
+    $stop_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${::tomcat::catalina_home_real}/bin/catalina.sh stop'"
     $status_command = "/usr/bin/pgrep -d , -u ${::tomcat::tomcat_user_real} -G ${::tomcat::tomcat_group_real} -f Dcatalina.base=${::tomcat::catalina_base_real}"
 
     service { $::tomcat::service_name_real:

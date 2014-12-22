@@ -1,3 +1,8 @@
+###0.5.2
+
+* `installation_support` renamed to `install_from`
+* New debugging parameters: `jpda_enable`, `jpda_transport`, `jpda_address`, `jpda_suspend` and `jpda_opts`
+
 ###0.5.1
 
 * `tomcat_user` defaults to `service_name` if installed from package

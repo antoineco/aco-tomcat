@@ -13,7 +13,7 @@ class tomcat::service {
       provider => systemd }
   }
 
-  case $::tomcat::installation_support {
+  case $::tomcat::install_from {
     'package' : { contain ::tomcat::service::package }
     default   : { contain ::tomcat::service::archive }
   }

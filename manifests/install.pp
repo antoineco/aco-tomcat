@@ -8,7 +8,7 @@ class tomcat::install {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
-  case $::tomcat::installation_support {
+  case $::tomcat::install_from {
     'package' : { contain ::tomcat::install::package }
     default   : { contain ::tomcat::install::archive }
   }
