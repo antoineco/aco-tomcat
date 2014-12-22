@@ -21,8 +21,6 @@ class tomcat::config {
   # generate and manage global parameters
   # Template uses:
   #-
-  # note: defining the exact same parameters in two files may seem awkward,
-  # but it avoids the randomness observed in some releases due to buggy startup scripts
   file { 'tomcat environment variables':
     path    => $::tomcat::config_path_real,
     content => template("${module_name}/common/setenv.erb"),
