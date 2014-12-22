@@ -339,7 +339,8 @@ define tomcat::instance (
 
   File {
     owner => $::tomcat::tomcat_user_real,
-    group => $::tomcat::tomcat_group_real
+    group => $::tomcat::tomcat_group_real,
+    mode  => '0660'
   }
 
   if !defined(File['tomcat instances root']) {
@@ -414,7 +415,6 @@ define tomcat::instance (
     content => template("${module_name}/common/server.xml.erb"),
     owner   => $::tomcat::tomcat_user_real,
     group   => $::tomcat::tomcat_group_real,
-    mode    => '0600',
     notify  => Service[$service_name_real]
   }
 
@@ -428,7 +428,6 @@ define tomcat::instance (
     content => template("${module_name}/common/setenv.erb"),
     owner   => $::tomcat::tomcat_user_real,
     group   => $::tomcat::tomcat_group_real,
-    mode    => '0644',
     notify  => Service[$service_name_real]
   }
 

@@ -41,7 +41,10 @@ class tomcat::install::archive {
 
   file { 'tomcat logs directory':
     ensure => directory,
-    path   => "/var/log/${::tomcat::service_name_real}"
+    path   => "/var/log/${::tomcat::service_name_real}",
+    owner  => $::tomcat::tomcat_user_real,
+    group  => $::tomcat::tomcat_group_real,
+    mode   => '0660'
   }
 
   # warn if admin webapps were selected for installation
