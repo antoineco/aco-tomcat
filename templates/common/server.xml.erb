@@ -77,7 +77,7 @@
 <% end -%>
 <% if @accesslog_valve -%>
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
-               prefix="localhost_access_log<% if scope.function_versioncmp([scope['::tomcat::maj_version'], '7']) <= 0 -%>.<% end -%>" suffix=".txt"
+               prefix="<%= @hostname %>_access_log<% if scope.function_versioncmp([scope['::tomcat::maj_version'], '7']) <= 0 -%>.<% end -%>" suffix=".txt"
                pattern="%h %l %u %t &quot;%r&quot; %s %b" />
 
 <% end -%>
