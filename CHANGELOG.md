@@ -1,3 +1,9 @@
+###0.5.1
+
+* `tomcat_user` defaults to `service_name` if installed from package
+* Log name in Access Log valve now matches `hostname`
+* Fixed log folder permissions
+
 ###0.5.0
 
 * Support SuSE OS family
