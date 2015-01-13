@@ -14,7 +14,7 @@ class tomcat::service {
   }
 
   case $::tomcat::install_from {
-    'package' : { contain ::tomcat::service::package }
-    default   : { contain ::tomcat::service::archive }
+    'package' : { contain tomcat::service::package }
+    default   : { contain tomcat::service::archive }
   }
 }

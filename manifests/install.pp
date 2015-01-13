@@ -9,8 +9,8 @@ class tomcat::install {
   }
 
   case $::tomcat::install_from {
-    'package' : { contain ::tomcat::install::package }
-    default   : { contain ::tomcat::install::archive }
+    'package' : { contain tomcat::install::package }
+    default   : { contain tomcat::install::archive }
   }
 
   # tomcat native library
