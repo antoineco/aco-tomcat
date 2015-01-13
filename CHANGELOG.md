@@ -1,3 +1,7 @@
+###0.5.3
+
+* Removed `root_path` parameter from main class (redundant with `catalina_home`)
+
 ###0.5.2
 
 * `installation_support` renamed to `install_from`

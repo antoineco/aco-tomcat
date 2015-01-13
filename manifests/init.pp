@@ -7,9 +7,7 @@
 # [*install_from*]
 #   what type of source to install from (valid: 'package'|'archive')
 # [*archive_source*]
-#   where to download archive from (*only* if installed from archive)
-# [*root_path*]
-#   root installation path (*only* if installed from archive)
+#   where to download archive from (only if installed from archive)
 # [*version*]
 #   tomcat full version number (valid format: x.y.z)
 # [*package_name*]
@@ -76,7 +74,6 @@ class tomcat (
   #----------------------------------------------------------------------------------
   $install_from         = 'package',
   $archive_source       = undef,
-  $root_path            = '/opt',
   $version              = $::tomcat::params::version,
   $package_name         = $::tomcat::params::package_name,
   $service_name         = undef,
@@ -204,10 +201,8 @@ class tomcat (
   }
 
   if $catalina_home == undef {
-    $catalina_home_real = $install_from ? {
-      'package' => "/usr/share/${service_name_real}",
-      default   => "${root_path}/tomcat-${version}"
-    } } else {
+    $catalina_home_real = "/usr/share/${service_name_real}"
+  } else {
     $catalina_home_real = $catalina_home
   }
 

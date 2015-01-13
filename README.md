@@ -202,19 +202,17 @@ Create a tomcat instance
 
 **Parameters within `tomcat::instance`:**
 
-No instance-specific parameters. See [Common parameters](#common-parameters)
+#####`root_path`
+Absolute path to the root of all tomcat instances. Defaults to `/opt/tomcat_instances`.  
+*Note:* instances will be installed in `${root_path}/${title}` and $CATALINA_BASE will be set to that folder
+
+See also [Common parameters](#common-parameters)
 
 ####Common parameters
 
 Parameters common to both `tomcat` and `tomcat::instance`
 
 **Packages and service**
-
-#####`root_path`
-Absolute path to the root of all tomcat instances. This parameter is ignored in the global context, unless tomcat was installed from archive. Defaults to `/opt` (global) / `/opt/tomcat_instances` (instance).  
-*Notes:*
-* the main instance will be installed in `${root_path}/tomcat-${version}` (if installed from archive) and both $CATALINA_HOME and $CATALINA_BASE will be set to that folder 
-* other instances will be installed in `${root_path}/${title}` (in all cases) and $CATALINA_BASE will be set to that folder
 
 #####`service_name`
 Tomcat service name. Defaults to `package_name` (global) / `${package_name}_${title}` (instance).
@@ -325,14 +323,10 @@ Absolute path to the environment configuration (*setenv*). Default depends on th
 Please see [catalina.sh](http://svn.apache.org/repos/asf/tomcat/tc8.0.x/trunk/bin/catalina.sh) for a description of the following environment variables.
 
 #####`catalina_home`
-$CATALINA_HOME. Default:
-* package: *platform specific*
-* archive: `${root_path}/tomcat-${version}`
+$CATALINA_HOME. Default depends on the platform.
 
 #####`catalina_base`
-$CATALINA_BASE. Default:
-* package: *platform specific*
-* archive: `${root_path}/${title}`
+$CATALINA_BASE. Default depends on the platform.
 
 #####`jasper_home`
 $JASPER_HOME. Defaults to `catalina_home`.
