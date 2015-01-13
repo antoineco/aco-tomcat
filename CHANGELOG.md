@@ -1,6 +1,10 @@
+###0.5.4
+
+Fix [compatibility issue](https://tickets.puppetlabs.com/browse/PUP-1597) with Puppet versions between 3.4 and 3.6
+
 ###0.5.3
 
-* Removed `root_path` parameter from main class (redundant with `catalina_home`)
+Removed `root_path` parameter from main class (redundant with `catalina_home`)
 
 ###0.5.2
 
