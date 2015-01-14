@@ -1,3 +1,8 @@
+###0.6.0
+
+* Compatible with future parser
+* Minor code improvements
+
 ###0.5.4
 
 Fix [compatibility issue](https://tickets.puppetlabs.com/browse/PUP-1597) with Puppet versions between 3.4 and 3.6
