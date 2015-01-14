@@ -272,7 +272,7 @@ define tomcat::instance (
   case $::tomcat::install_from {
     'package' : {
       # manage startup script/unit
-      if $::osfamily == 'Debian' and $tomcat::maj_version > 6 {
+      if $::osfamily == 'Debian' and $::tomcat::maj_version > 6 {
         file { "${service_name_real} service unit":
           path    => "/etc/init.d/${service_name_real}",
           owner   => 'root',
@@ -362,9 +362,10 @@ define tomcat::instance (
   # ---------------------#
 
   File {
-    owner => $::tomcat::tomcat_user_real,
-    group => $::tomcat::tomcat_group_real,
-    mode  => '0660'
+    owner   => $::tomcat::tomcat_user_real,
+    group   => $::tomcat::tomcat_group_real,
+    mode    => '0660',
+    require => Class['::tomcat::install']
   }
 
   if !defined(File['tomcat instances root']) {
@@ -433,7 +434,27 @@ define tomcat::instance (
 
   # generate and manage server configuration
   # Template uses:
-  #-
+  # - $control_port
+  # - $jmx_registry_port
+  # - $jmx_server_port
+  # - $jmx_bind_address
+  # - $apr_sslengine
+  # - $threadpool_executor
+  # - $http_connector
+  # - $http_port
+  # - $use_threadpool
+  # - $ssl_connector
+  # - $ssl_port
+  # - $ajp_connector
+  # - $ajp_port
+  # - $hostname
+  # - $jvmroute
+  # - $autodeploy
+  # - $deployOnStartup
+  # - $unpackwars
+  # - $undeployoldversions
+  # - $singlesignon_valve
+  # - $accesslog_valve
   file { "instance ${name} server configuration":
     path    => "${catalina_base_real}/conf/server.xml",
     content => template("${module_name}/common/server.xml.erb"),
@@ -444,7 +465,28 @@ define tomcat::instance (
 
   # generate and manage global parameters
   # Template uses:
-  #-
+  # - $instance
+  # - $service_name_real
+  # - $java_home
+  # - $catalina_base_real
+  # - $catalina_home_real
+  # - $jasper_home_real
+  # - $catalina_tmpdir_real
+  # - $catalina_pid_real
+  # - $java_opts_real
+  # - $catalina_opts_real
+  # - $tomcat::tomcat_user_real
+  # - $tomcat::tomcat_group_real
+  # - $maj_version
+  # - $lang
+  # - $security_manager_real
+  # - $shutdown_wait
+  # - $shutdown_verbose
+  # - $jpda_transport
+  # - $jpda_address
+  # - $jpda_suspend
+  # - $jpda_opts_real
+  # - $custom_fragment
   file { "instance ${name} environment variables":
     path    => $config_path_real,
     content => template("${module_name}/common/setenv.erb"),
