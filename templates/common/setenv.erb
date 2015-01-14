@@ -15,9 +15,9 @@ CATALINA_TMPDIR="<%= @catalina_tmpdir_real %>"
 <% if @catalina_pid_real and @catalina_pid_real != '' %>CATALINA_PID="<%= @catalina_pid_real %>"
 <% end -%>
 
-<% if @java_opts and @java_opts != [] %>JAVA_OPTS="<%= @java_opts_real %>"
+<% if @java_opts_real and @java_opts_real != '' %>JAVA_OPTS="<%= @java_opts_real %>"
 <% end -%>
-<% if @catalina_opts and @catalina_opts != [] %>CATALINA_OPTS="<%= @catalina_opts_real %>"
+<% if @catalina_opts_real and @catalina_opts_real != '' %>CATALINA_OPTS="<%= @catalina_opts_real %>"
 <% end -%>
 
 <% if scope['::osfamily'] == 'Debian' -%>
@@ -51,7 +51,7 @@ SHUTDOWN_VERBOSE="<%= @shutdown_verbose %>"
 <% end -%>
 <% if @jpda_suspend and @jpda_suspend != '' %>JPDA_SUSPEND="<%= @jpda_suspend %>"
 <% end -%>
-<% if @jpda_opts and @jpda_opts != [] %>JPDA_OPTS="<%= @jpda_opts_real %>"
+<% if @jpda_opts_real and @jpda_opts_real != '' %>JPDA_OPTS="<%= @jpda_opts_real %>"
 <% end -%>
 
 # Custom variables
