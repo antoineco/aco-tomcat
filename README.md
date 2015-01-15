@@ -13,6 +13,7 @@
     * [Common parameters](#common-parameters)
     * [Define: tomcat::userdb_entry](#define-tomcatuserdb_entry)
 5. [To Do](#to-do)
+6. [Contributors](#contributors)
 
 ##Overview
 
@@ -297,20 +298,18 @@ Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.h
 #####`autodeploy`, `deployOnStartup`, `undeployoldversions`, `unpackwars`
 Host's [common attributes](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html#Common_Attributes). Use tomcat's defaults (see doc).
 
+#####`lockout_realm`
+Whether to enable the [LockOut Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#LockOut_Realm_-_org.apache.catalina.realm.LockOutRealm). Boolean value. Defaults to `true`.
+
+#####`userdatabase_realm`
+Whether to enable the [UserDatabase Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#UserDatabase_Realm_-_org.apache.catalina.realm.UserDatabaseRealm). 
+Boolean value. Defaults to `true`. The User Database Realm is inserted within the Lock Out Realm if it is enabled.
+
 #####`singlesignon_valve`
 Whether to enable the [Single Sign On Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Single_Sign_On_Valve). Boolean value. Defaults to `false`.
 
 #####`accesslog_valve`
 Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Access_Log_Valve). Boolean value. Defaults to `true`.
-
-#####`lockout_realm`
-Whether to enable the [Lock Out Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#LockOut_Realm_-_org.apache.catalina.realm.LockOutRealm). Boolean value. 
-Defaults to `true`.
-
-#####`userdatabase_realm`
-Whether to enable the [User Database Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#UserDatabase_Realm_-_org.apache.catalina.realm.UserDatabaseRealm). 
-Boolean value. Defaults to `true`. The User Database Realm is inserted within the Lock Out Realm if it is enabled.
-
 
 #####`jmx_listener`
 Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener)
@@ -420,5 +419,9 @@ User roles (array of strings)
 
 * Proper startup script for distributions which do not have systemd
 * Parameters validation
+
+##Contributors
+
+* [etlweather](https://github.com/etlweather)
 
 Features request and contributions are always welcome!

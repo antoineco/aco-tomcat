@@ -109,13 +109,13 @@ define tomcat::instance (
   $undeployoldversions  = false,
   $unpackwars           = true,
   #----------------------------------------------------------------------------------
-  # valves
-  $singlesignon_valve   = false,
-  $accesslog_valve      = true,
-  #----------------------------------------------------------------------------------
   # realms
   $lockout_realm        = true,
   $userdatabase_realm   = true,
+  #----------------------------------------------------------------------------------
+  # valves
+  $singlesignon_valve   = false,
+  $accesslog_valve      = true,
   #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------

@@ -26,10 +26,10 @@ class tomcat::config {
   $deployOnStartup = $::tomcat::deployOnStartup
   $unpackwars = $::tomcat::unpackwars
   $undeployoldversions = $::tomcat::undeployoldversions
-  $singlesignon_valve = $::tomcat::singlesignon_valve
-  $accesslog_valve = $::tomcat::accesslog_valve
   $lockout_realm = $::tomcat::lockout_realm
   $userdatabase_realm = $::tomcat::userdatabase_realm
+  $singlesignon_valve = $::tomcat::singlesignon_valve
+  $accesslog_valve = $::tomcat::accesslog_valve
   $instance = $::tomcat::instance
   $service_name_real = $::tomcat::service_name_real
   $java_home = $::tomcat::java_home
@@ -72,10 +72,10 @@ class tomcat::config {
   # - $deployOnStartup
   # - $unpackwars
   # - $undeployoldversions
-  # - $singlesignon_valve
-  # - $accesslog_valve
   # - $lockout_realm
   # - $userdatabase_realm
+  # - $singlesignon_valve
+  # - $accesslog_valve
   file { 'tomcat server configuration':
     path    => "${::tomcat::catalina_base_real}/conf/server.xml",
     content => template("${module_name}/common/server.xml.erb"),
