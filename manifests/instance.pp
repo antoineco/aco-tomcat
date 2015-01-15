@@ -113,6 +113,10 @@ define tomcat::instance (
   $singlesignon_valve   = false,
   $accesslog_valve      = true,
   #----------------------------------------------------------------------------------
+  # realms
+  $lockout_realm        = true,
+  $userdatabase_realm   = true,
+  #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------
   $config_path          = undef,
@@ -455,6 +459,8 @@ define tomcat::instance (
   # - $undeployoldversions
   # - $singlesignon_valve
   # - $accesslog_valve
+  # - $lockout_realm
+  # - $userdatabase_realm
   file { "instance ${name} server configuration":
     path    => "${catalina_base_real}/conf/server.xml",
     content => template("${module_name}/common/server.xml.erb"),
