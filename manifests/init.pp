@@ -148,6 +148,10 @@ class tomcat (
   $singlesignon_valve   = false,
   $accesslog_valve      = true,
   #----------------------------------------------------------------------------------
+  # realms
+  $lockout_realm        = true,
+  $userdatabase_realm   = true,
+  #----------------------------------------------------------------------------------
   # environment variables
   #----------------------------------------------------------------------------------
   $config_path          = undef,

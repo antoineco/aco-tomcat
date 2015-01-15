@@ -27,11 +27,13 @@
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
 
   <GlobalNamingResources>
+<% if @userdatabase_realm -%>
     <Resource name="UserDatabase" auth="Container"
               type="org.apache.catalina.UserDatabase"
               description="User database that can be updated and saved"
               factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
               pathname="conf/tomcat-users.xml" />
+<% end -%>
   </GlobalNamingResources>
 
   <Service name="Catalina">
@@ -63,10 +65,16 @@
 <% end -%>
     <Engine name="Catalina" defaultHost="<%= @hostname %>"<% if @jvmroute and @jvmroute != '' -%> jvmRoute="<%= @jvmroute %>"<% end -%>>
 
+<% if @lockout_realm -%>
       <Realm className="org.apache.catalina.realm.LockOutRealm">
-        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+<% end -%>
+<% if @userdatabase_realm -%>
+         <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
                resourceName="UserDatabase"/>
+<% end -%>
+<% if @lockout_realm -%>
       </Realm>
+<% end -%>
 
       <Host name="<%= @hostname %>" appBase="webapps"
             autoDeploy="<%= @autodeploy %>" deployOnStartup="<%= @deployOnStartup %>"

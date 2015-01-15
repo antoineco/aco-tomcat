@@ -303,6 +303,15 @@ Whether to enable the [Single Sign On Valve](http://tomcat.apache.org/tomcat-8.0
 #####`accesslog_valve`
 Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Access_Log_Valve). Boolean value. Defaults to `true`.
 
+#####`lockout_realm`
+Whether to enable the [Lock Out Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#LockOut_Realm_-_org.apache.catalina.realm.LockOutRealm). Boolean value. 
+Defaults to `true`.
+
+#####`userdatabase_realm`
+Whether to enable the [User Database Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#UserDatabase_Realm_-_org.apache.catalina.realm.UserDatabaseRealm). 
+Boolean value. Defaults to `true`. The User Database Realm is inserted within the Lock Out Realm if it is enabled.
+
+
 #####`jmx_listener`
 Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener)
 
