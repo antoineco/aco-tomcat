@@ -1,3 +1,7 @@
+###0.6.1
+
+New realm parameters: `$lockout_realm`, `$userdatabase_realm` (thanks [etlweather](https://github.com/etlweather)!)
+
 ###0.6.0
 
 * Compatible with future parser
