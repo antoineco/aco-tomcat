@@ -51,6 +51,7 @@ class tomcat::config {
   $jpda_opts_real = $::tomcat::jpda_opts_real
   $custom_fragment = $::tomcat::custom_fragment
   $globalnaming_resources = $::tomcat::globalnaming_resources
+  $realms = $::tomcat::realms
 
   # generate and manage server configuration
   # Template uses:

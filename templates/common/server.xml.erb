@@ -35,7 +35,7 @@
               pathname="conf/tomcat-users.xml" />
 <% end -%>
 
-<% if @globalnaming_resources and ! @globalnaming_resources? -%>
+<% if @globalnaming_resources and ! @globalnaming_resources.empty? -%>
    <%- [@globalnaming_resources].flatten.compact.each do |resource| -%>
    <Resource
       <%- resource.each_pair do |attrib, att_value| -%>
@@ -83,6 +83,17 @@
         <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
                resourceName="UserDatabase"/>
 <% end -%>
+
+<% if @realms and ! @realms.empty? -%>
+   <%- [@realms].flatten.compact.each do |realm| -%>
+   <Realm
+      <%- realm.each_pair do |attrib, att_value| -%>
+      <%= attrib %>="<%= att_value %>"
+      <%- end -%>
+      />
+   <%- end -%>
+<% end -%>
+
 <% if @lockout_realm -%>
       </Realm>
 <% end -%>
