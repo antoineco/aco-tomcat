@@ -10,7 +10,7 @@ class tomcat::service::archive {
 
   # systemd is prefered if supported
   if $::tomcat::params::systemd {
-    if $::operatingsystem == 'OpenSuSE' {
+    if $::osfamily == 'Suse' { # SuSE
       file { "${::tomcat::service_name_real} service unit":
         path    => "/usr/lib/systemd/system/${::tomcat::service_name_real}.service",
         owner   => 'root',
@@ -31,8 +31,10 @@ class tomcat::service::archive {
       enable   => $::tomcat::service_enable,
       require  => File["${::tomcat::service_name_real} service unit"];
     }
-    # temporary solution until a proper init script is included
-  } else {
+  }
+  # Debian/Ubuntu, RHEL 6, SLES 11, ...
+  # temporary solution until a proper init script is included
+  else {
     $start_command = $::tomcat::jpda_enable ? {
       true    => "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${::tomcat::catalina_home_real}/bin/catalina.sh jpda start'",
       default => "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${::tomcat::catalina_home_real}/bin/catalina.sh start'"

@@ -106,10 +106,12 @@ class tomcat::params {
             /^11\.[23]$/ : {
               $version = '6.0.18'
               $package_name = 'tomcat6'
+              $systemd = false
             }
             '12.0'       : {
               $version = '7.0.55'
               $package_name = 'tomcat'
+              $systemd = true
             }
             default      : {
               fail("Unsupported OS version ${::operatingsystemrelease}")
