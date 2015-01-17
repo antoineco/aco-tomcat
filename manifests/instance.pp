@@ -223,7 +223,7 @@ define tomcat::instance (
 
   if $service_start == undef {
     case $::tomcat::install_from {
-      'package' : { $service_start_real = '/usr/sbin/tomcat-sysd stop' }
+      'package' : { $service_start_real = '/usr/sbin/tomcat-sysd start' }
       default   : {
         $start_cmd = $jpda_enable ? {
           true    => 'jpda start',
@@ -337,11 +337,8 @@ define tomcat::instance (
       # Debian/Ubuntu, RHEL 6, SLES 11, ...
       # temporary solution until a proper init script is included
       else {
-        $start_command = $jpda_enable ? {
-          true    => "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_home_real}/bin/catalina.sh jpda start'",
-          default => "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_home_real}/bin/catalina.sh start'"
-        }
-        $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_home_real}/bin/catalina.sh jpda stop'"
+        $start_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_start_real}'"
+        $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_stop_real}'"
         $status_command = "/usr/bin/pgrep -d , -u ${::tomcat::tomcat_user_real} -G ${::tomcat::tomcat_group_real} -f Dcatalina.base=${catalina_base_real}"
 
         # generate tomcat service
