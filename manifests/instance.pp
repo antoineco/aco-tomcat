@@ -335,20 +335,23 @@ define tomcat::instance (
         }
       } 
       # Debian/Ubuntu, RHEL 6, SLES 11, ...
-      # temporary solution until a proper init script is included
       else {
         $start_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_start_real}'"
         $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_stop_real}'"
         $status_command = "/usr/bin/pgrep -d , -u ${::tomcat::tomcat_user_real} -G ${::tomcat::tomcat_group_real} -f Dcatalina.base=${catalina_base_real}"
 
-        # generate tomcat service
+		    file { "${service_name_real} service unit":
+		      path    => "/etc/init.d/${service_name_real}",
+		      owner   => 'root',
+		      group   => 'root',
+		      mode    => '0755',
+		      content => template("${module_name}/instance/tomcat_init_generic.erb")
+		    }
+
         service { $service_name_real:
-          ensure   => $service_ensure,
-          enable   => $service_enable,
-          provider => base,
-          start    => $start_command,
-          stop     => $stop_command,
-          status   => $status_command
+          ensure  => $service_ensure,
+          enable  => $service_enable,
+          require => File["${service_name_real} service unit"];
         }
       }
     }

@@ -27,25 +27,29 @@ class tomcat::service::archive {
     }
 
     service { $::tomcat::service_name_real:
-      ensure   => $::tomcat::service_ensure,
-      enable   => $::tomcat::service_enable,
-      require  => File["${::tomcat::service_name_real} service unit"];
+      ensure  => $::tomcat::service_ensure,
+      enable  => $::tomcat::service_enable,
+      require => File["${::tomcat::service_name_real} service unit"];
     }
   }
   # Debian/Ubuntu, RHEL 6, SLES 11, ...
-  # temporary solution until a proper init script is included
   else {
     $start_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${tomcat::service_start_real}'"
     $stop_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${::tomcat::service_stop_real}'"
     $status_command = "/usr/bin/pgrep -d , -u ${::tomcat::tomcat_user_real} -G ${::tomcat::tomcat_group_real} -f Dcatalina.base=${::tomcat::catalina_base_real}"
 
+    file { "${::tomcat::service_name_real} service unit":
+      path    => "/etc/init.d/${::tomcat::service_name_real}",
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      content => template("${module_name}/instance/tomcat_init_generic.erb")
+    }
+
     service { $::tomcat::service_name_real:
-      ensure   => $::tomcat::service_ensure,
-      enable   => $::tomcat::service_enable,
-      provider => base,
-      start    => $start_command,
-      stop     => $stop_command,
-      status   => $status_command
+      ensure  => $::tomcat::service_ensure,
+      enable  => $::tomcat::service_enable,
+      require => File["${::tomcat::service_name_real} service unit"];
     }
   }
 }
