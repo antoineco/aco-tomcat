@@ -47,7 +47,7 @@
 #  }
 #
 define tomcat::instance (
-  $root_path            = '/opt/tomcat_instances',
+  $root_path            = '/var/lib/tomcats',
   $service_name         = undef,
   $service_ensure       = 'running',
   $service_enable       = true,
