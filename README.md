@@ -204,7 +204,7 @@ Create a tomcat instance
 **Parameters within `tomcat::instance`:**
 
 #####`root_path`
-Absolute path to the root of all tomcat instances. Defaults to `/opt/tomcat_instances`.  
+Absolute path to the root of all tomcat instances. Defaults to `/var/lib/tomcats`.  
 *Note:* instances will be installed in `${root_path}/${title}` and $CATALINA_BASE will be set to that folder
 
 See also [Common parameters](#common-parameters)
@@ -417,7 +417,6 @@ User roles (array of strings)
 
 ##To Do
 
-* Proper startup script for distributions which do not have systemd
 * Parameters validation
 
 ##Contributors
