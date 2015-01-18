@@ -86,10 +86,10 @@
 
 <% if @realms and ! @realms.empty? -%>
    <%- [@realms].flatten.compact.each do |realm| -%>
-   <Realm
-      <%- realm.each_pair do |attrib, att_value| -%>
-      <%= attrib %>="<%= att_value %>"
-      <%- end -%>
+      <Realm
+         <%- realm.each_pair do |attrib, att_value| -%>
+         <%= attrib %>="<%= att_value %>"
+         <%- end -%>
       />
    <%- end -%>
 <% end -%>
