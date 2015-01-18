@@ -22,12 +22,21 @@ class tomcat::install::package {
     }
   }
 
-  # fix broken status check in some tomcat init scripts
-  if $::osfamily == 'RedHat' and $::operatingsystemmajrelease < 7 {
+  # fix broken bits in some tomcat init scripts
+  if $::osfamily == 'RedHat' and $::operatingsystemmajrelease < 7 { #fix 'status' command for instances
+    file_line { 'fix broken tomcat init script':
+      path     => "/etc/init.d/${::tomcat::service_name_real}",
+      line     => "            pid=\"$(/usr/bin/pgrep -d , -u \${TOMCAT_USER} -G \${TOMCAT_USER} -f Dcatalina.base=\${CATALINA_BASE})\"",
+      match    => 'pid=.*pgrep',
+      multiple => true,
+      require  => Package['tomcat server']
+    }
+  }
+  elsif $::osfamily == 'Debian' and $::tomcat::maj_version > 6 { #support symlinking init script to create instances
     file_line { 'fix broken tomcat init script':
       path    => "/etc/init.d/${::tomcat::service_name_real}",
-      line    => "            pid=\"$(/usr/bin/pgrep -d , -u \${TOMCAT_USER} -G \${TOMCAT_USER} -f Dcatalina.base=\${CATALINA_BASE})\"",
-      match   => 'pid=.*pgrep',
+      line    => "NAME=\"$(basename \$0)\"",
+      match   => "^NAME=.*$",
       require => Package['tomcat server']
     }
   }

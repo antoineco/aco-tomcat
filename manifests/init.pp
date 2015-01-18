@@ -277,7 +277,7 @@ class tomcat (
 
   if $service_start == undef {
     case $install_from {
-      'package' : { $service_start_real = '/usr/sbin/tomcat-sysd stop' }
+      'package' : { $service_start_real = '/usr/sbin/tomcat-sysd start' }
       default   : {
         $start_cmd = $jpda_enable ? {
           true    => 'jpda start',

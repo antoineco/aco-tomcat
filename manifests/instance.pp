@@ -47,7 +47,7 @@
 #  }
 #
 define tomcat::instance (
-  $root_path            = '/opt/tomcat_instances',
+  $root_path            = '/var/lib/tomcats',
   $service_name         = undef,
   $service_ensure       = 'running',
   $service_enable       = true,
@@ -227,7 +227,7 @@ define tomcat::instance (
 
   if $service_start == undef {
     case $::tomcat::install_from {
-      'package' : { $service_start_real = '/usr/sbin/tomcat-sysd stop' }
+      'package' : { $service_start_real = '/usr/sbin/tomcat-sysd start' }
       default   : {
         $start_cmd = $jpda_enable ? {
           true    => 'jpda start',
@@ -279,30 +279,24 @@ define tomcat::instance (
 
   case $::tomcat::install_from {
     'package' : {
-      # manage startup script/unit
-      if $::osfamily == 'Debian' and $::tomcat::maj_version > 6 {
-        file { "${service_name_real} service unit":
-          path    => "/etc/init.d/${service_name_real}",
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0755',
-          content => template("${module_name}/instance/tomcat${::tomcat::maj_version}_init_deb.erb");
-        }
-      } elsif $::operatingsystem == 'OpenSuSE' {
-        file { "${service_name_real} service unit":
-          path    => "/usr/lib/systemd/system/${service_name_real}.service",
-          owner   => 'root',
-          group   => 'root',
-          content => template("${module_name}/instance/systemd_unit_suse.erb")
-        }
-      } elsif $::operatingsystem == 'Fedora' or ($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' and $::operatingsystemmajrelease >= 7) {
-        file { "${service_name_real} service unit":
-          path    => "/usr/lib/systemd/system/${service_name_real}.service",
-          owner   => 'root',
-          group   => 'root',
-          content => template("${module_name}/instance/systemd_unit_rhel.erb")
-        }
-      } else {
+      # manage systemd unit on compatible systems
+      if $::tomcat::params::systemd {
+	      if $::osfamily == 'Suse' { # SuSE
+	        file { "${service_name_real} service unit":
+	          path    => "/usr/lib/systemd/system/${service_name_real}.service",
+	          owner   => 'root',
+	          group   => 'root',
+	          content => template("${module_name}/instance/systemd_unit_suse.erb")
+	        }
+	      } else { # RHEL 7+ or Fedora
+	        file { "${service_name_real} service unit":
+	          path    => "/usr/lib/systemd/system/${service_name_real}.service",
+	          owner   => 'root',
+	          group   => 'root',
+	          content => template("${module_name}/instance/systemd_unit_rhel.erb")
+	        }
+	      }
+      } else { # symlink main init script on all other distributions (Debian/Ubuntu, RHEL 6, SLES 11, ...)
         file { "${service_name_real} service unit":
           ensure => link,
           path   => "/etc/init.d/${service_name_real}",
@@ -322,7 +316,7 @@ define tomcat::instance (
     default   : {
       # systemd is prefered if supported
       if $::tomcat::params::systemd {
-        if $::operatingsystem == 'OpenSuSE' {
+        if $::osfamily == 'Suse' { # SuSE
           file { "${service_name_real} service unit":
             path    => "/usr/lib/systemd/system/${service_name_real}.service",
             owner   => 'root',
@@ -343,23 +337,25 @@ define tomcat::instance (
           enable  => $service_enable,
           require => File["${service_name_real} service unit"];
         }
-        # temporary solution until a proper init script is included
-      } else {
-        $start_command = $jpda_enable ? {
-          true    => "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_home_real}/bin/catalina.sh jpda start'",
-          default => "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_home_real}/bin/catalina.sh start'"
-        }
-        $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${catalina_home_real}/bin/catalina.sh jpda stop'"
+      } 
+      # Debian/Ubuntu, RHEL 6, SLES 11, ...
+      else {
+        $start_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_start_real}'"
+        $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_stop_real}'"
         $status_command = "/usr/bin/pgrep -d , -u ${::tomcat::tomcat_user_real} -G ${::tomcat::tomcat_group_real} -f Dcatalina.base=${catalina_base_real}"
 
-        # generate tomcat service
+		    file { "${service_name_real} service unit":
+		      path    => "/etc/init.d/${service_name_real}",
+		      owner   => 'root',
+		      group   => 'root',
+		      mode    => '0755',
+		      content => template("${module_name}/instance/tomcat_init_generic.erb")
+		    }
+
         service { $service_name_real:
-          ensure   => $service_ensure,
-          enable   => $service_enable,
-          provider => base,
-          start    => $start_command,
-          stop     => $stop_command,
-          status   => $status_command
+          ensure  => $service_ensure,
+          enable  => $service_enable,
+          require => File["${service_name_real} service unit"];
         }
       }
     }
