@@ -281,21 +281,21 @@ define tomcat::instance (
     'package' : {
       # manage systemd unit on compatible systems
       if $::tomcat::params::systemd {
-	      if $::osfamily == 'Suse' { # SuSE
-	        file { "${service_name_real} service unit":
-	          path    => "/usr/lib/systemd/system/${service_name_real}.service",
-	          owner   => 'root',
-	          group   => 'root',
-	          content => template("${module_name}/instance/systemd_unit_suse.erb")
-	        }
-	      } else { # RHEL 7+ or Fedora
-	        file { "${service_name_real} service unit":
-	          path    => "/usr/lib/systemd/system/${service_name_real}.service",
-	          owner   => 'root',
-	          group   => 'root',
-	          content => template("${module_name}/instance/systemd_unit_rhel.erb")
-	        }
-	      }
+        if $::osfamily == 'Suse' { # SuSE
+          file { "${service_name_real} service unit":
+            path    => "/usr/lib/systemd/system/${service_name_real}.service",
+            owner   => 'root',
+            group   => 'root',
+            content => template("${module_name}/instance/systemd_unit_suse.erb")
+          }
+        } else { # RHEL 7+ or Fedora
+          file { "${service_name_real} service unit":
+            path    => "/usr/lib/systemd/system/${service_name_real}.service",
+            owner   => 'root',
+            group   => 'root',
+            content => template("${module_name}/instance/systemd_unit_rhel.erb")
+          }
+        }
       } else { # symlink main init script on all other distributions (Debian/Ubuntu, RHEL 6, SLES 11, ...)
         file { "${service_name_real} service unit":
           ensure => link,
@@ -337,20 +337,20 @@ define tomcat::instance (
           enable  => $service_enable,
           require => File["${service_name_real} service unit"];
         }
-      } 
+      }
       # Debian/Ubuntu, RHEL 6, SLES 11, ...
       else {
         $start_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_start_real}'"
         $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_stop_real}'"
         $status_command = "/usr/bin/pgrep -d , -u ${::tomcat::tomcat_user_real} -G ${::tomcat::tomcat_group_real} -f Dcatalina.base=${catalina_base_real}"
 
-		    file { "${service_name_real} service unit":
-		      path    => "/etc/init.d/${service_name_real}",
-		      owner   => 'root',
-		      group   => 'root',
-		      mode    => '0755',
-		      content => template("${module_name}/instance/tomcat_init_generic.erb")
-		    }
+        file { "${service_name_real} service unit":
+          path    => "/etc/init.d/${service_name_real}",
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0755',
+          content => template("${module_name}/instance/tomcat_init_generic.erb")
+        }
 
         service { $service_name_real:
           ensure  => $service_ensure,

@@ -36,7 +36,7 @@ class tomcat::install::package {
     file_line { 'fix broken tomcat init script':
       path    => "/etc/init.d/${::tomcat::service_name_real}",
       line    => "NAME=\"$(basename \$0)\"",
-      match   => "^NAME=.*$",
+      match   => "^NAME=.*\$",
       require => Package['tomcat server']
     }
   }
