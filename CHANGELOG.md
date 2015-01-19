@@ -1,6 +1,12 @@
-###0.6.1
+###0.7.0
 
-New realm parameters: `$lockout_realm`, `$userdatabase_realm` (thanks [etlweather](https://github.com/etlweather)!)
+* New realm parameters: `$lockout_realm`, `$userdatabase_realm` (by [etlweather](https://github.com/etlweather))
+* New `globalnaming_resources`and `realms` parameters: possibility to define custom GlobalNamingResources and Realm blocks (by [etlweather](https://github.com/etlweather))
+* Changed `root_path` default value (instance context)
+* Proper startup script for distributions without systemd
+* Better support of SuSE OS family
+* Improved management of systemd units on Fedora
+* Fix tomcat6 startup script on RHEL (warning: now requires stdlib >= 4.4.0)
 
 ###0.6.0
 
