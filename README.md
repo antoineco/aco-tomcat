@@ -305,11 +305,17 @@ Whether to enable the [LockOut Realm](http://tomcat.apache.org/tomcat-8.0-doc/co
 Whether to enable the [UserDatabase Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#UserDatabase_Realm_-_org.apache.catalina.realm.UserDatabaseRealm). 
 Boolean value. Defaults to `true`. The User Database Realm is inserted within the Lock Out Realm if it is enabled.
 
+#####`realms`
+An array of custom `Realm` entries to be added to the `Engine` block. Each entry is to be supplied as a Hash of attributes/values for the `Realm` XML node.
+
 #####`singlesignon_valve`
 Whether to enable the [Single Sign On Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Single_Sign_On_Valve). Boolean value. Defaults to `false`.
 
 #####`accesslog_valve`
 Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Access_Log_Valve). Boolean value. Defaults to `true`.
+
+#####`globalnaming_resources`
+An array of `Resource` entries to be added to the `GlobalNamingResources` block. Each entry is to be supplied as a Hash of attributes/values for the `Resource` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html) for the list of possible attributes.
 
 #####`jmx_listener`
 Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener)
@@ -329,14 +335,6 @@ JMX/RMI server interface address. Defaults to `undef`.
 Absolute path to the environment configuration (*setenv*). Default depends on the platform.
 
 Please see [catalina.sh](http://svn.apache.org/repos/asf/tomcat/tc8.0.x/trunk/bin/catalina.sh) for a description of the following environment variables.
-
-#####`globalnaming_resources`
-An array of `Resource` entries to be added to `server.xml`. Each entry is to be supplied as a Hash of attributes/values for the `Resource` XML node. 
-
-See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html) for attributes.
-
-#####`realms`
-An array of `Realm` entries to be added to `server.xml`. Each entry is to be supplied as a Hash of attributes/values for the `Realm` XML node.
 
 #####`catalina_home`
 $CATALINA_HOME. Default depends on the platform.
