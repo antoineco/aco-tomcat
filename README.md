@@ -330,6 +330,14 @@ Absolute path to the environment configuration (*setenv*). Default depends on th
 
 Please see [catalina.sh](http://svn.apache.org/repos/asf/tomcat/tc8.0.x/trunk/bin/catalina.sh) for a description of the following environment variables.
 
+#####`globalnaming_resources`
+An array of `Resource` entries to be added to `server.xml`. Each entry is to be supplied as a Hash of attributes/values for the `Resource` XML node. 
+
+See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html) for attributes.
+
+#####`realms`
+An array of `Realm` entries to be added to `server.xml`. Each entry is to be supplied as a Hash of attributes/values for the `Realm` XML node.
+
 #####`catalina_home`
 $CATALINA_HOME. Default depends on the platform.
 

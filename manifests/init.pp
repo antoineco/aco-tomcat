@@ -152,6 +152,10 @@ class tomcat (
   $singlesignon_valve   = false,
   $accesslog_valve      = true,
   #----------------------------------------------------------------------------------
+  # server xml
+  $globalnaming_resources = undef,
+  $realms               = undef,
+  #----------------------------------------------------------------------------------
   # environment variables
   #----------------------------------------------------------------------------------
   $config_path          = undef,
