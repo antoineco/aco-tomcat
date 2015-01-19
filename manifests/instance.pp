@@ -112,14 +112,14 @@ define tomcat::instance (
   # realms
   $lockout_realm        = true,
   $userdatabase_realm   = true,
+  $realms               = [],
   #----------------------------------------------------------------------------------
   # valves
   $singlesignon_valve   = false,
   $accesslog_valve      = true,
   #----------------------------------------------------------------------------------
-  # server xml
-  $globalnaming_resources = undef,
-  $realms               = undef,
+  # misc
+  $globalnaming_resources = [],
   #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------
