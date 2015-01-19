@@ -5,7 +5,6 @@
 * Changed `root_path` default value (instance context)
 * Proper startup script for distributions without systemd
 * Better support of SuSE OS family
-* Improved management of systemd units on Fedora
 * Fix tomcat6 startup script on RHEL (warning: now requires stdlib >= 4.4.0)
 
 ###0.6.0

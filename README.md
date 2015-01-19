@@ -423,6 +423,7 @@ User roles (array of strings)
 
 ##To Do
 
+* Create systemd units for Fedora 20+
 * Parameters validation
 
 ##Contributors
