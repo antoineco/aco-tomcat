@@ -117,6 +117,10 @@ define tomcat::instance (
   $singlesignon_valve   = false,
   $accesslog_valve      = true,
   #----------------------------------------------------------------------------------
+  # server xml
+  $globalnaming_resources = undef,
+  $realms               = undef,
+  #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------
   $config_path          = undef,
