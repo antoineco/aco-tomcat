@@ -27,24 +27,25 @@
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
 
   <GlobalNamingResources>
+
 <% if @userdatabase_realm -%>
     <Resource name="UserDatabase" auth="Container"
               type="org.apache.catalina.UserDatabase"
               description="User database that can be updated and saved"
               factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
               pathname="conf/tomcat-users.xml" />
-<% end -%>
 
+<% end -%>
 <% if @globalnaming_resources and ! @globalnaming_resources.empty? -%>
-   <%- [@globalnaming_resources].flatten.compact.each do |resource| -%>
-   <Resource
-      <%- resource.each_pair do |attrib, att_value| -%>
-      <%= attrib %>="<%= att_value %>"
-      <%- end -%>
-      />
-   <%- end -%>
-<% end -%>
+  <%- [@globalnaming_resources].flatten.compact.each do |resource| -%>
+    <Resource
+       <%- resource.each_pair do |attrib, att_value| -%>
+       <%= attrib %>="<%= att_value %>"
+       <%- end -%>
+    />
 
+  <%- end -%>
+<% end -%>
   </GlobalNamingResources>
 
   <Service name="Catalina">
@@ -78,26 +79,27 @@
 
 <% if @lockout_realm -%>
       <Realm className="org.apache.catalina.realm.LockOutRealm">
+
 <% end -%>
 <% if @userdatabase_realm -%>
         <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
-               resourceName="UserDatabase"/>
-<% end -%>
+               resourceName="UserDatabase" />
 
+<% end -%>
 <% if @realms and ! @realms.empty? -%>
-   <%- [@realms].flatten.compact.each do |realm| -%>
-      <Realm
-         <%- realm.each_pair do |attrib, att_value| -%>
-         <%= attrib %>="<%= att_value %>"
-         <%- end -%>
-      />
-   <%- end -%>
-<% end -%>
+  <%- [@realms].flatten.compact.each do |realm| -%>
+        <Realm
+           <%- realm.each_pair do |attrib, att_value| -%>
+           <%= attrib %>="<%= att_value %>"
+           <%- end -%>
+        />
 
+  <%- end -%>
+<% end -%>
 <% if @lockout_realm -%>
       </Realm>
-<% end -%>
 
+<% end -%>
       <Host name="<%= @hostname %>" appBase="webapps"
             autoDeploy="<%= @autodeploy %>" deployOnStartup="<%= @deployOnStartup %>"
             unpackWARs="<%= @unpackwars %>" <% if scope.function_versioncmp([scope['::tomcat::maj_version'], '7']) >= 0 -%>undeployOldVersions="<%= @undeployoldversions %>" <% end -%>>

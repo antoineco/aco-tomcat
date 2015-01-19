@@ -28,8 +28,10 @@ class tomcat::config {
   $undeployoldversions = $::tomcat::undeployoldversions
   $lockout_realm = $::tomcat::lockout_realm
   $userdatabase_realm = $::tomcat::userdatabase_realm
+  $realms = $::tomcat::realms
   $singlesignon_valve = $::tomcat::singlesignon_valve
   $accesslog_valve = $::tomcat::accesslog_valve
+  $globalnaming_resources = $::tomcat::globalnaming_resources
   $instance = $::tomcat::instance
   $service_name_real = $::tomcat::service_name_real
   $java_home = $::tomcat::java_home
@@ -50,8 +52,6 @@ class tomcat::config {
   $jpda_suspend = $::tomcat::jpda_suspend
   $jpda_opts_real = $::tomcat::jpda_opts_real
   $custom_fragment = $::tomcat::custom_fragment
-  $globalnaming_resources = $::tomcat::globalnaming_resources
-  $realms = $::tomcat::realms
 
   # generate and manage server configuration
   # Template uses:
@@ -76,8 +76,10 @@ class tomcat::config {
   # - $undeployoldversions
   # - $lockout_realm
   # - $userdatabase_realm
+  # - $realms
   # - $singlesignon_valve
   # - $accesslog_valve
+  # - $globalnaming_resources
   file { 'tomcat server configuration':
     path    => "${::tomcat::catalina_base_real}/conf/server.xml",
     content => template("${module_name}/common/server.xml.erb"),
