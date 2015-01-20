@@ -60,13 +60,13 @@
                protocol="<%= @http_protocol %>"
                connectionTimeout="<%= @http_connection_timeout %>"
                redirectPort="<%= @ssl_port %>" <% if @use_threadpool and @threadpool_executor -%>executor="tomcatThreadPool" <% end -%>
-               <% if @http_uri_encoding -%>URIEncoding="<%= @http_uri_encoding %>"<% end -%>
-               <% if @http_compression -%>compression="on"<% end -%>
-               <% if @http_max_threads -%>maxThreads="<%= @http_max_threads %>"<% end -%>
-               <% @http_params.each_pair do |attrib, value| -%>
+               <%- if @http_uri_encoding -%>URIEncoding="<%= @http_uri_encoding %>"<% end -%>
+               <%- if @http_compression -%>compression="on"<% end -%>
+               <%- if @http_max_threads -%>maxThreads="<%= @http_max_threads %>"<% end -%>
+               <%- @http_params.each_pair do |attrib, value| -%>
                <%= attrib %>="<%= value %>"
                <%- end %>
-   />
+    />
 
 <% end -%>
 <% if @ssl_connector -%>
@@ -79,14 +79,15 @@
 <% else -%>
               protocol="org.apache.coyote.http11.Http11Protocol"
 <% end -%>
+<% end -%>
               connectionTimeout="<%= @ssl_connection_timeout %>"
-              <% if @ssl_uri_encoding -%>URIEncoding="<%= @ssl_uri_encoding %>"<% end -%>
-              <% if @ssl_compression -%>compression="on"<% end -%>
+              <%- if @ssl_uri_encoding -%>URIEncoding="<%= @ssl_uri_encoding %>"<% end -%>
+              <%- if @ssl_compression -%>compression="on"<% end -%>
               maxThreads="<%= @ssl_max_threads %>"
-              <% if @ssl_keystore -%>keystoreFile="<%= @ssl_keystore %>"<% end -%>
-              <% @ssl_params.each_pair do |attrib, value| -%>
+              <%- if @ssl_keystore -%>keystoreFile="<%= @ssl_keystore %>"<% end -%>
+              <%- @ssl_params.each_pair do |attrib, value| -%>
               <%= attrib %>="<%= value %>"
-              <%- end %>
+              <%- end -%>
               SSLEnabled="true" scheme="https" secure="true"
               clientAuth="false" sslProtocol="TLS" />
 
