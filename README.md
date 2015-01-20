@@ -269,19 +269,29 @@ Server control port. Defaults to `8005` (global) / `8006` (instance).
 Whether to enable the [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`.
 
 #####`http_connector`
-Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`.
-
-#####`http_port`
-HTTP connector port. Defaults to `8080` (global) / `8081` (instance).
-
+Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`. Further, the connector can be configured via a series of parameters:
+ - `http_port`: HTTP connector port. Defaults to `8080` (global) / `8081` (instance).
+ - `http_protocol`: The protocol to use. Defaults to `HTTP/1.1`.
+ - `http_connection_timeout`: The timeout for a connection. Defaults to `20000`.
+ - `http_uri_encoding`: Encoding to use for URI. If none specified, will use Tomcat's default.
+ - `http_compression`: If set to `true`, Tomcat will be configured to use compression.
+ - `http_max_threads`: The maximum number of executor threads. If not specified, will use Tomcat's default.
+ - `http_params`: An optional Hash of additional parameters to put in the HTTP Connector where he key is the XML attribute name and the value, the attribute's value.
+ 
 #####`use_threadpool`
 Whether to use the previously described Executor within the HTTP connector.	 Boolean value. Defaults to `false`.
 
 #####`ssl_connector`
 Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#SSL_Support). Boolean value. Defaults to `false`.
-
-#####`ssl_port`
-SSL connector port. Defaults to `8443` (global) / `8444` (instance).
+Further, the connector can be configured via a series of parameters:
+ - `http_port`: SSL connector port. Defaults to `8443` (global) / `8444` (instance). The HTTP connector's `redirect port` will also be set to this value.
+ - `http_protocol`: The protocol to use. Defaults to `HTTP/1.1` for Tomcat 7 and NIO for Tomcat 8.
+ - `http_connection_timeout`: The timeout for a connection. Defaults to `20000`.
+ - `http_uri_encoding`: Encoding to use for URI. If none specified, will use Tomcat's default.
+ - `http_compression`: If set to `true`, Tomcat will be configured to use compression.
+ - `http_max_threads`: The maximum number of executor threads. If not specified, will use Tomcat's default.
+ - `http_keystore`: Path to the keystore file. Tomcat's default used if no value specified.
+ - `http_params`: An optional Hash of additional parameters to put in the HTTPS Connector where he key is the XML attribute name and the value, the attribute's value.
 
 #####`ajp_connector`
 Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp). Boolean value. Defaults to `true`.
