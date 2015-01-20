@@ -89,23 +89,25 @@ define tomcat::instance (
   # http connector
   $http_connector       = true,
   $http_port            = 8081,
-  $http_protocol        = 'HTTP/1.1',
-  $http_connection_timeout   = 20000,
-  $http_uri_encoding    = undef,
+  $http_protocol        = undef,
+  $http_use_threadpool  = false,
+  $http_connectiontimeout = undef,
+  $http_uriencoding     = undef,
   $http_compression     = false,
-  $http_max_threads     = undef,
-  $use_threadpool       = false,
+  $http_maxthreads      = undef,
   $http_params          = {},
   #----------------------------------------------------------------------------------
   # ssl connector
   $ssl_connector        = false,
   $ssl_port             = 8444,
-  $ssl_protocol         = 'undef',
-  $ssl_connection_timeout   = 20000,
-  $ssl_redirect_port    = 8443,
-  $ssl_uri_encoding     = undef,
+  $ssl_protocol         = undef,
+  $ssl_clientauth       = undef,
+  $ssl_sslprotocol      = undef,
+  $ssl_use_threadpool   = false,
+  $ssl_connectiontimeout = undef,
+  $ssl_uriencoding      = undef,
   $ssl_compression      = false,
-  $ssl_max_threads      = 150,
+  $ssl_maxthreads       = undef,
   $ssl_keystore         = undef,
   $ssl_params           = {},
   #----------------------------------------------------------------------------------
@@ -460,9 +462,25 @@ define tomcat::instance (
   # - $threadpool_executor
   # - $http_connector
   # - $http_port
-  # - $use_threadpool
+  # - $http_protocol
+  # - $http_use_threadpool
+  # - $http_connection_timeout
+  # - $http_uri_encoding
+  # - $http_compression
+  # - $http_max_threads
+  # - $http_params
   # - $ssl_connector
   # - $ssl_port
+  # - $ssl_protocol
+  # - $ssl_clientauth
+  # - $ssl_sslprotocol
+  # - $ssl_use_threadpool
+  # - $ssl_connectiontimeout
+  # - $ssl_uriencoding
+  # - $ssl_compression
+  # - $ssl_maxthreads
+  # - $ssl_keystore
+  # - $ssl_params
   # - $ajp_connector
   # - $ajp_port
   # - $hostname

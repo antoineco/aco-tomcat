@@ -16,19 +16,22 @@ class tomcat::config {
   $http_connector = $::tomcat::http_connector
   $http_port = $::tomcat::http_port
   $http_protocol = $::tomcat::http_protocol
+  $http_use_threadpool = $::tomcat::http_use_threadpool
   $http_connection_timeout = $::tomcat::http_connection_timeout
   $http_uri_encoding = $::tomcat::http_uri_encoding
   $http_compression = $::tomcat::http_compression
   $http_max_threads = $::tomcat::http_max_threads
-  $use_threadpool = $::tomcat::use_threadpool
   $http_params = $::tomcat::http_params
   $ssl_connector = $::tomcat::ssl_connector
   $ssl_port = $::tomcat::ssl_port
   $ssl_protocol = $::tomcat::ssl_protocol
-  $ssl_connection_timeout = $::tomcat::ssl_connection_timeout
-  $ssl_uri_encoding = $::tomcat::ssl_uri_encoding
+  $ssl_clientauth = $::tomcat::ssl_clientauth
+  $ssl_sslprotocol = $::tomcat::ssl_sslprotocol
+  $ssl_use_threadpool = $::tomcat::ssl_use_threadpool
+  $ssl_connectiontimeout = $::tomcat::ssl_connectiontimeout
+  $ssl_uriencoding = $::tomcat::ssl_uriencoding
   $ssl_compression = $::tomcat::ssl_compression
-  $ssl_max_threads = $::tomcat::ssl_max_threads
+  $ssl_maxthreads = $::tomcat::ssl_maxthreads
   $ssl_keystore = $::tomcat::ssl_keystore
   $ssl_params = $::tomcat::ssl_params
   $ajp_connector = $::tomcat::ajp_connector
@@ -76,9 +79,25 @@ class tomcat::config {
   # - $threadpool_executor
   # - $http_connector
   # - $http_port
-  # - $use_threadpool
+  # - $http_protocol
+  # - $http_use_threadpool
+  # - $http_connection_timeout
+  # - $http_uri_encoding
+  # - $http_compression
+  # - $http_max_threads
+  # - $http_params
   # - $ssl_connector
   # - $ssl_port
+  # - $ssl_protocol
+  # - $ssl_clientauth
+  # - $ssl_sslprotocol
+  # - $ssl_use_threadpool
+  # - $ssl_connectiontimeout
+  # - $ssl_uriencoding
+  # - $ssl_compression
+  # - $ssl_maxthreads
+  # - $ssl_keystore
+  # - $ssl_params
   # - $ajp_connector
   # - $ajp_port
   # - $hostname

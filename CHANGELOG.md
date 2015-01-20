@@ -1,3 +1,5 @@
+###0.7.1
+
 ###0.7.0
 
 * New realm parameters: `$lockout_realm`, `$userdatabase_realm` (by [etlweather](https://github.com/etlweather))
