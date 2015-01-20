@@ -124,7 +124,14 @@ class tomcat (
   # http connector
   $http_connector       = true,
   $http_port            = 8080,
+  $http_protocol        = 'HTTP/1.1',
+  $http_connection_timeout   = 20000,
+  $http_redirect_port   = 8443,
+  $http_uri_encoding    = undef,
+  $http_compression     = false,
+  $http_max_threads     = undef,
   $use_threadpool       = false,
+  $http_params          = {},
   #----------------------------------------------------------------------------------
   # ssl connector
   $ssl_connector        = false,

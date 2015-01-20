@@ -15,7 +15,13 @@ class tomcat::config {
   $threadpool_executor = $::tomcat::threadpool_executor
   $http_connector = $::tomcat::http_connector
   $http_port = $::tomcat::http_port
+  $http_protocol = $::tomcat::http_protocol
+  $http_connection_timeout = $::tomcat::http_connection_timeout
+  $http_uri_encoding = $::tomcat::http_uri_encoding
+  $http_compression = $::tomcat::http_compression
+  $http_max_threads = $::tomcat::http_max_threads
   $use_threadpool = $::tomcat::use_threadpool
+  $http_params = $::tomcat::http_params
   $ssl_connector = $::tomcat::ssl_connector
   $ssl_port = $::tomcat::ssl_port
   $ajp_connector = $::tomcat::ajp_connector
