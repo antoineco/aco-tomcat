@@ -65,18 +65,30 @@
                <% if @http_max_threads -%>maxThreads="<%= @http_max_threads %>"<% end -%>
                <% @http_params.each_pair do |attrib, value| -%>
                <%= attrib %>="<%= value %>"
-               <%- end -%>
-    />
+               <%- end %>
+   />
 
 <% end -%>
 <% if @ssl_connector -%>
+   <Connector port="<%= @ssl_port %>"
+<% if @ssl_protocol -%>
+              protocol=<%= @ssl_protocol %>"
+<%- else -%>
 <% if scope['::tomcat::maj_version'] == '8' -%>
-    <Connector port="<%= @ssl_port %>" protocol="org.apache.coyote.http11.Http11NioProtocol"
+              protocol="org.apache.coyote.http11.Http11NioProtocol"
 <% else -%>
-    <Connector port="<%= @ssl_port %>" protocol="org.apache.coyote.http11.Http11Protocol"
+              protocol="org.apache.coyote.http11.Http11Protocol"
 <% end -%>
-               maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
-               clientAuth="false" sslProtocol="TLS" />
+              connectionTimeout="<%= @ssl_connection_timeout %>"
+              <% if @ssl_uri_encoding -%>URIEncoding="<%= @ssl_uri_encoding %>"<% end -%>
+              <% if @ssl_compression -%>compression="on"<% end -%>
+              maxThreads="<%= @ssl_max_threads %>"
+              <% if @ssl_keystore -%>keystoreFile="<%= @ssl_keystore %>"<% end -%>
+              <% @ssl_params.each_pair do |attrib, value| -%>
+              <%= attrib %>="<%= value %>"
+              <%- end %>
+              SSLEnabled="true" scheme="https" secure="true"
+              clientAuth="false" sslProtocol="TLS" />
 
 <% end -%>
 <% if @ajp_connector -%>

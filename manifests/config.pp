@@ -24,6 +24,13 @@ class tomcat::config {
   $http_params = $::tomcat::http_params
   $ssl_connector = $::tomcat::ssl_connector
   $ssl_port = $::tomcat::ssl_port
+  $ssl_protocol = $::tomcat::ssl_protocol
+  $ssl_connection_timeout = $::tomcat::ssl_connection_timeout
+  $ssl_uri_encoding = $::tomcat::ssl_uri_encoding
+  $ssl_compression = $::tomcat::ssl_compression
+  $ssl_max_threads = $::tomcat::ssl_max_threads
+  $ssl_keystore = $::tomcat::ssl_keystore
+  $ssl_params = $::tomcat::ssl_params
   $ajp_connector = $::tomcat::ajp_connector
   $ajp_port = $::tomcat::ajp_port
   $hostname = $::tomcat::hostname

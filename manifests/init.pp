@@ -136,6 +136,13 @@ class tomcat (
   # ssl connector
   $ssl_connector        = false,
   $ssl_port             = 8443,
+  $ssl_protocol         = undef,
+  $ssl_connection_timeout   = 20000,
+  $ssl_uri_encoding     = undef,
+  $ssl_compression      = false,
+  $ssl_max_threads      = 150,
+  $ssl_keystore         = undef,
+  $ssl_params           = {},
   #----------------------------------------------------------------------------------
   # ajp connector
   $ajp_connector        = true,
