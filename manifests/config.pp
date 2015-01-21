@@ -21,7 +21,7 @@ class tomcat::config {
   $http_uri_encoding = $::tomcat::http_uri_encoding
   $http_compression = $::tomcat::http_compression
   $http_max_threads = $::tomcat::http_max_threads
-  $http_params = $::tomcat::http_params
+  $http_params_real = $::tomcat::http_params_real
   $ssl_connector = $::tomcat::ssl_connector
   $ssl_port = $::tomcat::ssl_port
   $ssl_protocol = $::tomcat::ssl_protocol
@@ -33,11 +33,11 @@ class tomcat::config {
   $ssl_compression = $::tomcat::ssl_compression
   $ssl_maxthreads = $::tomcat::ssl_maxthreads
   $ssl_keystore = $::tomcat::ssl_keystore
-  $ssl_params = $::tomcat::ssl_params
+  $ssl_params_real = $::tomcat::ssl_params_real
   $ajp_connector = $::tomcat::ajp_connector
   $ajp_port = $::tomcat::ajp_port
   $ajp_protocol = $::tomcat::ajp_protocol
-  $ajp_params = $::tomcat::ajp_params
+  $ajp_params_real = $::tomcat::ajp_params_real
   $hostname = $::tomcat::hostname
   $jvmroute = $::tomcat::jvmroute
   $autodeploy = $::tomcat::autodeploy
@@ -134,7 +134,7 @@ class tomcat::config {
   # - $http_uri_encoding
   # - $http_compression
   # - $http_max_threads
-  # - $http_params
+  # - $http_params_real
   # - $ssl_connector
   # - $ssl_port
   concat::fragment { 'server.xml http connector':
@@ -154,7 +154,7 @@ class tomcat::config {
   # - $ssl_compression
   # - $ssl_maxthreads
   # - $ssl_keystore
-  # - $ssl_params
+  # - $ssl_params_real
   concat::fragment { 'server.xml ssl connector':
     order   => 60,
     content => template("${module_name}/common/server.xml/060_ssl_connector.erb")
@@ -164,7 +164,7 @@ class tomcat::config {
   # - $ajp_connector
   # - $ajp_port
   # - $ajp_protocol
-  # - $ajp_params
+  # - $ajp_params_real
   # - $ssl_connector
   # - $ssl_port
   concat::fragment { 'server.xml ajp connector':
@@ -281,19 +281,20 @@ class tomcat::config {
     owner  => $::tomcat::tomcat_user_real,
     group  => $::tomcat::tomcat_group_real,
     mode   => '0600',
+    order  => 'numeric',
     notify => Service[$::tomcat::service_name_real]
   }
 
   concat::fragment { 'main UserDatabase header':
     target  => 'main UserDatabase',
     content => template("${module_name}/common/UserDatabase_header.erb"),
-    order   => 01
+    order   => 1
   }
 
   concat::fragment { 'main UserDatabase footer':
     target  => 'main UserDatabase',
     content => template("${module_name}/common/UserDatabase_footer.erb"),
-    order   => 03
+    order   => 3
   }
 
   # configure authorized access

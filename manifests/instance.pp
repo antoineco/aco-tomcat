@@ -47,132 +47,130 @@
 #  }
 #
 define tomcat::instance (
-  $root_path            = '/var/lib/tomcats',
-  $service_name         = undef,
-  $service_ensure       = 'running',
-  $service_enable       = true,
-  $service_start        = undef,
-  $service_stop         = undef,
-  $enable_extras        = false,
-  $manage_firewall      = false,
+  $root_path                  = '/var/lib/tomcats',
+  $service_name               = undef,
+  $service_ensure             = 'running',
+  $service_enable             = true,
+  $service_start              = undef,
+  $service_stop               = undef,
+  $enable_extras              = false,
+  $manage_firewall            = false,
   #----------------------------------------------------------------------------------
   # security and administration
   #----------------------------------------------------------------------------------
-  $admin_webapps        = true,
-  $create_default_admin = false,
-  $admin_user           = 'tomcatadmin',
-  $admin_password       = 'password',
+  $admin_webapps              = true,
+  $create_default_admin       = false,
+  $admin_user                 = 'tomcatadmin',
+  $admin_password             = 'password',
   #----------------------------------------------------------------------------------
   # logging
   #----------------------------------------------------------------------------------
-  $log4j_enable         = false,
-  $log4j_conf_type      = 'ini',
-  $log4j_conf_source    = "puppet:///modules/${module_name}/log4j/log4j.properties",
+  $log4j_enable               = false,
+  $log4j_conf_type            = 'ini',
+  $log4j_conf_source          = "puppet:///modules/${module_name}/log4j/log4j.properties",
   #----------------------------------------------------------------------------------
   # server configuration
   #----------------------------------------------------------------------------------
   # listeners
-  $apr_listener         = false,
-  $apr_sslengine        = 'on',
+  $apr_listener               = false,
+  $apr_sslengine              = 'on',
   # jmx
-  $jmx_listener         = false,
-  $jmx_registry_port    = 8052,
-  $jmx_server_port      = 8053,
-  $jmx_bind_address     = '',
+  $jmx_listener               = false,
+  $jmx_registry_port          = 8052,
+  $jmx_server_port            = 8053,
+  $jmx_bind_address           = '',
   #----------------------------------------------------------------------------------
   # server
-  $control_port         = 8006,
+  $control_port               = 8006,
   #----------------------------------------------------------------------------------
   # executor
-  $threadpool_executor  = false,
+  $threadpool_executor        = false,
   #----------------------------------------------------------------------------------
   # http connector
-  $http_connector       = true,
-  $http_port            = 8081,
-  $http_protocol        = undef,
-  $http_use_threadpool  = false,
-  $http_connectiontimeout = undef,
-  $http_uriencoding     = undef,
-  $http_compression     = false,
-  $http_maxthreads      = undef,
-  $http_params          = {},
+  $http_connector             = true,
+  $http_port                  = 8081,
+  $http_protocol              = 'HTTP/1.1',
+  $http_use_threadpool        = false,
+  $http_connectiontimeout     = undef,
+  $http_uriencoding           = undef,
+  $http_compression           = undef,
+  $http_maxthreads            = undef,
+  $http_params                = {},
   #----------------------------------------------------------------------------------
   # ssl connector
-  $ssl_connector        = false,
-  $ssl_port             = 8444,
-  $ssl_protocol         = undef,
-  $ssl_clientauth       = undef,
-  $ssl_sslprotocol      = undef,
-  $ssl_use_threadpool   = false,
-  $ssl_connectiontimeout = undef,
-  $ssl_uriencoding      = undef,
-  $ssl_compression      = false,
-  $ssl_maxthreads       = undef,
-  $ssl_keystore         = undef,
-  $ssl_params           = {},
+  $ssl_connector              = false,
+  $ssl_port                   = 8444,
+  $ssl_protocol               = 'HTTP/1.1',
+  $ssl_clientauth             = undef,
+  $ssl_sslprotocol            = undef,
+  $ssl_use_threadpool         = false,
+  $ssl_connectiontimeout      = undef,
+  $ssl_uriencoding            = undef,
+  $ssl_compression            = false,
+  $ssl_maxthreads             = undef,
+  $ssl_keystore               = undef,
+  $ssl_params                 = {},
   #----------------------------------------------------------------------------------
   # ajp connector
-  $ajp_connector        = true,
-  $ajp_port             = 8010,
-  $ajp_protocol         = undef,
-  $ajp_params           = {},
+  $ajp_connector              = true,
+  $ajp_port                   = 8010,
+  $ajp_protocol               = 'AJP/1.3',
+  $ajp_params                 = {},
   #----------------------------------------------------------------------------------
   # engine
-  $jvmroute             = undef,
+  $jvmroute                   = undef,
   #----------------------------------------------------------------------------------
   # host
-  $hostname             = 'localhost',
-  $autodeploy           = true,
-  $deployOnStartup      = true,
-  $undeployoldversions  = false,
-  $unpackwars           = true,
+  $hostname                   = 'localhost',
+  $autodeploy                 = true,
+  $deployOnStartup            = true,
+  $undeployoldversions        = false,
+  $unpackwars                 = true,
   #----------------------------------------------------------------------------------
   # cluster
-  $use_simpletcpcluster = false,
-  $cluster_membership_port = '45565',
-  $cluster_membership_domain = 'tccluster',
-  $cluster_receiver_address = undef,
+  $use_simpletcpcluster       = false,
+  $cluster_membership_port    = '45565',
+  $cluster_membership_domain  = 'tccluster',
+  $cluster_receiver_address   = undef,
   #----------------------------------------------------------------------------------
   # realms
-  $lockout_realm        = true,
-  $userdatabase_realm   = true,
-  $realms               = [],
+  $lockout_realm              = true,
+  $userdatabase_realm         = true,
+  $realms                     = [],
   #----------------------------------------------------------------------------------
   # valves
-  $singlesignon_valve   = false,
-  $accesslog_valve      = true,
+  $singlesignon_valve         = false,
+  $accesslog_valve            = true,
   #----------------------------------------------------------------------------------
   # misc
-  $globalnaming_resources = [],
-  $context_resources    = [],
+  $globalnaming_resources     = [],
+  $context_resources          = [],
   #----------------------------------------------------------------------------------
-  # global configuration file
+  # environment variables
   #----------------------------------------------------------------------------------
-  $config_path          = undef,
+  $config_path                = undef,
   # catalina
-  $catalina_home        = undef,
-  $catalina_base        = undef,
-  $jasper_home          = undef,
-  $catalina_tmpdir      = undef,
-  $catalina_pid         = undef,
-  $catalina_opts        = [],
+  $catalina_home              = undef,
+  $catalina_base              = undef,
+  $jasper_home                = undef,
+  $catalina_tmpdir            = undef,
+  $catalina_pid               = undef,
+  $catalina_opts              = [],
   # java
-  $java_home            = undef,
-  $java_opts            = ['-server'],
+  $java_home                  = undef,
+  $java_opts                  = ['-server'],
   # debug
-  $jpda_enable          = false,
-  $jpda_transport       = undef,
-  $jpda_address         = undef,
-  $jpda_suspend         = undef,
-  $jpda_opts            = [],
+  $jpda_enable                = false,
+  $jpda_transport             = undef,
+  $jpda_address               = undef,
+  $jpda_suspend               = undef,
+  $jpda_opts                  = [],
   # other
-  $security_manager     = false,
-  $tomcat_user          = undef,
-  $tomcat_group         = undef,
-  $lang                 = undef,
-  $shutdown_wait        = 30,
-  $shutdown_verbose     = false,
-  $custom_fragment      = undef) {
+  $security_manager           = false,
+  $lang                       = undef,
+  $shutdown_wait              = 30,
+  $shutdown_verbose           = false,
+  $custom_fragment            = undef) {
   # The base class must be included first
   if !defined(Class['tomcat']) {
     fail('You must include the tomcat base class before using any tomcat defined resources')
@@ -285,6 +283,51 @@ define tomcat::instance (
     } } else {
     $security_manager_real = $security_manager
   }
+  
+  # generate connectors params
+  $http_params_real = merge(delete_undef_values(
+    { 'protocol'          => $http_protocol,
+      'executor'          => $http_use_threadpool ? {
+                               true    => 'tomcatThreadPool',
+                               default => undef
+                             },
+      'connectionTimeout' => $http_connectiontimeout,
+      'URIEncoding'       => $http_uriencoding,
+      'compression'       => $http_compression ? {
+                               true    => 'on',
+                               default => undef
+                             },
+      'maxThreads'        => $http_maxthreads
+    }
+  ), $http_params)
+
+  $ssl_params_real = merge(delete_undef_values(
+    { 'protocol'          => $ssl_protocol,
+      'clientAuth'        => $ssl_clientauth,
+      'sslProtocol'       => $ssl_sslprotocol,
+      'executor'          => $ssl_use_threadpool ? {
+                               true    => 'tomcatThreadPool',
+                               default => undef
+                             },
+      'connectionTimeout' => $ssl_connectiontimeout,
+      'URIEncoding'       => $ssl_uriencoding,
+      'compression'       => $ssl_compression ? {
+                               true    => 'on',
+                               default => undef
+                             },
+      'maxThreads'        => $ssl_maxthreads,
+      'keystoreFile'      => $ssl_keystore
+    }
+  ), $ssl_params)
+  
+  $ajp_params_real = merge(delete_undef_values(
+    { 'protocol' => $ajp_protocol,
+      'executor' => $ajp_use_threadpool ? {
+                      true    => 'tomcatThreadPool',
+                      default => undef
+                    }
+    }
+  ), $ajp_params)
 
   # should we force download extras libs?
   if ($log4j_enable or $jmx_listener) and !$::tomcat::enable_extras_real {

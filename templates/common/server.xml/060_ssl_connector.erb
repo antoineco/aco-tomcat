@@ -1,37 +1,9 @@
 <%- if @ssl_connector -%>
 
-    <Connector port="<%= @ssl_port %>"<% if @ssl_protocol %> protocol="<%= @ssl_protocol %>"<% end %>
-               SSLEnabled="true" scheme="https" secure="true"
-               <%- if @ssl_clientauth -%>
-               clientAuth="<%= ssl_clientauth %>"
-               <%- end -%>
-               <%- if @ssl_sslprotocol -%>
-               sslProtocol="<%= ssl_sslprotocol %>"
-               <%- end -%>
-               <%- if @ssl_use_threadpool and @threadpool_executor -%>
-               executor="tomcatThreadPool"
-               <%- end -%>
-               <%- if @ssl_connector -%>
-               redirectPort="<%= @ssl_port %>"
-               <%- end -%>
-               <%- if @ssl_connectiontimeout -%>
-               connectionTimeout="<%= @ssl_connectiontimeout %>"
-               <%- end -%>
-               <%- if @ssl_uriencoding -%>
-               URIEncoding="<%= @ssl_uriencoding %>"
-               <%- end -%>
-               <%- if @ssl_compression -%>
-               compression="on"
-               <%- end -%>
-               <%- if @ssl_maxthreads -%>
-               maxThreads="<%= @ssl_maxthreads %>"
-               <%- end -%>
-               <%- if @ssl_keystore -%>
-               keystoreFile="<%= @ssl_keystore %>"
-               <%- end -%>
-               <%- if @ssl_params and ! @ssl_params.empty? -%>
-               <%- @ssl_params.each_pair do |attrib, value| -%>
-               <%= attrib %>="<%= value %>"<% if attrib == @ssl_params.keys.last %> /><% end %>
+    <Connector port="<%= @ssl_port %>" SSLEnabled="true" scheme="https" secure="true"
+               <%- if @ssl_params_real and ! @ssl_params_real.empty? -%>
+               <%- @ssl_params_real.each_pair do |attrib, value| -%>
+               <%= attrib %>="<%= value %>"<% if attrib == @ssl_params_real.keys.last %> /><% end %>
                <%- end -%>
                <%- else -%>
     />

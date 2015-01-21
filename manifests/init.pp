@@ -128,7 +128,7 @@ class tomcat (
   $http_use_threadpool        = false,
   $http_connectiontimeout     = undef,
   $http_uriencoding           = undef,
-  $http_compression           = false,
+  $http_compression           = undef,
   $http_maxthreads            = undef,
   $http_params                = {},
   #----------------------------------------------------------------------------------
@@ -150,6 +150,7 @@ class tomcat (
   $ajp_connector              = true,
   $ajp_port                   = 8009,
   $ajp_protocol               = 'AJP/1.3',
+  $ajp_use_threadpool         = false,
   $ajp_params                 = {},
   #----------------------------------------------------------------------------------
   # engine
@@ -356,6 +357,51 @@ class tomcat (
     } } else {
     $security_manager_real = $security_manager
   }
+  
+  # generate connectors params
+  $http_params_real = merge(delete_undef_values(
+    { 'protocol'          => $http_protocol,
+      'executor'          => $http_use_threadpool ? {
+                               true    => 'tomcatThreadPool',
+                               default => undef
+                             },
+      'connectionTimeout' => $http_connectiontimeout,
+      'URIEncoding'       => $http_uriencoding,
+      'compression'       => $http_compression ? {
+                               true    => 'on',
+                               default => undef
+                             },
+      'maxThreads'        => $http_maxthreads
+    }
+  ), $http_params)
+
+  $ssl_params_real = merge(delete_undef_values(
+    { 'protocol'          => $ssl_protocol,
+      'clientAuth'        => $ssl_clientauth,
+      'sslProtocol'       => $ssl_sslprotocol,
+      'executor'          => $ssl_use_threadpool ? {
+                               true    => 'tomcatThreadPool',
+                               default => undef
+                             },
+      'connectionTimeout' => $ssl_connectiontimeout,
+      'URIEncoding'       => $ssl_uriencoding,
+      'compression'       => $ssl_compression ? {
+                               true    => 'on',
+                               default => undef
+                             },
+      'maxThreads'        => $ssl_maxthreads,
+      'keystoreFile'      => $ssl_keystore
+    }
+  ), $ssl_params)
+  
+  $ajp_params_real = merge(delete_undef_values(
+    { 'protocol' => $ajp_protocol,
+      'executor' => $ajp_use_threadpool ? {
+                      true    => 'tomcatThreadPool',
+                      default => undef
+                    }
+    }
+  ), $ajp_params)
 
   # should we force download extras libs?
   if $log4j_enable or $jmx_listener {

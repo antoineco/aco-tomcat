@@ -16,6 +16,6 @@ define tomcat::userdb_entry ($database, $username, $password, $roles) {
   concat::fragment { "UserDatabase entry (${title})":
     target  => $database,
     content => template("${module_name}/common/UserDatabase_entry.erb"),
-    order   => 02
+    order   => 2
   }
 }

@@ -1,27 +1,9 @@
 <%- if @http_connector -%>
 
-    <Connector port="<%= @http_port %>"<% if @http_protocol %> protocol="<%= @http_protocol %>"<% end %>
-               <%- if @http_use_threadpool and @threadpool_executor -%>
-               executor="tomcatThreadPool"
-               <%- end -%>
-               <%- if @ssl_connector -%>
-               redirectPort="<%= @ssl_port %>"
-               <%- end -%>
-               <%- if @http_connectiontimeout -%>
-               connectionTimeout="<%= @http_connectiontimeout %>"
-               <%- end -%>
-               <%- if @http_uriencoding -%>
-               URIEncoding="<%= @http_uriencoding %>"
-               <%- end -%>
-               <%- if @http_compression -%>
-               compression="on"
-               <%- end -%>
-               <%- if @http_maxthreads -%>
-               maxThreads="<%= @http_maxthreads %>"
-               <%- end -%>
-               <%- if @http_params and ! @http_params.empty? -%>
-               <%- @http_params.each_pair do |attrib, value| -%>
-               <%= attrib %>="<%= value %>"<% if attrib == @http_params.keys.last %> /><% end %>
+    <Connector port="<%= @http_port %>"<% if @ssl_connector %> redirectPort="<%= @ssl_port %>"<% end %>
+               <%- if @http_params_real and ! @http_params_real.empty? -%>
+               <%- @http_params_real.each_pair do |attrib, value| -%>
+               <%= attrib %>="<%= value %>"<% if attrib == @http_params_real.keys.last %> /><% end %>
                <%- end -%>
                <%- else -%>
     />
