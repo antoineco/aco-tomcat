@@ -1,9 +1,15 @@
-###0.7.1
+###0.8.0
+
+* Numerous new connector parameters (see documentation, thanks [etlweather](https://github.com/etlweather) for the help)
+* Split bulky server.xml template into independant fragments
+* New `context_resources` parameter: add ResourceLink elements to context.xml (by [etlweather](https://github.com/etlweather))
+* Added basic support for SimpleTcpCluster (by [etlweather](https://github.com/etlweather), experimental and undocumented, need contributions)
+* Updated documentation
 
 ###0.7.0
 
 * New realm parameters: `$lockout_realm`, `$userdatabase_realm` (by [etlweather](https://github.com/etlweather))
-* New `globalnaming_resources`and `realms` parameters: possibility to define custom GlobalNamingResources and Realm blocks (by [etlweather](https://github.com/etlweather))
+* New `globalnaming_resources`and `realms` parameters: possibility to define custom GlobalNamingResources and Realm elements (by [etlweather](https://github.com/etlweather))
 * Changed `root_path` default value (instance context)
 * Proper startup script for distributions without systemd
 * Better support of SuSE OS family
