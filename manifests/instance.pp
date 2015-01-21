@@ -289,51 +289,51 @@ define tomcat::instance (
   }
   
   # generate connectors params
-  $http_params_real = merge(delete_undef_values(
-    { 'protocol'          => $http_protocol,
-      'executor'          => $http_use_threadpool ? {
-                               true    => 'tomcatThreadPool',
-                               default => undef
-                             },
-      'connectionTimeout' => $http_connectiontimeout,
-      'URIEncoding'       => $http_uriencoding,
-      'compression'       => $http_compression ? {
-                               true    => 'on',
-                               default => undef
-                             },
-      'maxThreads'        => $http_maxthreads
-    }
+  $http_params_real = merge(delete_undef_values({
+    'protocol'          => $http_protocol,
+    'executor'          => $http_use_threadpool ? {
+      true    => 'tomcatThreadPool',
+      default => undef
+    },
+    'connectionTimeout' => $http_connectiontimeout,
+    'URIEncoding'       => $http_uriencoding,
+    'compression'       => $http_compression ? {
+      true    => 'on',
+      default => undef
+    },
+    'maxThreads'        => $http_maxthreads
+  }
   ), $http_params)
 
-  $ssl_params_real = merge(delete_undef_values(
-    { 'protocol'          => $ssl_protocol,
-      'executor'          => $ssl_use_threadpool ? {
-                               true    => 'tomcatThreadPool',
-                               default => undef
-                             },
-      'connectionTimeout' => $ssl_connectiontimeout,
-      'URIEncoding'       => $ssl_uriencoding,
-      'compression'       => $ssl_compression ? {
-                               true    => 'on',
-                               default => undef
-                             },
-      'maxThreads'        => $ssl_maxthreads,
-      'clientAuth'        => $ssl_clientauth,
-      'sslProtocol'       => $ssl_sslprotocol,
-      'keystoreFile'      => $ssl_keystorefile
-    }
+  $ssl_params_real = merge(delete_undef_values({
+    'protocol'          => $ssl_protocol,
+    'executor'          => $ssl_use_threadpool ? {
+      true    => 'tomcatThreadPool',
+      default => undef
+    },
+    'connectionTimeout' => $ssl_connectiontimeout,
+    'URIEncoding'       => $ssl_uriencoding,
+    'compression'       => $ssl_compression ? {
+      true    => 'on',
+      default => undef
+    },
+    'maxThreads'        => $ssl_maxthreads,
+    'clientAuth'        => $ssl_clientauth,
+    'sslProtocol'       => $ssl_sslprotocol,
+    'keystoreFile'      => $ssl_keystorefile
+  }
   ), $ssl_params)
-  
-  $ajp_params_real = merge(delete_undef_values(
-    { 'protocol'          => $ajp_protocol,
-      'executor'          => $ajp_use_threadpool ? {
-                               true    => 'tomcatThreadPool',
-                               default => undef
-                             },
-      'connectionTimeout' => $ajp_connectiontimeout,
-      'URIEncoding'       => $ajp_uriencoding,
-      'maxThreads'        => $ajp_maxthreads
-    }
+
+  $ajp_params_real = merge(delete_undef_values({
+    'protocol'          => $ajp_protocol,
+    'executor'          => $ajp_use_threadpool ? {
+      true    => 'tomcatThreadPool',
+      default => undef
+    },
+    'connectionTimeout' => $ajp_connectiontimeout,
+    'URIEncoding'       => $ajp_uriencoding,
+    'maxThreads'        => $ajp_maxthreads
+  }
   ), $ajp_params)
 
   # should we force download extras libs?
