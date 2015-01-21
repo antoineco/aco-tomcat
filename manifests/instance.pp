@@ -114,6 +114,8 @@ define tomcat::instance (
   # ajp connector
   $ajp_connector        = true,
   $ajp_port             = 8010,
+  $ajp_protocol         = undef,
+  $ajp_params           = {},
   #----------------------------------------------------------------------------------
   # engine
   $jvmroute             = undef,

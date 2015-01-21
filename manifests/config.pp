@@ -36,6 +36,8 @@ class tomcat::config {
   $ssl_params = $::tomcat::ssl_params
   $ajp_connector = $::tomcat::ajp_connector
   $ajp_port = $::tomcat::ajp_port
+  $ajp_protocol = $::tomcat::ajp_protocol
+  $ajp_params = $::tomcat::ajp_params
   $hostname = $::tomcat::hostname
   $jvmroute = $::tomcat::jvmroute
   $autodeploy = $::tomcat::autodeploy
@@ -75,13 +77,55 @@ class tomcat::config {
   $custom_fragment = $::tomcat::custom_fragment
 
   # generate and manage server configuration
+  concat { 'tomcat server configuration':
+    path   => "${::tomcat::catalina_base_real}/conf/server.xml",
+    owner  => $::tomcat::tomcat_user_real,
+    group  => $::tomcat::tomcat_group_real,
+    mode   => '0600',
+    order  => 'numeric',
+    notify => Service[$::tomcat::service_name_real]
+  }
+
+  Concat::Fragment { target  => 'tomcat server configuration' }
+
   # Template uses:
   # - $control_port
+  concat::fragment { 'server.xml header':
+    order   => 0,
+    content => template("${module_name}/common/server.xml/000_header.erb")
+  }
+
+  # Template uses:
   # - $jmx_registry_port
   # - $jmx_server_port
   # - $jmx_bind_address
   # - $apr_sslengine
+  concat::fragment { 'server.xml listeners':
+    order   => 10,
+    content => template("${module_name}/common/server.xml/010_listeners.erb")
+  }
+
+  # Template uses:
+  # - $userdatabase_realm
+  # - $globalnaming_resources
+  concat::fragment { 'server.xml globalnamingresources':
+    order   => 20,
+    content => template("${module_name}/common/server.xml/020_globalnamingresources.erb")
+  }
+
+  concat::fragment { 'server.xml service':
+    order   => 30,
+    content => template("${module_name}/common/server.xml/030_service.erb")
+  }
+
+  # Template uses:
   # - $threadpool_executor
+  concat::fragment { 'server.xml threadpool executor':
+    order   => 40,
+    content => template("${module_name}/common/server.xml/040_threadpool_executor.erb")
+  }
+
+  # Template uses:
   # - $http_connector
   # - $http_port
   # - $http_protocol
@@ -91,6 +135,14 @@ class tomcat::config {
   # - $http_compression
   # - $http_max_threads
   # - $http_params
+  # - $ssl_connector
+  # - $ssl_port
+  concat::fragment { 'server.xml http connector':
+    order   => 50,
+    content => template("${module_name}/common/server.xml/050_http_connector.erb")
+  }
+  
+  # Template uses:
   # - $ssl_connector
   # - $ssl_port
   # - $ssl_protocol
@@ -103,27 +155,71 @@ class tomcat::config {
   # - $ssl_maxthreads
   # - $ssl_keystore
   # - $ssl_params
+  concat::fragment { 'server.xml ssl connector':
+    order   => 60,
+    content => template("${module_name}/common/server.xml/060_ssl_connector.erb")
+  }
+  
+  # Template uses:
   # - $ajp_connector
   # - $ajp_port
+  # - $ajp_protocol
+  # - $ajp_params
+  # - $ssl_connector
+  # - $ssl_port
+  concat::fragment { 'server.xml ajp connector':
+    order   => 70,
+    content => template("${module_name}/common/server.xml/070_ajp_connector.erb")
+  }
+  
+  # Template uses:
   # - $hostname
   # - $jvmroute
+  concat::fragment { 'server.xml engine':
+    order   => 80,
+    content => template("${module_name}/common/server.xml/080_engine.erb")
+  }
+
+  # Template uses:
+  # - $use_simpletcpcluster
+  # - $cluster_membership_port
+  # - $cluster_membership_domain
+  # - $cluster_receiver_address  
+  concat::fragment { 'server.xml cluster':
+    order   => 90,
+    content => template("${module_name}/common/server.xml/090_cluster.erb")
+  }
+
+  # Template uses:
+  # - $lockout_realm
+  # - $userdatabase_realm
+  # - $realms
+  concat::fragment { 'server.xml realms':
+    order   => 100,
+    content => template("${module_name}/common/server.xml/100_realms.erb")
+  }
+
+  # Template uses:
   # - $autodeploy
   # - $deployOnStartup
   # - $unpackwars
   # - $undeployoldversions
-  # - $lockout_realm
-  # - $userdatabase_realm
-  # - $realms
+  concat::fragment { 'server.xml host':
+    order   => 110,
+    content => template("${module_name}/common/server.xml/110_host.erb")
+  }
+
+  # Template uses:
   # - $singlesignon_valve
   # - $accesslog_valve
-  # - $globalnaming_resources
-  file { 'tomcat server configuration':
-    path    => "${::tomcat::catalina_base_real}/conf/server.xml",
-    content => template("${module_name}/common/server.xml.erb"),
-    owner   => $::tomcat::tomcat_user_real,
-    group   => $::tomcat::tomcat_group_real,
-    mode    => '0600',
-    notify  => Service[$::tomcat::service_name_real]
+  concat::fragment { 'server.xml valves':
+    order   => 120,
+    content => template("${module_name}/common/server.xml/120_valves.erb")
+  }
+
+  concat::fragment { 'server.xml footer':
+    order   => 200,
+    content => template("${module_name}/common/server.xml/200_footer.erb")
   }
 
   # generate and manage server context configuration

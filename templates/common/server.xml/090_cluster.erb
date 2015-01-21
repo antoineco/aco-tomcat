@@ -1,0 +1,33 @@
+<%- if @use_simpletcpcluster -%>
+
+      <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"
+               channelSendOptions="8">
+         <Manager className="org.apache.catalina.ha.session.DeltaManager"
+                  expireSessionsOnShutdown="false"
+                  notifyListenersOnReplication="true"/>
+         <Channel className="org.apache.catalina.tribes.group.GroupChannel">
+            <Membership className="org.apache.catalina.tribes.membership.McastService"
+                        address="228.0.0.4"
+                        port="<%= @cluster_membership_port %>"
+                        domain="<%= @cluster_membership_domain %>"
+                        frequency="500"
+                        dropTime="3000"/>
+            <Receiver className="org.apache.catalina.tribes.transport.nio.NioReceiver"
+                         address="<%= @cluster_receiver_address %>"
+                         port="4000"
+                         autoBind="100"
+                         selectorTimeout="5000"
+                         maxThreads="6"/>
+            <Sender className="org.apache.catalina.tribes.transport.ReplicationTransmitter">
+               <Transport className="org.apache.catalina.tribes.transport.nio.PooledParallelSender"/>
+            </Sender>
+            <Interceptor className="org.apache.catalina.tribes.group.interceptors.TcpFailureDetector"/>
+            <Interceptor className="org.apache.catalina.tribes.group.interceptors.MessageDispatch15Interceptor"/>
+         </Channel>
+         <Valve className="org.apache.catalina.ha.tcp.ReplicationValve"
+                filter=".*\.gif;.*\.js;.*\.jpg;.*\.png;.*\.css;.*\.txt;"/>
+         <Valve className="org.apache.catalina.ha.session.JvmRouteBinderValve"/>
+         <ClusterListener className="org.apache.catalina.ha.session.JvmRouteSessionIDBinderListener"/>
+         <ClusterListener className="org.apache.catalina.ha.session.ClusterSessionListener"/>
+      </Cluster>
+<%- end -%>

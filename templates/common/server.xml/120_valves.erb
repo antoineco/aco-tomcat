@@ -1,0 +1,8 @@
+<%- if @singlesignon_valve %>
+        <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
+<% end -%>
+<% if @accesslog_valve %>
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="<%= @hostname %>_access_log<% if scope.function_versioncmp([scope['::tomcat::maj_version'], '7']) <= 0 -%>.<% end -%>" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+<% end -%>

@@ -1,0 +1,22 @@
+
+
+<%- if scope.function_versioncmp([scope['::tomcat::version'], '8.0.14']) >= 0 -%>
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+<%- end -%>
+<%- if scope.function_versioncmp([scope['::tomcat::maj_version'], '7']) >= 0 -%>
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+<%- end -%>
+<%- if scope['::tomcat::maj_version'] == '7' -%>
+  <Listener className="org.apache.catalina.core.JasperListener" />
+<%- end -%>
+<%- if scope['::tomcat::maj_version'] == '6' -%>
+  <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
+<%- end -%>
+<%- if @jmx_listener -%>
+  <Listener className="org.apache.catalina.mbeans.JmxRemoteLifecycleListener" rmiRegistryPortPlatform="<%= @jmx_registry_port %>" rmiServerPortPlatform="<%= @jmx_server_port %>"<% if @jmx_bind_address and @jmx_bind_address != '' -%> rmiBindAddress="<%= @jmx_bind_address %>"<% end -%> />
+<%- end -%>
+<%- if @apr_listener -%>
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" <% if @apr_sslengine and @apr_sslengine != '' -%>SSLEngine="<%= @apr_sslengine %>" <% end -%>/>
+<%- end -%>
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />

@@ -1,0 +1,25 @@
+<%- if @userdatabase_realm or (@globalnaming_resources and ! @globalnaming_resources.empty?) -%>
+
+  <GlobalNamingResources>
+<%- if @userdatabase_realm -%>
+
+    <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+              description="User database that can be updated and saved"
+              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+              pathname="conf/tomcat-users.xml" />
+<%- end -%>
+<%- if @globalnaming_resources and ! @globalnaming_resources.empty? -%>
+  <%- [@globalnaming_resources].flatten.compact.each do |resource| %>
+  <%- resource.each_pair do |attrib, att_value| -%>
+    <%- if attrib == resource.keys.first -%>
+    <Resource <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.last %> /><% end %>
+    <%- else -%>
+              <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.last %> /><% end %>
+    <%- end -%>
+  <%- end -%>
+  <%- end -%>
+<%- end -%>
+
+  </GlobalNamingResources>
+<%- end -%>

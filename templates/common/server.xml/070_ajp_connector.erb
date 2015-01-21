@@ -1,0 +1,14 @@
+<%- if @ajp_connector -%>
+
+    <Connector port="<%= @ajp_port %>"<% if @ajp_protocol %> protocol="<%= @ajp_protocol %>"<% end %>
+               <%- if @ssl_connector -%>
+               redirectPort="<%= @ssl_port %>"
+               <%- end -%>
+               <%- if @ajp_params and ! @ajp_params.empty? -%>
+               <%- @ajp_params.each_pair do |attrib, value| -%>
+               <%= attrib %>="<%= value %>"<% if attrib == @ajp_params.keys.last %> /><% end %>
+               <%- end -%>
+               <%- else -%>
+    />
+               <%- end -%>
+<%- end -%>

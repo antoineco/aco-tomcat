@@ -1,0 +1,4 @@
+
+      <Host name="<%= @hostname %>" appBase="webapps"
+            autoDeploy="<%= @autodeploy %>" deployOnStartup="<%= @deployOnStartup %>"
+            unpackWARs="<%= @unpackwars %>" <% if scope.function_versioncmp([scope['::tomcat::maj_version'], '7']) >= 0 -%>undeployOldVersions="<%= @undeployoldversions %>" <% end -%>>
