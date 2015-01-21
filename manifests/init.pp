@@ -162,8 +162,8 @@ class tomcat (
   #----------------------------------------------------------------------------------
   # cluster
   $use_simpletcpcluster = false,
-  $cluster_membership_port = "45565",
-  $cluster_membership_domain = "tccluster",
+  $cluster_membership_port = '45565',
+  $cluster_membership_domain = 'tccluster',
   $cluster_receiver_address = undef,
   #----------------------------------------------------------------------------------
   # realms
