@@ -42,6 +42,10 @@ class tomcat::config {
   $deployOnStartup = $::tomcat::deployOnStartup
   $unpackwars = $::tomcat::unpackwars
   $undeployoldversions = $::tomcat::undeployoldversions
+  $use_simpletcpcluster = $::tomcat::use_simpletcpcluster
+  $cluster_membership_port = $::tomcat::cluster_membership_port
+  $cluster_membership_domain = $::tomcat::cluster_membership_domain
+  $cluster_receiver_address = $::tomcat::cluster_receiver_address
   $lockout_realm = $::tomcat::lockout_realm
   $userdatabase_realm = $::tomcat::userdatabase_realm
   $realms = $::tomcat::realms
