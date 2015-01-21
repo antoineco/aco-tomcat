@@ -108,7 +108,7 @@ class tomcat (
   #----------------------------------------------------------------------------------
   # listeners
   $apr_listener               = false,
-  $apr_sslengine              = 'on',
+  $apr_sslengine              = undef,
   # jmx
   $jmx_listener               = false,
   $jmx_registry_port          = 8050,
@@ -136,14 +136,14 @@ class tomcat (
   $ssl_connector              = false,
   $ssl_port                   = 8443,
   $ssl_protocol               = 'HTTP/1.1',
-  $ssl_clientauth             = undef,
-  $ssl_sslprotocol            = undef,
   $ssl_use_threadpool         = false,
   $ssl_connectiontimeout      = undef,
   $ssl_uriencoding            = undef,
   $ssl_compression            = false,
   $ssl_maxthreads             = undef,
-  $ssl_keystore               = undef,
+  $ssl_clientauth             = undef,
+  $ssl_sslprotocol            = undef,
+  $ssl_keystorefile           = undef,
   $ssl_params                 = {},
   #----------------------------------------------------------------------------------
   # ajp connector
@@ -151,6 +151,9 @@ class tomcat (
   $ajp_port                   = 8009,
   $ajp_protocol               = 'AJP/1.3',
   $ajp_use_threadpool         = false,
+  $ajp_connectiontimeout      = undef,
+  $ajp_uriencoding            = undef,
+  $ajp_maxthreads             = undef,
   $ajp_params                 = {},
   #----------------------------------------------------------------------------------
   # engine
@@ -377,8 +380,6 @@ class tomcat (
 
   $ssl_params_real = merge(delete_undef_values(
     { 'protocol'          => $ssl_protocol,
-      'clientAuth'        => $ssl_clientauth,
-      'sslProtocol'       => $ssl_sslprotocol,
       'executor'          => $ssl_use_threadpool ? {
                                true    => 'tomcatThreadPool',
                                default => undef
@@ -390,16 +391,21 @@ class tomcat (
                                default => undef
                              },
       'maxThreads'        => $ssl_maxthreads,
-      'keystoreFile'      => $ssl_keystore
+      'clientAuth'        => $ssl_clientauth,
+      'sslProtocol'       => $ssl_sslprotocol,
+      'keystoreFile'      => $ssl_keystorefile
     }
   ), $ssl_params)
   
   $ajp_params_real = merge(delete_undef_values(
-    { 'protocol' => $ajp_protocol,
-      'executor' => $ajp_use_threadpool ? {
-                      true    => 'tomcatThreadPool',
-                      default => undef
-                    }
+    { 'protocol'          => $ajp_protocol,
+      'executor'          => $ajp_use_threadpool ? {
+                               true    => 'tomcatThreadPool',
+                               default => undef
+                             },
+      'connectionTimeout' => $ajp_connectiontimeout,
+      'URIEncoding'       => $ajp_uriencoding,
+      'maxThreads'        => $ajp_maxthreads
     }
   ), $ajp_params)
 

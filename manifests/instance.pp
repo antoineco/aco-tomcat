@@ -73,7 +73,7 @@ define tomcat::instance (
   #----------------------------------------------------------------------------------
   # listeners
   $apr_listener               = false,
-  $apr_sslengine              = 'on',
+  $apr_sslengine              = undef,
   # jmx
   $jmx_listener               = false,
   $jmx_registry_port          = 8052,
@@ -101,20 +101,24 @@ define tomcat::instance (
   $ssl_connector              = false,
   $ssl_port                   = 8444,
   $ssl_protocol               = 'HTTP/1.1',
-  $ssl_clientauth             = undef,
-  $ssl_sslprotocol            = undef,
   $ssl_use_threadpool         = false,
   $ssl_connectiontimeout      = undef,
   $ssl_uriencoding            = undef,
   $ssl_compression            = false,
   $ssl_maxthreads             = undef,
-  $ssl_keystore               = undef,
+  $ssl_clientauth             = undef,
+  $ssl_sslprotocol            = undef,
+  $ssl_keystorefile           = undef,
   $ssl_params                 = {},
   #----------------------------------------------------------------------------------
   # ajp connector
   $ajp_connector              = true,
   $ajp_port                   = 8010,
   $ajp_protocol               = 'AJP/1.3',
+  $ajp_use_threadpool         = false,
+  $ajp_connectiontimeout      = undef,
+  $ajp_uriencoding            = undef,
+  $ajp_maxthreads             = undef,
   $ajp_params                 = {},
   #----------------------------------------------------------------------------------
   # engine
@@ -303,8 +307,6 @@ define tomcat::instance (
 
   $ssl_params_real = merge(delete_undef_values(
     { 'protocol'          => $ssl_protocol,
-      'clientAuth'        => $ssl_clientauth,
-      'sslProtocol'       => $ssl_sslprotocol,
       'executor'          => $ssl_use_threadpool ? {
                                true    => 'tomcatThreadPool',
                                default => undef
@@ -316,16 +318,21 @@ define tomcat::instance (
                                default => undef
                              },
       'maxThreads'        => $ssl_maxthreads,
-      'keystoreFile'      => $ssl_keystore
+      'clientAuth'        => $ssl_clientauth,
+      'sslProtocol'       => $ssl_sslprotocol,
+      'keystoreFile'      => $ssl_keystorefile
     }
   ), $ssl_params)
   
   $ajp_params_real = merge(delete_undef_values(
-    { 'protocol' => $ajp_protocol,
-      'executor' => $ajp_use_threadpool ? {
-                      true    => 'tomcatThreadPool',
-                      default => undef
-                    }
+    { 'protocol'          => $ajp_protocol,
+      'executor'          => $ajp_use_threadpool ? {
+                               true    => 'tomcatThreadPool',
+                               default => undef
+                             },
+      'connectionTimeout' => $ajp_connectiontimeout,
+      'URIEncoding'       => $ajp_uriencoding,
+      'maxThreads'        => $ajp_maxthreads
     }
   ), $ajp_params)
 
@@ -557,12 +564,6 @@ define tomcat::instance (
   # Template uses:
   # - $http_connector
   # - $http_port
-  # - $http_protocol
-  # - $http_use_threadpool
-  # - $http_connection_timeout
-  # - $http_uri_encoding
-  # - $http_compression
-  # - $http_max_threads
   # - $http_params_real
   # - $ssl_connector
   # - $ssl_port
@@ -574,15 +575,6 @@ define tomcat::instance (
   # Template uses:
   # - $ssl_connector
   # - $ssl_port
-  # - $ssl_protocol
-  # - $ssl_clientauth
-  # - $ssl_sslprotocol
-  # - $ssl_use_threadpool
-  # - $ssl_connectiontimeout
-  # - $ssl_uriencoding
-  # - $ssl_compression
-  # - $ssl_maxthreads
-  # - $ssl_keystore
   # - $ssl_params_real
   concat::fragment { "instance ${name} server.xml ssl connector":
     order   => 60,
@@ -592,7 +584,6 @@ define tomcat::instance (
   # Template uses:
   # - $ajp_connector
   # - $ajp_port
-  # - $ajp_protocol
   # - $ajp_params_real
   # - $ssl_connector
   # - $ssl_port
