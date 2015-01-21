@@ -142,6 +142,7 @@ define tomcat::instance (
   #----------------------------------------------------------------------------------
   # misc
   $globalnaming_resources = [],
+  $context_resources    = [],
   #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------
@@ -504,6 +505,18 @@ define tomcat::instance (
     content => template("${module_name}/common/server.xml.erb"),
     owner   => $::tomcat::tomcat_user_real,
     group   => $::tomcat::tomcat_group_real,
+    notify  => Service[$service_name_real]
+  }
+
+  # generate and manage server context configuration
+  # Template uses:
+  # - $context_resources
+  file { 'instance ${name} context configuration':
+    path    => "${catalina_base_real}/conf/context.xml",
+    content => template("${module_name}/common/context.xml.erb"),
+    owner   => $::tomcat::tomcat_user_real,
+    group   => $::tomcat::tomcat_group_real,
+    mode    => '0600',
     notify  => Service[$service_name_real]
   }
 

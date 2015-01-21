@@ -52,6 +52,7 @@ class tomcat::config {
   $singlesignon_valve = $::tomcat::singlesignon_valve
   $accesslog_valve = $::tomcat::accesslog_valve
   $globalnaming_resources = $::tomcat::globalnaming_resources
+  $context_resources = $::tomcat::context_resources
   $instance = $::tomcat::instance
   $service_name_real = $::tomcat::service_name_real
   $java_home = $::tomcat::java_home
@@ -119,6 +120,18 @@ class tomcat::config {
   file { 'tomcat server configuration':
     path    => "${::tomcat::catalina_base_real}/conf/server.xml",
     content => template("${module_name}/common/server.xml.erb"),
+    owner   => $::tomcat::tomcat_user_real,
+    group   => $::tomcat::tomcat_group_real,
+    mode    => '0600',
+    notify  => Service[$::tomcat::service_name_real]
+  }
+
+  # generate and manage server context configuration
+  # Template uses:
+  # - $context_resources
+  file { 'tomcat context configuration':
+    path    => "${::tomcat::catalina_base_real}/conf/context.xml",
+    content => template("${module_name}/common/context.xml.erb"),
     owner   => $::tomcat::tomcat_user_real,
     group   => $::tomcat::tomcat_group_real,
     mode    => '0600',
