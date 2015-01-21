@@ -21,11 +21,14 @@
     -->
 <%- if @context_resources and ! @context_resources.empty? -%>
   <%- [@context_resources].flatten.compact.each do |resource| %>
-    <ResourceLink
-       <%- resource.each_pair do |attrib, att_value| -%>
-       <%= attrib %>="<%= att_value %>"
-       <%- end -%>
-    />
+  <%- resource.each_pair do |attrib, att_value| -%>
+    <%- if attrib == resource.keys.first -%>
+    <ResourceLink <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.last %> /><% end %>
+    <%- else -%>
+                  <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.last %> /><% end %>
+    <%- end -%>
+  <%- end -%>
   <%- end -%>
 <%- end -%>
+
 </Context>
