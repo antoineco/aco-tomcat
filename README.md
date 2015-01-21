@@ -350,7 +350,8 @@ Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-8.0-doc
 #####`globalnaming_resources`
 An array of `Resource` entries to be added to the `GlobalNamingResources` block. Each entry is to be supplied as a Hash of attributes/values for the `Resource` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html) for the list of possible attributes.
 
-$context_resources
+#####`context_resources`
+An array of `ResourceLink` entries to be added to the context.xml file. Each entry is to be supplied as a Hash of attributes/values for the `Resource` XML node. See [Resource Links](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Links) for the list of possible attributes.
 
 **Global configuration file / environment variables**
 
@@ -447,7 +448,6 @@ User roles (array of strings)
 ##To Do
 
 * Create systemd units for Fedora 20+
-* Split server.xml template file using concat
 * Parameters validation
 
 ##Contributors
