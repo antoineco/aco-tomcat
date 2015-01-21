@@ -505,13 +505,56 @@ define tomcat::instance (
   # --------------------#
 
   # generate and manage server configuration
+  concat { "instance ${name} server configuration":
+    path   => "${catalina_base_real}/conf/server.xml",
+    owner  => $::tomcat::tomcat_user_real,
+    group  => $::tomcat::tomcat_group_real,
+    mode   => '0600',
+    order  => 'numeric',
+    notify => Service[$service_name_real]
+  }
+
+  Concat::Fragment { target  => "instance ${name} server configuration" }
+
   # Template uses:
   # - $control_port
+  concat::fragment { "instance ${name} server.xml header":
+    order   => 0,
+    content => template("${module_name}/common/server.xml/000_header.erb")
+  }
+
+  # Template uses:
   # - $jmx_registry_port
   # - $jmx_server_port
   # - $jmx_bind_address
   # - $apr_sslengine
+  # - $tomcat::maj_version
+  concat::fragment { "instance ${name} server.xml listeners":
+    order   => 10,
+    content => template("${module_name}/common/server.xml/010_listeners.erb")
+  }
+
+  # Template uses:
+  # - $userdatabase_realm
+  # - $globalnaming_resources
+  concat::fragment { "instance ${name} server.xml globalnamingresources":
+    order   => 20,
+    content => template("${module_name}/common/server.xml/020_globalnamingresources.erb")
+  }
+
+  concat::fragment { "instance ${name} server.xml service":
+    order   => 30,
+    content => template("${module_name}/common/server.xml/030_service.erb")
+  }
+
+  # Template uses:
   # - $threadpool_executor
+  concat::fragment { "instance ${name} server.xml threadpool executor":
+    order   => 40,
+    content => template("${module_name}/common/server.xml/040_threadpool_executor.erb")
+  }
+
+  # Template uses:
   # - $http_connector
   # - $http_port
   # - $http_protocol
@@ -520,7 +563,15 @@ define tomcat::instance (
   # - $http_uri_encoding
   # - $http_compression
   # - $http_max_threads
-  # - $http_params
+  # - $http_params_real
+  # - $ssl_connector
+  # - $ssl_port
+  concat::fragment { "instance ${name} server.xml http connector":
+    order   => 50,
+    content => template("${module_name}/common/server.xml/050_http_connector.erb")
+  }
+  
+  # Template uses:
   # - $ssl_connector
   # - $ssl_port
   # - $ssl_protocol
@@ -532,31 +583,80 @@ define tomcat::instance (
   # - $ssl_compression
   # - $ssl_maxthreads
   # - $ssl_keystore
-  # - $ssl_params
+  # - $ssl_params_real
+  concat::fragment { "instance ${name} server.xml ssl connector":
+    order   => 60,
+    content => template("${module_name}/common/server.xml/060_ssl_connector.erb")
+  }
+  
+  # Template uses:
   # - $ajp_connector
   # - $ajp_port
+  # - $ajp_protocol
+  # - $ajp_params_real
+  # - $ssl_connector
+  # - $ssl_port
+  concat::fragment { "instance ${name} server.xml ajp connector":
+    order   => 70,
+    content => template("${module_name}/common/server.xml/070_ajp_connector.erb")
+  }
+  
+  # Template uses:
   # - $hostname
   # - $jvmroute
+  concat::fragment { "instance ${name} server.xml engine":
+    order   => 80,
+    content => template("${module_name}/common/server.xml/080_engine.erb")
+  }
+
+  # Template uses:
+  # - $use_simpletcpcluster
+  # - $cluster_membership_port
+  # - $cluster_membership_domain
+  # - $cluster_receiver_address  
+  concat::fragment { "instance ${name} server.xml cluster":
+    order   => 90,
+    content => template("${module_name}/common/server.xml/090_cluster.erb")
+  }
+
+  # Template uses:
+  # - $lockout_realm
+  # - $userdatabase_realm
+  # - $realms
+  concat::fragment { "instance ${name} server.xml realms":
+    order   => 100,
+    content => template("${module_name}/common/server.xml/100_realms.erb")
+  }
+
+  # Template uses:
   # - $autodeploy
   # - $deployOnStartup
   # - $unpackwars
   # - $undeployoldversions
+  # - $tomcat::maj_version
+  concat::fragment { "instance ${name} server.xml host":
+    order   => 110,
+    content => template("${module_name}/common/server.xml/110_host.erb")
+  }
+
+  # Template uses:
   # - $singlesignon_valve
   # - $accesslog_valve
-  # - $lockout_realm
-  # - $userdatabase_realm
-  file { "instance ${name} server configuration":
-    path    => "${catalina_base_real}/conf/server.xml",
-    content => template("${module_name}/common/server.xml.erb"),
-    owner   => $::tomcat::tomcat_user_real,
-    group   => $::tomcat::tomcat_group_real,
-    notify  => Service[$service_name_real]
+  # - $tomcat::maj_version
+  concat::fragment { "instance ${name} server.xml valves":
+    order   => 120,
+    content => template("${module_name}/common/server.xml/120_valves.erb")
+  }
+
+  concat::fragment { "instance ${name} server.xml footer":
+    order   => 200,
+    content => template("${module_name}/common/server.xml/200_footer.erb")
   }
 
   # generate and manage server context configuration
   # Template uses:
   # - $context_resources
-  file { 'instance ${name} context configuration':
+  file { "instance ${name} context configuration":
     path    => "${catalina_base_real}/conf/context.xml",
     content => template("${module_name}/common/context.xml.erb"),
     owner   => $::tomcat::tomcat_user_real,
@@ -579,7 +679,7 @@ define tomcat::instance (
   # - $catalina_opts_real
   # - $tomcat::tomcat_user_real
   # - $tomcat::tomcat_group_real
-  # - $maj_version
+  # - $tomcat::maj_version
   # - $lang
   # - $security_manager_real
   # - $shutdown_wait
@@ -607,19 +707,20 @@ define tomcat::instance (
     owner  => $::tomcat::tomcat_user_real,
     group  => $::tomcat::tomcat_group_real,
     mode   => '0600',
+    order  => 'numeric',
     notify => Service[$service_name_real]
   }
 
   concat::fragment { "instance ${name} UserDatabase header":
     target  => "instance ${name} UserDatabase",
     content => template("${module_name}/common/UserDatabase_header.erb"),
-    order   => 01
+    order   => 1
   }
 
   concat::fragment { "instance ${name} UserDatabase footer":
     target  => "instance ${name} UserDatabase",
     content => template("${module_name}/common/UserDatabase_footer.erb"),
-    order   => 03
+    order   => 3
   }
 
   # configure authorized access

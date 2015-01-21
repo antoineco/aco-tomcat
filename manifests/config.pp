@@ -65,7 +65,6 @@ class tomcat::config {
   $catalina_pid_real = $::tomcat::catalina_pid_real
   $java_opts_real = $::tomcat::java_opts_real
   $catalina_opts_real = $::tomcat::catalina_opts_real
-  $maj_version = $::tomcat::maj_version
   $lang = $::tomcat::lang
   $security_manager_real = $::tomcat::security_manager_real
   $shutdown_wait = $::tomcat::shutdown_wait
@@ -100,6 +99,7 @@ class tomcat::config {
   # - $jmx_server_port
   # - $jmx_bind_address
   # - $apr_sslengine
+  # - $tomcat::maj_version
   concat::fragment { 'server.xml listeners':
     order   => 10,
     content => template("${module_name}/common/server.xml/010_listeners.erb")
@@ -204,6 +204,7 @@ class tomcat::config {
   # - $deployOnStartup
   # - $unpackwars
   # - $undeployoldversions
+  # - $tomcat::maj_version
   concat::fragment { 'server.xml host':
     order   => 110,
     content => template("${module_name}/common/server.xml/110_host.erb")
@@ -212,6 +213,7 @@ class tomcat::config {
   # Template uses:
   # - $singlesignon_valve
   # - $accesslog_valve
+  # - $tomcat::maj_version
   concat::fragment { 'server.xml valves':
     order   => 120,
     content => template("${module_name}/common/server.xml/120_valves.erb")
@@ -248,7 +250,7 @@ class tomcat::config {
   # - $catalina_opts_real
   # - $tomcat::tomcat_user_real
   # - $tomcat::tomcat_group_real
-  # - $maj_version
+  # - $tomcat::maj_version
   # - $lang
   # - $security_manager_real
   # - $shutdown_wait

@@ -19,14 +19,13 @@
     <!--
     <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
     -->
-<% if @context_resources and ! @context_resources.empty? -%>
-  <%- [@context_resources].flatten.compact.each do |resource| -%>
+<%- if @context_resources and ! @context_resources.empty? -%>
+  <%- [@context_resources].flatten.compact.each do |resource| %>
     <ResourceLink
        <%- resource.each_pair do |attrib, att_value| -%>
        <%= attrib %>="<%= att_value %>"
        <%- end -%>
     />
-
   <%- end -%>
-<% end -%>
+<%- end -%>
 </Context>
