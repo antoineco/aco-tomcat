@@ -19,11 +19,14 @@ class tomcat::install::archive {
 
   File {
     owner => $::tomcat::tomcat_user_real,
-    group => $::tomcat::tomcat_group_real
+    group => $::tomcat::tomcat_group_real,
+    mode  => '0644'
   }
 
   # install from archive
-  file { $::tomcat::catalina_home_real: ensure => directory } ->
+  file { $::tomcat::catalina_home_real:
+    ensure => directory
+  } ->
   staging::file { "apache-tomcat-${::tomcat::version}.tar.gz": source => $::tomcat::archive_source_real } ->
   staging::extract { "apache-tomcat-${::tomcat::version}.tar.gz":
     target  => $::tomcat::catalina_home_real,
@@ -36,15 +39,19 @@ class tomcat::install::archive {
     ensure => link,
     path   => "${::tomcat::catalina_base_real}/logs",
     target => "/var/log/${::tomcat::service_name_real}",
+    mode   => '0777',
     force  => true
   }
 
   file { 'tomcat logs directory':
     ensure => directory,
-    path   => "/var/log/${::tomcat::service_name_real}",
-    owner  => $::tomcat::tomcat_user_real,
-    group  => $::tomcat::tomcat_group_real,
-    mode   => '0660'
+    path   => "/var/log/${::tomcat::service_name_real}"
+  }
+  
+  # pid file
+  file { 'tomcat pid file':
+    ensure => present,
+    path   => $::tomcat::catalina_pid_real
   }
 
   # warn if admin webapps were selected for installation

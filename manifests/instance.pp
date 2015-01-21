@@ -229,10 +229,7 @@ define tomcat::instance (
   }
 
   if $catalina_pid == undef {
-    case $::tomcat::install_from {
-      'package' : { $catalina_pid_real = "/var/run/${service_name_real}.pid" }
-      default   : { $catalina_pid_real = "${catalina_tmpdir_real}/${service_name_real}.pid" }
-    }
+    $catalina_pid_real = "/var/run/${service_name_real}.pid"
   } else {
     $catalina_pid_real = $catalina_pid
   }
@@ -443,7 +440,7 @@ define tomcat::instance (
   File {
     owner   => $::tomcat::tomcat_user_real,
     group   => $::tomcat::tomcat_group_real,
-    mode    => '0660',
+    mode    => '0644',
     require => Class['::tomcat::install']
   }
 
@@ -480,7 +477,8 @@ define tomcat::instance (
     "instance ${name} logs symlink":
       ensure => link,
       path   => "${catalina_base_real}/logs",
-      target => "/var/log/${service_name_real}";
+      target => "/var/log/${service_name_real}",
+      mode    => '0777';
 
     "instance ${name} webapps directory":
       ensure => directory,
@@ -504,6 +502,14 @@ define tomcat::instance (
     file { "instance ${name} catalina.policy":
       ensure => present,
       path   => "${catalina_base_real}/conf/policy.d/catalina.policy"
+    }
+  }
+  
+  # pid file
+  if $::tomcat::install_from == 'archive' {
+    file { 'tomcat pid file':
+      ensure => present,
+      path   => $catalina_pid_real
     }
   }
 
