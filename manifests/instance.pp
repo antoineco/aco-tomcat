@@ -125,6 +125,12 @@ define tomcat::instance (
   $undeployoldversions  = false,
   $unpackwars           = true,
   #----------------------------------------------------------------------------------
+  # cluster
+  $use_simpletcpcluster = false,
+  $cluster_membership_port = '45565',
+  $cluster_membership_domain = 'tccluster',
+  $cluster_receiver_address = undef,
+  #----------------------------------------------------------------------------------
   # realms
   $lockout_realm        = true,
   $userdatabase_realm   = true,
@@ -136,6 +142,7 @@ define tomcat::instance (
   #----------------------------------------------------------------------------------
   # misc
   $globalnaming_resources = [],
+  $context_resources    = [],
   #----------------------------------------------------------------------------------
   # global configuration file
   #----------------------------------------------------------------------------------
@@ -498,6 +505,18 @@ define tomcat::instance (
     content => template("${module_name}/common/server.xml.erb"),
     owner   => $::tomcat::tomcat_user_real,
     group   => $::tomcat::tomcat_group_real,
+    notify  => Service[$service_name_real]
+  }
+
+  # generate and manage server context configuration
+  # Template uses:
+  # - $context_resources
+  file { 'instance ${name} context configuration':
+    path    => "${catalina_base_real}/conf/context.xml",
+    content => template("${module_name}/common/context.xml.erb"),
+    owner   => $::tomcat::tomcat_user_real,
+    group   => $::tomcat::tomcat_group_real,
+    mode    => '0600',
     notify  => Service[$service_name_real]
   }
 

@@ -42,12 +42,17 @@ class tomcat::config {
   $deployOnStartup = $::tomcat::deployOnStartup
   $unpackwars = $::tomcat::unpackwars
   $undeployoldversions = $::tomcat::undeployoldversions
+  $use_simpletcpcluster = $::tomcat::use_simpletcpcluster
+  $cluster_membership_port = $::tomcat::cluster_membership_port
+  $cluster_membership_domain = $::tomcat::cluster_membership_domain
+  $cluster_receiver_address = $::tomcat::cluster_receiver_address
   $lockout_realm = $::tomcat::lockout_realm
   $userdatabase_realm = $::tomcat::userdatabase_realm
   $realms = $::tomcat::realms
   $singlesignon_valve = $::tomcat::singlesignon_valve
   $accesslog_valve = $::tomcat::accesslog_valve
   $globalnaming_resources = $::tomcat::globalnaming_resources
+  $context_resources = $::tomcat::context_resources
   $instance = $::tomcat::instance
   $service_name_real = $::tomcat::service_name_real
   $java_home = $::tomcat::java_home
@@ -115,6 +120,18 @@ class tomcat::config {
   file { 'tomcat server configuration':
     path    => "${::tomcat::catalina_base_real}/conf/server.xml",
     content => template("${module_name}/common/server.xml.erb"),
+    owner   => $::tomcat::tomcat_user_real,
+    group   => $::tomcat::tomcat_group_real,
+    mode    => '0600',
+    notify  => Service[$::tomcat::service_name_real]
+  }
+
+  # generate and manage server context configuration
+  # Template uses:
+  # - $context_resources
+  file { 'tomcat context configuration':
+    path    => "${::tomcat::catalina_base_real}/conf/context.xml",
+    content => template("${module_name}/common/context.xml.erb"),
     owner   => $::tomcat::tomcat_user_real,
     group   => $::tomcat::tomcat_group_real,
     mode    => '0600',

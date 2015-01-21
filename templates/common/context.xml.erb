@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+# ******************
+# Managed by Puppet
+# ******************
+-->
+<Context>
+
+    <!-- Default set of monitored resources -->
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+
+    <!-- Uncomment this to disable session persistence across Tomcat restarts -->
+    <!--
+    <Manager pathname="" />
+    -->
+
+    <!-- Uncomment this to enable Comet connection tacking (provides events
+         on session expiration as well as webapp lifecycle) -->
+    <!--
+    <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
+    -->
+<% if @context_resources and ! @context_resources.empty? -%>
+  <%- [@context_resources].flatten.compact.each do |resource| -%>
+    <ResourceLink
+       <%- resource.each_pair do |attrib, att_value| -%>
+       <%= attrib %>="<%= att_value %>"
+       <%- end -%>
+    />
+
+  <%- end -%>
+<% end -%>
+</Context>
