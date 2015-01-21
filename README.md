@@ -81,13 +81,14 @@ class { '::tomcat':
 }
 ```
 
-Enable the AJP connector on non-default port
+Enable the AJP connector on non-default port with custom parameters
 
 ```puppet
 class { '::tomcat':
   …
   ajp_connector => true,
-  ajp_port      => 8090
+  ajp_port      => 8090,
+  ajp_params    => { address => '127.0.0.1', packetSize => 12288 }
 }
 ```
 
@@ -262,6 +263,24 @@ Admin user password. Defaults to `password`.
 
 **Server configuration**
 
+#####`apr_listener`
+Whether to enable the [APR Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/apr.html#APR_Lifecycle_Listener_Configuration)
+
+#####`apr_sslengine`
+Name of the SSLEngine to use with the APR Lifecycle Listener. Defaults to `undef`.
+
+#####`jmx_listener`
+Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener)
+
+#####`jmx_registry_port`
+JMX/RMI registry port for the JMX Remote Lifecycle Listener. Defaults to `8050` (global) / `8052` (instance).
+
+#####`jmx_server_port`
+JMX/RMI server port for the JMX Remote Lifecycle Listener. Defaults to `8051` (global) / `8053` (instance).
+
+#####`jmx_bind_address`
+JMX/RMI server interface address for the JMX Remote Lifecycle Listener. Defaults to `undef`.
+
 #####`control_port`
 Server control port. Defaults to `8005` (global) / `8006` (instance).
 
@@ -277,28 +296,30 @@ Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/c
  - `http_uriencoding`: encoding to use for URI
  - `http_compression`: whether to use compression (boolean)
  - `http_maxthreads`: maximum number of executor threads
- - `http_keystore`: path to keystore file
  - `http_params`: optional Hash of additional parameters to put in the HTTP Connector where the key is the XML attribute name and the value, the attribute's value
  
 #####`ssl_connector`
 Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#SSL_Support). Boolean value. Defaults to `false`. Further, the connector can be configured via a series of parameters (if not specified, will use Tomcat's defaults):
  - `ssl_port`: SSL connector port. Defaults to `8443` (global) / `8444` (instance). The HTTP connector's `redirect port` will also be set to this value.
  - `ssl_protocol`: protocol to use
- - `ssl_clientauth`: whether to require a valid certificate chain from the client
- - `ssl_sslprotocol`: SSL protocol(s) to use
  - `ssl_use_threadpool`: whether to use the previously described Executor within the HTTPS connector (boolean)
  - `ssl_connectiontimeout`: timeout for a connection
  - `ssl_uriencoding`: encoding to use for URI
  - `ssl_compression`: whether to use compression (boolean)
  - `ssl_maxthreads`: maximum number of executor threads
- - `ssl_keystore`: path to keystore file
+ - `ssl_clientauth`: whether to require a valid certificate chain from the client
+ - `ssl_sslprotocol`: SSL protocol(s) to use
+ - `ssl_keystorefile`: path to keystore file
  - `ssl_params`: optional Hash of additional parameters to put in the HTTPS Connector where the key is the XML attribute name and the value, the attribute's value
 
 #####`ajp_connector`
 Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp). Boolean value. Defaults to `true`. Further, the connector can be configured via a series of parameters (if not specified, will use Tomcat's defaults):
  - `ajp_port`: AJP connector port. Defaults to `8009` (global) / `8010` (instance).
  - `ajp_protocol`: protocol to use
- - `ajp_use_threadpool`: whether to use the previously described Executor within the HTTPS connector (boolean)
+ - `ajp_use_threadpool`: whether to use the previously described Executor within the AJP connector (boolean)
+ - `ajp_connectiontimeout`: timeout for a connection
+ - `ajp_uriencoding`: encoding to use for URI
+ - `ajp_maxthreads`: maximum number of executor threads
  - `ajp_params`: optional Hash of additional parameters to put in the AJP Connector where the key is the XML attribute name and the value, the attribute's value
 
 #####`jvmroute`
@@ -329,17 +350,7 @@ Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-8.0-doc
 #####`globalnaming_resources`
 An array of `Resource` entries to be added to the `GlobalNamingResources` block. Each entry is to be supplied as a Hash of attributes/values for the `Resource` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html) for the list of possible attributes.
 
-#####`jmx_listener`
-Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener)
-
-#####`jmx_registry_port`
-JMX/RMI registry port. Defaults to `8050` (global) / `8052` (instance).
-
-#####`jmx_server_port`
-JMX/RMI server port. Defaults to `8051` (global) / `8053` (instance).
-
-#####`jmx_bind_address`
-JMX/RMI server interface address. Defaults to `undef`.
+$context_resources
 
 **Global configuration file / environment variables**
 
