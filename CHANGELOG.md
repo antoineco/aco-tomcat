@@ -1,3 +1,9 @@
+###0.8.1
+
+* Fix Critical messages generated when concaneting empty fragments to server.xml
+* New parameter `valves`: create custom Valve elements within the server configuration
+* Improve template formatting
+
 ###0.8.0
 
 * Numerous new connector parameters (see documentation, thanks [etlweather](https://github.com/etlweather) for the help)

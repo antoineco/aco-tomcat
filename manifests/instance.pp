@@ -510,7 +510,7 @@ define tomcat::instance (
     }
   }
   
-  # pid file
+  # pid file management
   if $::tomcat::install_from == 'archive' {
     file { 'tomcat pid file':
       ensure => present,

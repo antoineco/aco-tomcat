@@ -49,7 +49,7 @@ class tomcat::install::archive {
     mode   => '0660',
   }
   
-  # pid file
+  # pid file management
   file { 'tomcat pid file':
     ensure => present,
     path   => $::tomcat::catalina_pid_real
