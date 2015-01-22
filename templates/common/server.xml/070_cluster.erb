@@ -1,4 +1,3 @@
-<%- if @use_simpletcpcluster -%>
 
       <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"
                channelSendOptions="8">
@@ -30,4 +29,3 @@
          <ClusterListener className="org.apache.catalina.ha.session.JvmRouteSessionIDBinderListener"/>
          <ClusterListener className="org.apache.catalina.ha.session.ClusterSessionListener"/>
       </Cluster>
-<%- end -%>

@@ -89,7 +89,7 @@ define tomcat::instance (
   # http connector
   $http_connector             = true,
   $http_port                  = 8081,
-  $http_protocol              = 'HTTP/1.1',
+  $http_protocol              = undef,
   $http_use_threadpool        = false,
   $http_connectiontimeout     = undef,
   $http_uriencoding           = undef,
@@ -100,7 +100,7 @@ define tomcat::instance (
   # ssl connector
   $ssl_connector              = false,
   $ssl_port                   = 8444,
-  $ssl_protocol               = 'HTTP/1.1',
+  $ssl_protocol               = undef,
   $ssl_use_threadpool         = false,
   $ssl_connectiontimeout      = undef,
   $ssl_uriencoding            = undef,
@@ -148,6 +148,7 @@ define tomcat::instance (
   # valves
   $singlesignon_valve         = false,
   $accesslog_valve            = true,
+  $valves                     = [],
   #----------------------------------------------------------------------------------
   # misc
   $globalnaming_resources     = [],
@@ -554,9 +555,11 @@ define tomcat::instance (
   # Template uses:
   # - $userdatabase_realm
   # - $globalnaming_resources
-  concat::fragment { "instance ${name} server.xml globalnamingresources":
-    order   => 20,
-    content => template("${module_name}/common/server.xml/020_globalnamingresources.erb")
+  if $userdatabase_realm or ($globalnaming_resources and $globalnaming_resources != []) {
+    concat::fragment { "instance ${name} server.xml globalnamingresources":
+      order   => 20,
+      content => template("${module_name}/common/server.xml/020_globalnamingresources.erb")
+    }
   }
 
   concat::fragment { "instance ${name} server.xml service":
@@ -566,9 +569,11 @@ define tomcat::instance (
 
   # Template uses:
   # - $threadpool_executor
-  concat::fragment { "instance ${name} server.xml threadpool executor":
-    order   => 40,
-    content => template("${module_name}/common/server.xml/040_threadpool_executor.erb")
+  if $threadpool_executor {
+    concat::fragment { "instance ${name} server.xml threadpool executor":
+      order   => 40,
+      content => template("${module_name}/common/server.xml/040_threadpool_executor.erb")
+    }
   }
 
   # Template uses:
@@ -577,18 +582,22 @@ define tomcat::instance (
   # - $http_params_real
   # - $ssl_connector
   # - $ssl_port
-  concat::fragment { "instance ${name} server.xml http connector":
-    order   => 50,
-    content => template("${module_name}/common/server.xml/050_http_connector.erb")
+  if $http_connector {
+    concat::fragment { "instance ${name} server.xml http connector":
+      order   => 50,
+      content => template("${module_name}/common/server.xml/050_http_connector.erb")
+    }
   }
   
   # Template uses:
   # - $ssl_connector
   # - $ssl_port
   # - $ssl_params_real
-  concat::fragment { "instance ${name} server.xml ssl connector":
-    order   => 51,
-    content => template("${module_name}/common/server.xml/051_ssl_connector.erb")
+  if $ssl_connector {
+    concat::fragment { "instance ${name} server.xml ssl connector":
+      order   => 51,
+      content => template("${module_name}/common/server.xml/051_ssl_connector.erb")
+    }
   }
   
   # Template uses:
@@ -597,16 +606,20 @@ define tomcat::instance (
   # - $ajp_params_real
   # - $ssl_connector
   # - $ssl_port
-  concat::fragment { "instance ${name} server.xml ajp connector":
-    order   => 52,
-    content => template("${module_name}/common/server.xml/052_ajp_connector.erb")
+  if $ajp_connector {
+    concat::fragment { "instance ${name} server.xml ajp connector":
+      order   => 52,
+      content => template("${module_name}/common/server.xml/052_ajp_connector.erb")
+    }
   }
   
   # Template uses:
   # - $connectors
-  concat::fragment { "instance ${name} server.xml connectors":
-    order   => 53,
-    content => template("${module_name}/common/server.xml/053_connectors.erb")
+  if $connectors and $connectors != [] {
+    concat::fragment { "instance ${name} server.xml connectors":
+      order   => 53,
+      content => template("${module_name}/common/server.xml/053_connectors.erb")
+    }
   }
   
   # Template uses:
@@ -621,19 +634,23 @@ define tomcat::instance (
   # - $use_simpletcpcluster
   # - $cluster_membership_port
   # - $cluster_membership_domain
-  # - $cluster_receiver_address  
-  concat::fragment { "instance ${name} server.xml cluster":
-    order   => 70,
-    content => template("${module_name}/common/server.xml/070_cluster.erb")
+  # - $cluster_receiver_address
+  if $use_simpletcpcluster {
+    concat::fragment { "instance ${name} server.xml cluster":
+      order   => 70,
+      content => template("${module_name}/common/server.xml/070_cluster.erb")
+    }
   }
 
   # Template uses:
   # - $lockout_realm
   # - $userdatabase_realm
   # - $realms
-  concat::fragment { "instance ${name} server.xml realms":
-    order   => 80,
-    content => template("${module_name}/common/server.xml/080_realms.erb")
+  if $lockout_realm or $userdatabase_realm or ($realms and $realms != []) {
+    concat::fragment { "instance ${name} server.xml realms":
+      order   => 80,
+      content => template("${module_name}/common/server.xml/080_realms.erb")
+    }
   }
 
   # Template uses:
@@ -650,10 +667,13 @@ define tomcat::instance (
   # Template uses:
   # - $singlesignon_valve
   # - $accesslog_valve
+  # - $valves
   # - $tomcat::maj_version
-  concat::fragment { "instance ${name} server.xml valves":
-    order   => 100,
-    content => template("${module_name}/common/server.xml/100_valves.erb")
+  if $singlesignon_valve or $accesslog_valve or ($valves and $valves != []) {
+    concat::fragment { "instance ${name} server.xml valves":
+      order   => 100,
+      content => template("${module_name}/common/server.xml/100_valves.erb")
+    }
   }
 
   concat::fragment { "instance ${name} server.xml footer":

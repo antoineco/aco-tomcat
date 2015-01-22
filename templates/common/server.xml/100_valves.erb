@@ -6,3 +6,14 @@
                prefix="<%= @hostname %>_access_log<% if scope.function_versioncmp([scope['::tomcat::maj_version'], '7']) <= 0 -%>.<% end -%>" suffix=".txt"
                pattern="%h %l %u %t &quot;%r&quot; %s %b" />
 <% end -%>
+<%- if @valves and ! @valves.empty? -%>
+  <%- [@valves].flatten.compact.each do |valve| %>
+    <%- valve.each_pair do |attrib, att_value| -%>
+      <%- if attrib == valve.keys.first -%>
+        <Valve <%= attrib %>="<%= att_value %>"<% if attrib == valve.keys.last %> /><% end %>
+      <%- else -%>
+               <%= attrib %>="<%= att_value %>"<% if attrib == valve.keys.last %> /><% end %>
+      <%- end -%>
+    <%- end -%>
+  <%- end -%>
+<%- end -%>

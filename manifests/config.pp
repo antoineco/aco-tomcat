@@ -40,9 +40,9 @@ class tomcat::config {
   $realms = $::tomcat::realms
   $singlesignon_valve = $::tomcat::singlesignon_valve
   $accesslog_valve = $::tomcat::accesslog_valve
+  $valves = $::tomcat::valves
   $globalnaming_resources = $::tomcat::globalnaming_resources
   $context_resources = $::tomcat::context_resources
-  $service_name_real = $::tomcat::service_name_real
   $java_home = $::tomcat::java_home
   $catalina_base_real = $::tomcat::catalina_base_real
   $catalina_home_real = $::tomcat::catalina_home_real
@@ -94,9 +94,11 @@ class tomcat::config {
   # Template uses:
   # - $userdatabase_realm
   # - $globalnaming_resources
-  concat::fragment { 'server.xml globalnamingresources':
-    order   => 20,
-    content => template("${module_name}/common/server.xml/020_globalnamingresources.erb")
+  if $userdatabase_realm or ($globalnaming_resources and $globalnaming_resources != []) {
+    concat::fragment { 'server.xml globalnamingresources':
+      order   => 20,
+      content => template("${module_name}/common/server.xml/020_globalnamingresources.erb")
+    }
   }
 
   concat::fragment { 'server.xml service':
@@ -106,9 +108,11 @@ class tomcat::config {
 
   # Template uses:
   # - $threadpool_executor
-  concat::fragment { 'server.xml threadpool executor':
-    order   => 40,
-    content => template("${module_name}/common/server.xml/040_threadpool_executor.erb")
+  if $threadpool_executor {
+    concat::fragment { 'server.xml threadpool executor':
+      order   => 40,
+      content => template("${module_name}/common/server.xml/040_threadpool_executor.erb")
+    }
   }
 
   # Template uses:
@@ -117,18 +121,22 @@ class tomcat::config {
   # - $http_params_real
   # - $ssl_connector
   # - $ssl_port
-  concat::fragment { 'server.xml http connector':
-    order   => 50,
-    content => template("${module_name}/common/server.xml/050_http_connector.erb")
+  if $http_connector {
+    concat::fragment { 'server.xml http connector':
+      order   => 50,
+      content => template("${module_name}/common/server.xml/050_http_connector.erb")
+    }
   }
   
   # Template uses:
   # - $ssl_connector
   # - $ssl_port
   # - $ssl_params_real
-  concat::fragment { 'server.xml ssl connector':
-    order   => 51,
-    content => template("${module_name}/common/server.xml/051_ssl_connector.erb")
+  if $ssl_connector {
+    concat::fragment { 'server.xml ssl connector':
+      order   => 51,
+      content => template("${module_name}/common/server.xml/051_ssl_connector.erb")
+    }
   }
   
   # Template uses:
@@ -137,16 +145,20 @@ class tomcat::config {
   # - $ajp_params_real
   # - $ssl_connector
   # - $ssl_port
-  concat::fragment { 'server.xml ajp connector':
-    order   => 52,
-    content => template("${module_name}/common/server.xml/052_ajp_connector.erb")
+  if $ajp_connector {
+    concat::fragment { 'server.xml ajp connector':
+      order   => 52,
+      content => template("${module_name}/common/server.xml/052_ajp_connector.erb")
+    }
   }
 
   # Template uses:
   # - $connectors
-  concat::fragment { 'server.xml connectors':
-    order   => 53,
-    content => template("${module_name}/common/server.xml/053_connectors.erb")
+  if $connectors and $connectors != [] {
+    concat::fragment { 'server.xml connectors':
+      order   => 53,
+      content => template("${module_name}/common/server.xml/053_connectors.erb")
+    }
   }
   
   # Template uses:
@@ -161,19 +173,23 @@ class tomcat::config {
   # - $use_simpletcpcluster
   # - $cluster_membership_port
   # - $cluster_membership_domain
-  # - $cluster_receiver_address  
-  concat::fragment { 'server.xml cluster':
-    order   => 70,
-    content => template("${module_name}/common/server.xml/070_cluster.erb")
+  # - $cluster_receiver_address
+  if $use_simpletcpcluster {
+    concat::fragment { 'server.xml cluster':
+      order   => 70,
+      content => template("${module_name}/common/server.xml/070_cluster.erb")
+    }
   }
 
   # Template uses:
   # - $lockout_realm
   # - $userdatabase_realm
   # - $realms
-  concat::fragment { 'server.xml realms':
-    order   => 80,
-    content => template("${module_name}/common/server.xml/080_realms.erb")
+  if $lockout_realm or $userdatabase_realm or ($realms and $realms != []) {
+    concat::fragment { 'server.xml realms':
+      order   => 80,
+      content => template("${module_name}/common/server.xml/080_realms.erb")
+    }
   }
 
   # Template uses:
@@ -190,10 +206,13 @@ class tomcat::config {
   # Template uses:
   # - $singlesignon_valve
   # - $accesslog_valve
+  # - $valves
   # - $tomcat::maj_version
-  concat::fragment { 'server.xml valves':
-    order   => 100,
-    content => template("${module_name}/common/server.xml/100_valves.erb")
+  if $singlesignon_valve or $accesslog_valve or ($valves and $valves != []) {
+    concat::fragment { 'server.xml valves':
+      order   => 100,
+      content => template("${module_name}/common/server.xml/100_valves.erb")
+    }
   }
 
   concat::fragment { 'server.xml footer':

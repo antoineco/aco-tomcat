@@ -1,4 +1,3 @@
-<%- if @userdatabase_realm or (@globalnaming_resources and ! @globalnaming_resources.empty?) -%>
 
   <GlobalNamingResources>
 <%- if @userdatabase_realm -%>
@@ -11,15 +10,14 @@
 <%- end -%>
 <%- if @globalnaming_resources and ! @globalnaming_resources.empty? -%>
   <%- [@globalnaming_resources].flatten.compact.each do |resource| %>
-  <%- resource.each_pair do |attrib, att_value| -%>
-    <%- if attrib == resource.keys.first -%>
+    <%- resource.each_pair do |attrib, att_value| -%>
+      <%- if attrib == resource.keys.first -%>
     <Resource <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.last %> /><% end %>
-    <%- else -%>
+      <%- else -%>
               <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.last %> /><% end %>
+      <%- end -%>
     <%- end -%>
-  <%- end -%>
   <%- end -%>
 <%- end -%>
 
   </GlobalNamingResources>
-<%- end -%>

@@ -124,7 +124,7 @@ class tomcat (
   # http connector
   $http_connector             = true,
   $http_port                  = 8080,
-  $http_protocol              = 'HTTP/1.1',
+  $http_protocol              = undef,
   $http_use_threadpool        = false,
   $http_connectiontimeout     = undef,
   $http_uriencoding           = undef,
@@ -135,7 +135,7 @@ class tomcat (
   # ssl connector
   $ssl_connector              = false,
   $ssl_port                   = 8443,
-  $ssl_protocol               = 'HTTP/1.1',
+  $ssl_protocol               = undef,
   $ssl_use_threadpool         = false,
   $ssl_connectiontimeout      = undef,
   $ssl_uriencoding            = undef,
@@ -183,6 +183,7 @@ class tomcat (
   # valves
   $singlesignon_valve         = false,
   $accesslog_valve            = true,
+  $valves                     = [],
   #----------------------------------------------------------------------------------
   # misc
   $globalnaming_resources     = [],
