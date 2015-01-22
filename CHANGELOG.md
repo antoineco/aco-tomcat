@@ -1,3 +1,8 @@
+###0.8.2
+
+* New parameters related to Executors (see documentation)
+* Updated documentation
+
 ###0.8.1
 
 * Fix Critical messages generated when concaneting empty fragments to server.xml
@@ -7,7 +12,7 @@
 
 ###0.8.0
 
-* Numerous new connector parameters (see documentation, thanks [etlweather](https://github.com/etlweather) for the help)
+* Numerous new Connector parameters (see documentation, thanks [etlweather](https://github.com/etlweather) for the help)
 * Split bulky server.xml template into independant fragments
 * New `context_resources` parameter: add ResourceLink elements to context.xml (by [etlweather](https://github.com/etlweather))
 * Added basic support for SimpleTcpCluster (by [etlweather](https://github.com/etlweather), experimental and undocumented, need contributions)
