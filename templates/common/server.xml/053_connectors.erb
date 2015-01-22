@@ -1,0 +1,11 @@
+<%- if @connectors and ! @connectors.empty? -%>
+  <%- [@connectors].flatten.compact.each do |connector| %>
+  <%- connector.each_pair do |attrib, att_value| -%>
+    <%- if attrib == connector.keys.first -%>
+    <Connector <%= attrib %>="<%= att_value %>"<% if attrib == connector.keys.last %> /><% end %>
+    <%- else -%>
+               <%= attrib %>="<%= att_value %>"<% if attrib == connector.keys.last %> /><% end %>
+    <%- end -%>
+  <%- end -%>
+  <%- end -%>
+<%- end -%>

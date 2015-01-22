@@ -121,6 +121,9 @@ define tomcat::instance (
   $ajp_maxthreads             = undef,
   $ajp_params                 = {},
   #----------------------------------------------------------------------------------
+  # custom connectors
+  $connectors                 = [],
+  #----------------------------------------------------------------------------------
   # engine
   $jvmroute                   = undef,
   #----------------------------------------------------------------------------------
@@ -459,7 +462,8 @@ define tomcat::instance (
 
     "instance ${name} logs directory":
       ensure => directory,
-      path   => "/var/log/${service_name_real}"
+      path   => "/var/log/${service_name_real}",
+      mode   => '0660',
   } ->
   file {
     "instance ${name} bin directory":
@@ -583,8 +587,8 @@ define tomcat::instance (
   # - $ssl_port
   # - $ssl_params_real
   concat::fragment { "instance ${name} server.xml ssl connector":
-    order   => 60,
-    content => template("${module_name}/common/server.xml/060_ssl_connector.erb")
+    order   => 51,
+    content => template("${module_name}/common/server.xml/051_ssl_connector.erb")
   }
   
   # Template uses:
@@ -594,16 +598,23 @@ define tomcat::instance (
   # - $ssl_connector
   # - $ssl_port
   concat::fragment { "instance ${name} server.xml ajp connector":
-    order   => 70,
-    content => template("${module_name}/common/server.xml/070_ajp_connector.erb")
+    order   => 52,
+    content => template("${module_name}/common/server.xml/052_ajp_connector.erb")
+  }
+  
+  # Template uses:
+  # - $connectors
+  concat::fragment { "instance ${name} server.xml connectors":
+    order   => 53,
+    content => template("${module_name}/common/server.xml/053_connectors.erb")
   }
   
   # Template uses:
   # - $hostname
   # - $jvmroute
   concat::fragment { "instance ${name} server.xml engine":
-    order   => 80,
-    content => template("${module_name}/common/server.xml/080_engine.erb")
+    order   => 60,
+    content => template("${module_name}/common/server.xml/060_engine.erb")
   }
 
   # Template uses:
@@ -612,8 +623,8 @@ define tomcat::instance (
   # - $cluster_membership_domain
   # - $cluster_receiver_address  
   concat::fragment { "instance ${name} server.xml cluster":
-    order   => 90,
-    content => template("${module_name}/common/server.xml/090_cluster.erb")
+    order   => 70,
+    content => template("${module_name}/common/server.xml/070_cluster.erb")
   }
 
   # Template uses:
@@ -621,8 +632,8 @@ define tomcat::instance (
   # - $userdatabase_realm
   # - $realms
   concat::fragment { "instance ${name} server.xml realms":
-    order   => 100,
-    content => template("${module_name}/common/server.xml/100_realms.erb")
+    order   => 80,
+    content => template("${module_name}/common/server.xml/080_realms.erb")
   }
 
   # Template uses:
@@ -632,8 +643,8 @@ define tomcat::instance (
   # - $undeployoldversions
   # - $tomcat::maj_version
   concat::fragment { "instance ${name} server.xml host":
-    order   => 110,
-    content => template("${module_name}/common/server.xml/110_host.erb")
+    order   => 90,
+    content => template("${module_name}/common/server.xml/090_host.erb")
   }
 
   # Template uses:
@@ -641,8 +652,8 @@ define tomcat::instance (
   # - $accesslog_valve
   # - $tomcat::maj_version
   concat::fragment { "instance ${name} server.xml valves":
-    order   => 120,
-    content => template("${module_name}/common/server.xml/120_valves.erb")
+    order   => 100,
+    content => template("${module_name}/common/server.xml/100_valves.erb")
   }
 
   concat::fragment { "instance ${name} server.xml footer":

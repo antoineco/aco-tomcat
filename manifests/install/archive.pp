@@ -45,7 +45,8 @@ class tomcat::install::archive {
 
   file { 'tomcat logs directory':
     ensure => directory,
-    path   => "/var/log/${::tomcat::service_name_real}"
+    path   => "/var/log/${::tomcat::service_name_real}",
+    mode   => '0660',
   }
   
   # pid file

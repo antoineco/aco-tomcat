@@ -5,7 +5,9 @@ class tomcat::config {
   if !defined(Class['tomcat']) {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
-  
+
+  $instance = false
+
   # forward variables used in templates
   $control_port = $::tomcat::control_port
   $jmx_registry_port = $::tomcat::jmx_registry_port
@@ -22,6 +24,7 @@ class tomcat::config {
   $ajp_connector = $::tomcat::ajp_connector
   $ajp_port = $::tomcat::ajp_port
   $ajp_params_real = $::tomcat::ajp_params_real
+  $connectors = $::tomcat::connectors
   $hostname = $::tomcat::hostname
   $jvmroute = $::tomcat::jvmroute
   $autodeploy = $::tomcat::autodeploy
@@ -39,7 +42,6 @@ class tomcat::config {
   $accesslog_valve = $::tomcat::accesslog_valve
   $globalnaming_resources = $::tomcat::globalnaming_resources
   $context_resources = $::tomcat::context_resources
-  $instance = $::tomcat::instance
   $service_name_real = $::tomcat::service_name_real
   $java_home = $::tomcat::java_home
   $catalina_base_real = $::tomcat::catalina_base_real
@@ -125,8 +127,8 @@ class tomcat::config {
   # - $ssl_port
   # - $ssl_params_real
   concat::fragment { 'server.xml ssl connector':
-    order   => 60,
-    content => template("${module_name}/common/server.xml/060_ssl_connector.erb")
+    order   => 51,
+    content => template("${module_name}/common/server.xml/051_ssl_connector.erb")
   }
   
   # Template uses:
@@ -136,16 +138,23 @@ class tomcat::config {
   # - $ssl_connector
   # - $ssl_port
   concat::fragment { 'server.xml ajp connector':
-    order   => 70,
-    content => template("${module_name}/common/server.xml/070_ajp_connector.erb")
+    order   => 52,
+    content => template("${module_name}/common/server.xml/052_ajp_connector.erb")
+  }
+
+  # Template uses:
+  # - $connectors
+  concat::fragment { 'server.xml connectors':
+    order   => 53,
+    content => template("${module_name}/common/server.xml/053_connectors.erb")
   }
   
   # Template uses:
   # - $hostname
   # - $jvmroute
   concat::fragment { 'server.xml engine':
-    order   => 80,
-    content => template("${module_name}/common/server.xml/080_engine.erb")
+    order   => 60,
+    content => template("${module_name}/common/server.xml/060_engine.erb")
   }
 
   # Template uses:
@@ -154,8 +163,8 @@ class tomcat::config {
   # - $cluster_membership_domain
   # - $cluster_receiver_address  
   concat::fragment { 'server.xml cluster':
-    order   => 90,
-    content => template("${module_name}/common/server.xml/090_cluster.erb")
+    order   => 70,
+    content => template("${module_name}/common/server.xml/070_cluster.erb")
   }
 
   # Template uses:
@@ -163,8 +172,8 @@ class tomcat::config {
   # - $userdatabase_realm
   # - $realms
   concat::fragment { 'server.xml realms':
-    order   => 100,
-    content => template("${module_name}/common/server.xml/100_realms.erb")
+    order   => 80,
+    content => template("${module_name}/common/server.xml/080_realms.erb")
   }
 
   # Template uses:
@@ -174,8 +183,8 @@ class tomcat::config {
   # - $undeployoldversions
   # - $tomcat::maj_version
   concat::fragment { 'server.xml host':
-    order   => 110,
-    content => template("${module_name}/common/server.xml/110_host.erb")
+    order   => 90,
+    content => template("${module_name}/common/server.xml/090_host.erb")
   }
 
   # Template uses:
@@ -183,8 +192,8 @@ class tomcat::config {
   # - $accesslog_valve
   # - $tomcat::maj_version
   concat::fragment { 'server.xml valves':
-    order   => 120,
-    content => template("${module_name}/common/server.xml/120_valves.erb")
+    order   => 100,
+    content => template("${module_name}/common/server.xml/100_valves.erb")
   }
 
   concat::fragment { 'server.xml footer':
