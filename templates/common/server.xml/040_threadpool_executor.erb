@@ -1,3 +1,8 @@
 
-    <Executor name="tomcatThreadPool" namePrefix="catalina-exec-"
-        maxThreads="150" minSpareThreads="4" />
+    <Executor name="<%= @threadpool_name %>"<% if @threadpool_params_real and ! @threadpool_params_real.empty? %>
+             <%- @threadpool_params_real.each_pair do |attrib, value| -%>
+              <%= attrib %>="<%= value %>"<% if attrib == @threadpool_params_real.keys.last %> /><% end %>
+             <%- end -%>
+           <%- else -%>
+ />
+           <%- end -%>

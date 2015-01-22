@@ -15,6 +15,9 @@ class tomcat::config {
   $jmx_bind_address = $::tomcat::jmx_bind_address
   $apr_sslengine = $::tomcat::apr_sslengine
   $threadpool_executor = $::tomcat::threadpool_executor
+  $threadpool_name = $::tomcat::threadpool_name
+  $threadpool_params_real = $::tomcat::threadpool_params_real
+  $executors = $::tomcat::executors
   $http_connector = $::tomcat::http_connector
   $http_port = $::tomcat::http_port
   $http_params_real = $::tomcat::http_params_real
@@ -108,10 +111,21 @@ class tomcat::config {
 
   # Template uses:
   # - $threadpool_executor
+  # - $threadpool_name
+  # - $threadpool_params_real
   if $threadpool_executor {
     concat::fragment { 'server.xml threadpool executor':
       order   => 40,
       content => template("${module_name}/common/server.xml/040_threadpool_executor.erb")
+    }
+  }
+
+  # Template uses:
+  # - $executors
+  if $executors and $executors != [] {
+    concat::fragment { 'server.xml executors':
+      order   => 41,
+      content => template("${module_name}/common/server.xml/041_executors.erb")
     }
   }
 
@@ -127,7 +141,7 @@ class tomcat::config {
       content => template("${module_name}/common/server.xml/050_http_connector.erb")
     }
   }
-  
+
   # Template uses:
   # - $ssl_connector
   # - $ssl_port
@@ -138,7 +152,7 @@ class tomcat::config {
       content => template("${module_name}/common/server.xml/051_ssl_connector.erb")
     }
   }
-  
+
   # Template uses:
   # - $ajp_connector
   # - $ajp_port
@@ -160,7 +174,7 @@ class tomcat::config {
       content => template("${module_name}/common/server.xml/053_connectors.erb")
     }
   }
-  
+
   # Template uses:
   # - $hostname
   # - $jvmroute

@@ -118,9 +118,17 @@ class tomcat (
   # server
   $control_port               = 8005,
   #----------------------------------------------------------------------------------
-  # executor
+  # executors
   $threadpool_executor        = false,
+  $threadpool_name            = 'tomcatThreadPool',
+  $threadpool_nameprefix      = 'catalina-exec-',
+  $threadpool_maxthreads      = undef,
+  $threadpool_minsparethreads = undef,
+  $threadpool_params          = {},
+  # custom executors
+  $executors                  = [],
   #----------------------------------------------------------------------------------
+  # connectors
   # http connector
   $http_connector             = true,
   $http_port                  = 8080,
@@ -131,7 +139,6 @@ class tomcat (
   $http_compression           = undef,
   $http_maxthreads            = undef,
   $http_params                = {},
-  #----------------------------------------------------------------------------------
   # ssl connector
   $ssl_connector              = false,
   $ssl_port                   = 8443,
@@ -145,7 +152,6 @@ class tomcat (
   $ssl_sslprotocol            = undef,
   $ssl_keystorefile           = undef,
   $ssl_params                 = {},
-  #----------------------------------------------------------------------------------
   # ajp connector
   $ajp_connector              = true,
   $ajp_port                   = 8009,
@@ -155,7 +161,6 @@ class tomcat (
   $ajp_uriencoding            = undef,
   $ajp_maxthreads             = undef,
   $ajp_params                 = {},
-  #----------------------------------------------------------------------------------
   # custom connectors
   $connectors                 = [],
   #----------------------------------------------------------------------------------
@@ -169,7 +174,7 @@ class tomcat (
   $undeployoldversions        = false,
   $unpackwars                 = true,
   #----------------------------------------------------------------------------------
-  # cluster
+  # cluster (experimental)
   $use_simpletcpcluster       = false,
   $cluster_membership_port    = '45565',
   $cluster_membership_domain  = 'tccluster',
@@ -362,11 +367,18 @@ class tomcat (
     $security_manager_real = $security_manager
   }
   
-  # generate connectors params
+  # generate params hash
+  $threadpool_params_real = merge(delete_undef_values({
+    'namePrefix'      => $threadpool_nameprefix,
+    'maxThreads'      => $threadpool_maxthreads,
+    'minSpareThreads' => $threadpool_minsparethreads
+  }
+  ), $threadpool_params)
+
   $http_params_real = merge(delete_undef_values({
     'protocol'          => $http_protocol,
     'executor'          => $http_use_threadpool ? {
-      true    => 'tomcatThreadPool',
+      true    => $threadpool_name,
       default => undef
     },
     'connectionTimeout' => $http_connectiontimeout,
@@ -382,7 +394,7 @@ class tomcat (
   $ssl_params_real = merge(delete_undef_values({
     'protocol'          => $ssl_protocol,
     'executor'          => $ssl_use_threadpool ? {
-      true    => 'tomcatThreadPool',
+      true    => $threadpool_name,
       default => undef
     },
     'connectionTimeout' => $ssl_connectiontimeout,
@@ -401,7 +413,7 @@ class tomcat (
   $ajp_params_real = merge(delete_undef_values({
     'protocol'          => $ajp_protocol,
     'executor'          => $ajp_use_threadpool ? {
-      true    => 'tomcatThreadPool',
+      true    => $threadpool_name,
       default => undef
     },
     'connectionTimeout' => $ajp_connectiontimeout,

@@ -83,9 +83,17 @@ define tomcat::instance (
   # server
   $control_port               = 8006,
   #----------------------------------------------------------------------------------
-  # executor
+  # executors
   $threadpool_executor        = false,
+  $threadpool_name            = 'tomcatThreadPool',
+  $threadpool_nameprefix      = 'catalina-exec-',
+  $threadpool_maxthreads      = undef,
+  $threadpool_minsparethreads = undef,
+  $threadpool_params          = {},
+  # custom executors
+  $executors                  = [],
   #----------------------------------------------------------------------------------
+  # connectors
   # http connector
   $http_connector             = true,
   $http_port                  = 8081,
@@ -96,7 +104,6 @@ define tomcat::instance (
   $http_compression           = undef,
   $http_maxthreads            = undef,
   $http_params                = {},
-  #----------------------------------------------------------------------------------
   # ssl connector
   $ssl_connector              = false,
   $ssl_port                   = 8444,
@@ -110,7 +117,6 @@ define tomcat::instance (
   $ssl_sslprotocol            = undef,
   $ssl_keystorefile           = undef,
   $ssl_params                 = {},
-  #----------------------------------------------------------------------------------
   # ajp connector
   $ajp_connector              = true,
   $ajp_port                   = 8010,
@@ -120,7 +126,6 @@ define tomcat::instance (
   $ajp_uriencoding            = undef,
   $ajp_maxthreads             = undef,
   $ajp_params                 = {},
-  #----------------------------------------------------------------------------------
   # custom connectors
   $connectors                 = [],
   #----------------------------------------------------------------------------------
@@ -134,7 +139,7 @@ define tomcat::instance (
   $undeployoldversions        = false,
   $unpackwars                 = true,
   #----------------------------------------------------------------------------------
-  # cluster
+  # cluster (experimental)
   $use_simpletcpcluster       = false,
   $cluster_membership_port    = '45565',
   $cluster_membership_domain  = 'tccluster',
@@ -289,7 +294,14 @@ define tomcat::instance (
     $security_manager_real = $security_manager
   }
   
-  # generate connectors params
+  # generate params hash
+  $threadpool_params_real = merge(delete_undef_values({
+    'namePrefix'      => $threadpool_nameprefix,
+    'maxThreads'      => $threadpool_maxthreads,
+    'minSpareThreads' => $threadpool_minsparethreads
+  }
+  ), $threadpool_params)
+
   $http_params_real = merge(delete_undef_values({
     'protocol'          => $http_protocol,
     'executor'          => $http_use_threadpool ? {
@@ -569,10 +581,21 @@ define tomcat::instance (
 
   # Template uses:
   # - $threadpool_executor
+  # - $threadpool_name
+  # - $threadpool_params_real
   if $threadpool_executor {
     concat::fragment { "instance ${name} server.xml threadpool executor":
       order   => 40,
       content => template("${module_name}/common/server.xml/040_threadpool_executor.erb")
+    }
+  }
+
+  # Template uses:
+  # - $executors
+  if $executors and $executors != [] {
+    concat::fragment { "instance ${name} server.xml executors":
+      order   => 41,
+      content => template("${module_name}/common/server.xml/041_executors.erb")
     }
   }
 
