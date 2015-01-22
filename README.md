@@ -217,7 +217,7 @@ Parameters common to both `tomcat` and `tomcat::instance`
 **Packages and service**
 
 #####`service_name`
-Tomcat service name. Defaults to `package_name` (global) / `${package_name}_${title}` (instance).
+Tomcat service name. Defaults to `${package_name}` (global) / `${package_name}_${title}` (instance).
 
 #####`service_ensure`
 Whether the service should be running. Valid values are `stopped` and `running`. Defaults to `running`.
@@ -232,10 +232,10 @@ Optional override command for starting the service. Default depends on the platf
 Optional override command for stopping the service. Default depends on the platform.
 
 #####`tomcat_user`
-Tomcat user. Defaults to `tomcat` / `service_name` (Debian).
+Tomcat user. Defaults to `${service_name}` (Debian) / `tomcat` (all other distributions).
 
 #####`tomcat_group`
-Tomcat group. Defaults to `tomcat_user`.
+Tomcat group. Defaults to `${tomcat_user}`.
 
 #####`enable_extras`
 Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.  
@@ -270,31 +270,33 @@ Whether to enable the [APR Lifecycle Listener](http://tomcat.apache.org/tomcat-8
 Name of the SSLEngine to use with the APR Lifecycle Listener. Defaults to `undef` (use tomcat default).
 
 #####`jmx_listener`
-Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener)
-
-#####`jmx_registry_port`
-JMX/RMI registry port for the JMX Remote Lifecycle Listener. Defaults to `8050` (global) / `8052` (instance).
-
-#####`jmx_server_port`
-JMX/RMI server port for the JMX Remote Lifecycle Listener. Defaults to `8051` (global) / `8053` (instance).
-
-#####`jmx_bind_address`
-JMX/RMI server interface address for the JMX Remote Lifecycle Listener. Defaults to `undef` (use tomcat default).
+Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener). The listener can be further configured via a series of parameters:
+ - `jmx_registry_port`: JMX/RMI registry port for the JMX Remote Lifecycle Listener. Defaults to `8050` (global) / `8052` (instance).
+ - `jmx_server_port`: JMX/RMI server port for the JMX Remote Lifecycle Listener. Defaults to `8051` (global) / `8053` (instance).
+ - `jmx_bind_address`: JMX/RMI server interface address for the JMX Remote Lifecycle Listener. Defaults to `undef` (use tomcat default).
 
 #####`control_port`
 Server control port. Defaults to `8005` (global) / `8006` (instance).
 
 #####`threadpool_executor`
-Whether to enable the [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`.
+Whether to enable the default [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`. The executor can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+ - `threadpool_name`: a unique reference name. Defaults to `tomcatThreadPool`.
+ - `threadpool_nameprefix`: name prefix for each thread created by the executor
+ - `threadpool_maxthreads`: max number of active threads in this pool
+ - `threadpool_minsparethreads`: minimum number of threads always kept alive
+ - `threadpool_params`: optional Hash of additional parameters to put in the Executor where the key is the XML attribute name and the value, the attribute's value
+
+#####`executors`
+An array of custom `Executor` entries to be added to the `Service` block. Each entry is to be supplied as a Hash of attributes/values for the `Executor` XML node.
 
 #####`http_connector`
 Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`. The connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
  - `http_port`: HTTP connector port. Defaults to `8080` (global) / `8081` (instance).
  - `http_protocol`: protocol to use
- - `http_use_threadpool`: whether to use the previously described Executor within the HTTP connector (boolean)
+ - `http_use_threadpool`: whether to use the previously described Executor within the HTTP connector. Boolean value. Defaults to `false`.
  - `http_connectiontimeout`: timeout for a connection
  - `http_uriencoding`: encoding to use for URI
- - `http_compression`: whether to use compression (boolean)
+ - `http_compression`: whether to use compression. Boolean value. Defaults to `false`.
  - `http_maxthreads`: maximum number of executor threads
  - `http_params`: optional Hash of additional parameters to put in the HTTP Connector where the key is the XML attribute name and the value, the attribute's value
  
@@ -305,7 +307,7 @@ Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomc
  - `ssl_use_threadpool`: whether to use the previously described Executor within the HTTPS connector (boolean)
  - `ssl_connectiontimeout`: timeout for a connection
  - `ssl_uriencoding`: encoding to use for URI
- - `ssl_compression`: whether to use compression (boolean)
+ - `ssl_compression`: whether to use compression. Boolean value. Defaults to `false`.
  - `ssl_maxthreads`: maximum number of executor threads
  - `ssl_clientauth`: whether to require a valid certificate chain from the client
  - `ssl_sslprotocol`: SSL protocol(s) to use
@@ -321,6 +323,9 @@ Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/co
  - `ajp_uriencoding`: encoding to use for URI
  - `ajp_maxthreads`: maximum number of executor threads
  - `ajp_params`: optional Hash of additional parameters to put in the AJP Connector where the key is the XML attribute name and the value, the attribute's value
+
+#####`connectors`
+An array of custom `Connector` entries to be added to the `Service` block. Each entry is to be supplied as a Hash of attributes/values for the `Connector` XML node.
 
 #####`jvmroute`
 Engine's [jvmRoute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes) attribute. Defaults to `undef` (use tomcat default).
