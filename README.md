@@ -288,7 +288,7 @@ Server control port. Defaults to `8005` (global) / `8006` (instance).
 Whether to enable the [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`.
 
 #####`http_connector`
-Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`. Further, the connector can be configured via a series of parameters (if not specified, will use Tomcat's defaults):
+Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`. The connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
  - `http_port`: HTTP connector port. Defaults to `8080` (global) / `8081` (instance).
  - `http_protocol`: protocol to use
  - `http_use_threadpool`: whether to use the previously described Executor within the HTTP connector (boolean)
@@ -299,7 +299,7 @@ Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/c
  - `http_params`: optional Hash of additional parameters to put in the HTTP Connector where the key is the XML attribute name and the value, the attribute's value
  
 #####`ssl_connector`
-Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#SSL_Support). Boolean value. Defaults to `false`. Further, the connector can be configured via a series of parameters (if not specified, will use Tomcat's defaults):
+Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#SSL_Support). Boolean value. Defaults to `false`. The connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
  - `ssl_port`: SSL connector port. Defaults to `8443` (global) / `8444` (instance). The HTTP connector's `redirect port` will also be set to this value.
  - `ssl_protocol`: protocol to use
  - `ssl_use_threadpool`: whether to use the previously described Executor within the HTTPS connector (boolean)
@@ -313,9 +313,9 @@ Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomc
  - `ssl_params`: optional Hash of additional parameters to put in the HTTPS Connector where the key is the XML attribute name and the value, the attribute's value
 
 #####`ajp_connector`
-Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp). Boolean value. Defaults to `true`. Further, the connector can be configured via a series of parameters (if not specified, will use Tomcat's defaults):
+Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp). Boolean value. Defaults to `true`. The connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
  - `ajp_port`: AJP connector port. Defaults to `8009` (global) / `8010` (instance).
- - `ajp_protocol`: protocol to use
+ - `ajp_protocol`: protocol to use. Defaults to `AJP/1.3`
  - `ajp_use_threadpool`: whether to use the previously described Executor within the AJP connector (boolean)
  - `ajp_connectiontimeout`: timeout for a connection
  - `ajp_uriencoding`: encoding to use for URI
@@ -346,6 +346,9 @@ Whether to enable the [Single Sign On Valve](http://tomcat.apache.org/tomcat-8.0
 
 #####`accesslog_valve`
 Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Access_Log_Valve). Boolean value. Defaults to `true`.
+
+#####`valves`
+An array of custom `Valve` entries to be added to the `Host` block. Each entry is to be supplied as a Hash of attributes/values for the `Valve` XML node.
 
 #####`globalnaming_resources`
 An array of `Resource` entries to be added to the `GlobalNamingResources` block. Each entry is to be supplied as a Hash of attributes/values for the `Resource` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html) for the list of possible attributes.
