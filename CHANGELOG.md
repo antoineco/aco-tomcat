@@ -1,3 +1,7 @@
+###0.8.3
+
+* New Host parameters. Warning: old parameters renamed and default values removed!
+
 ###0.8.2
 
 * New parameters related to Executors (see documentation)

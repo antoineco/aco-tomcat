@@ -134,10 +134,12 @@ define tomcat::instance (
   #----------------------------------------------------------------------------------
   # host
   $hostname                   = 'localhost',
-  $autodeploy                 = true,
-  $deployOnStartup            = true,
-  $undeployoldversions        = false,
-  $unpackwars                 = true,
+  $host_appbase               = undef,
+  $host_autodeploy            = undef,
+  $host_deployOnStartup       = undef,
+  $host_undeployoldversions   = undef,
+  $host_unpackwars            = undef,
+  $host_params                = {},
   #----------------------------------------------------------------------------------
   # cluster (experimental)
   $use_simpletcpcluster       = false,
@@ -348,6 +350,15 @@ define tomcat::instance (
     'maxThreads'        => $ajp_maxthreads
   }
   ), $ajp_params)
+
+  $host_params_real = merge(delete_undef_values({
+    'appBase'             => $host_appbase,
+    'autoDeploy'          => $host_autodeploy,
+    'deployOnStartup'     => $host_deployOnStartup,
+    'undeployOldVersions' => $host_undeployoldversions,
+    'unpackWARs'          => $host_unpackwars
+  }
+  ), $host_params)
 
   # should we force download extras libs?
   if ($log4j_enable or $jmx_listener) and !$::tomcat::enable_extras_real {
@@ -677,10 +688,8 @@ define tomcat::instance (
   }
 
   # Template uses:
-  # - $autodeploy
-  # - $deployOnStartup
-  # - $unpackwars
-  # - $undeployoldversions
+  # - $hostname
+  # - $host_params_real
   # - $tomcat::maj_version
   concat::fragment { "instance ${name} server.xml host":
     order   => 90,

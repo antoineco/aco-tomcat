@@ -29,11 +29,7 @@ class tomcat::config {
   $ajp_params_real = $::tomcat::ajp_params_real
   $connectors = $::tomcat::connectors
   $hostname = $::tomcat::hostname
-  $jvmroute = $::tomcat::jvmroute
-  $autodeploy = $::tomcat::autodeploy
-  $deployOnStartup = $::tomcat::deployOnStartup
-  $unpackwars = $::tomcat::unpackwars
-  $undeployoldversions = $::tomcat::undeployoldversions
+  $host_params_real = $::tomcat::host_params_real
   $use_simpletcpcluster = $::tomcat::use_simpletcpcluster
   $cluster_membership_port = $::tomcat::cluster_membership_port
   $cluster_membership_domain = $::tomcat::cluster_membership_domain
@@ -207,10 +203,8 @@ class tomcat::config {
   }
 
   # Template uses:
-  # - $autodeploy
-  # - $deployOnStartup
-  # - $unpackwars
-  # - $undeployoldversions
+  # - $hostname
+  # - $host_params_real
   # - $tomcat::maj_version
   concat::fragment { 'server.xml host':
     order   => 90,

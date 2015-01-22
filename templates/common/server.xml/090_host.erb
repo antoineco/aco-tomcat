@@ -1,4 +1,8 @@
 
-      <Host name="<%= @hostname %>" appBase="webapps"
-            autoDeploy="<%= @autodeploy %>" deployOnStartup="<%= @deployOnStartup %>"
-            unpackWARs="<%= @unpackwars %>" <% if scope.function_versioncmp([scope['::tomcat::maj_version'], '7']) >= 0 -%>undeployOldVersions="<%= @undeployoldversions %>" <% end -%>>
+      <Host name="<%= @hostname %>"<% if @host_params_real and ! @host_params_real.empty? %>
+             <%- @host_params_real.each_pair do |attrib, value| -%>
+            <%= attrib %>="<%= value %>"<% if attrib == @host_params_real.keys.last %> ><% end %>
+             <%- end -%>
+           <%- else -%>
+>
+           <%- end -%>

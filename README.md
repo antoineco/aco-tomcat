@@ -279,7 +279,7 @@ Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/t
 Server control port. Defaults to `8005` (global) / `8006` (instance).
 
 #####`threadpool_executor`
-Whether to enable the default [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`. The executor can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Whether to enable the default [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`. The Executor can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
  - `threadpool_name`: a unique reference name. Defaults to `tomcatThreadPool`.
  - `threadpool_nameprefix`: name prefix for each thread created by the executor
  - `threadpool_maxthreads`: max number of active threads in this pool
@@ -290,7 +290,7 @@ Whether to enable the default [Executor (thread pool)](http://tomcat.apache.org/
 An array of custom `Executor` entries to be added to the `Service` block. Each entry is to be supplied as a Hash of attributes/values for the `Executor` XML node.
 
 #####`http_connector`
-Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`. The connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
  - `http_port`: HTTP connector port. Defaults to `8080` (global) / `8081` (instance).
  - `http_protocol`: protocol to use
  - `http_use_threadpool`: whether to use the previously described Executor within the HTTP connector. Boolean value. Defaults to `false`.
@@ -301,7 +301,7 @@ Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/c
  - `http_params`: optional Hash of additional parameters to put in the HTTP Connector where the key is the XML attribute name and the value, the attribute's value
  
 #####`ssl_connector`
-Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#SSL_Support). Boolean value. Defaults to `false`. The connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#SSL_Support). Boolean value. Defaults to `false`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
  - `ssl_port`: SSL connector port. Defaults to `8443` (global) / `8444` (instance). The HTTP connector's `redirect port` will also be set to this value.
  - `ssl_protocol`: protocol to use
  - `ssl_use_threadpool`: whether to use the previously described Executor within the HTTPS connector (boolean)
@@ -315,10 +315,10 @@ Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomc
  - `ssl_params`: optional Hash of additional parameters to put in the HTTPS Connector where the key is the XML attribute name and the value, the attribute's value
 
 #####`ajp_connector`
-Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp). Boolean value. Defaults to `true`. The connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp). Boolean value. Defaults to `true`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
  - `ajp_port`: AJP connector port. Defaults to `8009` (global) / `8010` (instance).
  - `ajp_protocol`: protocol to use. Defaults to `AJP/1.3`
- - `ajp_use_threadpool`: whether to use the previously described Executor within the AJP connector (boolean)
+ - `ajp_use_threadpool`: whether to use the previously described Executor within the AJP connector.  Boolean value. Defaults to `false`.
  - `ajp_connectiontimeout`: timeout for a connection
  - `ajp_uriencoding`: encoding to use for URI
  - `ajp_maxthreads`: maximum number of executor threads
@@ -331,10 +331,13 @@ An array of custom `Connector` entries to be added to the `Service` block. Each 
 Engine's [jvmRoute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes) attribute. Defaults to `undef` (use tomcat default).
 
 #####`hostname`
-Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html). Defaults to `localhost`.
-
-#####`autodeploy`, `deployOnStartup`, `undeployoldversions`, `unpackwars`
-Host's [common attributes](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html#Common_Attributes). Use tomcat's defaults (see doc).
+Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html). Defaults to `localhost`. The Host can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+ - `host_appbase`: Application Base directory for this virtual host
+ - `host_autodeploy`: whether Tomcat should check periodically for new or updated web applications while Tomcat is running
+ - `host_deployOnStartup`: whether web applications from this host should be automatically deployed when Tomcat starts
+ - `host_undeployoldversions`: whether to clean unused versions of web applications deployed using parallel deployment
+ - `host_unpackwars`: whether to unpack web application archive (WAR) files 
+ - `host_params`: optional Hash of additional parameters to put in the Host container where the key is the XML attribute name and the value, the attribute's value
 
 #####`lockout_realm`
 Whether to enable the [LockOut Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#LockOut_Realm_-_org.apache.catalina.realm.LockOutRealm). Boolean value. Defaults to `true`.
@@ -344,7 +347,7 @@ Whether to enable the [UserDatabase Realm](http://tomcat.apache.org/tomcat-8.0-d
 Boolean value. Defaults to `true`. The User Database Realm is inserted within the Lock Out Realm if it is enabled.
 
 #####`realms`
-An array of custom `Realm` entries to be added to the `Engine` block. Each entry is to be supplied as a Hash of attributes/values for the `Realm` XML node.
+An array of custom `Realm` entries to be added to the `Engine` container. Each entry is to be supplied as a Hash of attributes/values for the `Realm` XML node.
 
 #####`singlesignon_valve`
 Whether to enable the [Single Sign On Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Single_Sign_On_Valve). Boolean value. Defaults to `false`.
