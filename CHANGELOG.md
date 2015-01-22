@@ -2,6 +2,7 @@
 
 * Fix Critical messages generated when concaneting empty fragments to server.xml
 * New parameter `valves`: create custom Valve elements within the server configuration
+* Change default value for `catalina_pid` (instance context) and manage pid file
 * Improve template formatting
 
 ###0.8.0

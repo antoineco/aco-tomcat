@@ -267,7 +267,7 @@ Admin user password. Defaults to `password`.
 Whether to enable the [APR Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/apr.html#APR_Lifecycle_Listener_Configuration)
 
 #####`apr_sslengine`
-Name of the SSLEngine to use with the APR Lifecycle Listener. Defaults to `undef`.
+Name of the SSLEngine to use with the APR Lifecycle Listener. Defaults to `undef` (use tomcat default).
 
 #####`jmx_listener`
 Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener)
@@ -279,7 +279,7 @@ JMX/RMI registry port for the JMX Remote Lifecycle Listener. Defaults to `8050` 
 JMX/RMI server port for the JMX Remote Lifecycle Listener. Defaults to `8051` (global) / `8053` (instance).
 
 #####`jmx_bind_address`
-JMX/RMI server interface address for the JMX Remote Lifecycle Listener. Defaults to `undef`.
+JMX/RMI server interface address for the JMX Remote Lifecycle Listener. Defaults to `undef` (use tomcat default).
 
 #####`control_port`
 Server control port. Defaults to `8005` (global) / `8006` (instance).
@@ -323,7 +323,7 @@ Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/co
  - `ajp_params`: optional Hash of additional parameters to put in the AJP Connector where the key is the XML attribute name and the value, the attribute's value
 
 #####`jvmroute`
-Engine's [jvmRoute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes) attribute. Defaults to `undef`.
+Engine's [jvmRoute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes) attribute. Defaults to `undef` (use tomcat default).
 
 #####`hostname`
 Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html). Defaults to `localhost`.
@@ -376,15 +376,13 @@ $JASPER_HOME. Defaults to `catalina_home`.
 $CATALINA_TMPDIR. Defaults to `${catalina_base}/temp`
 
 #####`catalina_pid`
-$CATALINA_PID. Default:
-* package: `/var/run/${service_name}.pid`
-* archive: `${catalina_tmpdir}/${service_name}.pid`
+$CATALINA_PID. Defaults to: `/var/run/${service_name}.pid`
 
 #####`catalina_opts`
 $CATALINA_OPTS. Array. Defaults to `[]`.
 
 #####`java_home`
-$JAVA_HOME. Defaults to `undef`.
+$JAVA_HOME. Defaults to `undef` (use tomcat default).
 
 #####`java_opts`
 $JAVA_OPTS. Array. Defaults to `['-server']`.
@@ -393,13 +391,13 @@ $JAVA_OPTS. Array. Defaults to `['-server']`.
 Enable JPDA debugger. Boolean value. Effective only if installed from archive. Defaults to `false`.
 
 #####`jpda_transport`
-$JPDA_TRANSPORT. Defaults to `undef`.
+$JPDA_TRANSPORT. Defaults to `undef` (use tomcat default).
 
 #####`jpda_address`
-$JPDA_ADDRESS. Defaults to `undef`.
+$JPDA_ADDRESS. Defaults to `undef` (use tomcat default).
 
 #####`jpda_suspend`
-$JPDA_SUSPEND. Defaults to `undef`.
+$JPDA_SUSPEND. Defaults to `undef` (use tomcat default).
 
 #####`jpda_opts`
 $JPDA_OPTS. Array. Defaults to `[]`.
@@ -408,7 +406,7 @@ $JPDA_OPTS. Array. Defaults to `[]`.
 Whether to enable the security manager. Boolean value. Defaults to `false`.
 
 #####`lang`
-Tomcat locale. Defaults to `undef`.
+Tomcat locale. Defaults to `undef` (use tomcat default).
 
 #####`shutdown_wait`
 How long to wait for a graceful shutdown before killing the process. Value in seconds. Only available on RedHat 6- systems and if installed from package. Defaults to `30`.
