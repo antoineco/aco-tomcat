@@ -1,5 +1,7 @@
 ###0.9.0
 
+**Warning:** this release is a big step forward, please read the documentation carefully
+
 * New `listeners` parameters: create custom Listener components within the server configuration
 * New Server parameters. Warning: `control_port` renamed to `server_control_port`
  - `server_control_port`
@@ -22,6 +24,7 @@
  - `host_unpackwars`
  - `host_params`
 * Fix instance startup on Fedora 20+, drop support for Fedora 15 and 16
+* `custom_fragment` renamed to `custom_variables` (hash)
 * Refactoring
 
 ###0.8.2

@@ -61,7 +61,7 @@ class tomcat::config {
   $jpda_address = $::tomcat::jpda_address
   $jpda_suspend = $::tomcat::jpda_suspend
   $jpda_opts_real = $::tomcat::jpda_opts_real
-  $custom_fragment = $::tomcat::custom_fragment
+  $custom_variables = $::tomcat::custom_variables
 
   # generate and manage server configuration
   concat { 'tomcat server configuration':
@@ -272,7 +272,7 @@ class tomcat::config {
   # - $jpda_address
   # - $jpda_suspend
   # - $jpda_opts_real
-  # - $custom_fragment
+  # - $custom_variables
   file { 'tomcat environment variables':
     path    => $::tomcat::config_path_real,
     content => template("${module_name}/common/setenv.erb"),

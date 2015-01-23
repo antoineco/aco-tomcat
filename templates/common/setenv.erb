@@ -48,4 +48,8 @@ SHUTDOWN_VERBOSE="<%= @shutdown_verbose %>"
 <% end -%>
 
 # Custom variables
-<% if @custom_fragment and @custom_fragment != '' -%><%= @custom_fragment %><% end -%>
+<%- if @custom_variables and ! @custom_variables.empty? -%>
+  <%- @custom_variables.each_pair do |attrib, value| -%>
+<%= attrib %>="<%= value %>"
+  <%- end -%>
+<%- end -%>

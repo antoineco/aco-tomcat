@@ -197,7 +197,7 @@ define tomcat::instance (
   $lang                       = undef,
   $shutdown_wait              = 30,
   $shutdown_verbose           = false,
-  $custom_fragment            = undef) {
+  $custom_variables           = {}) {
   # The base class must be included first
   if !defined(Class['tomcat']) {
     fail('You must include the tomcat base class before using any tomcat defined resources')
@@ -776,7 +776,7 @@ define tomcat::instance (
   # - $jpda_address
   # - $jpda_suspend
   # - $jpda_opts_real
-  # - $custom_fragment
+  # - $custom_variables
   file { "instance ${name} environment variables":
     path    => $config_path_real,
     content => template("${module_name}/common/setenv.erb"),

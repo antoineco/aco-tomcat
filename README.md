@@ -24,9 +24,9 @@ The tomcat module installs and configures Apache Tomcat instances from either th
 ##Module description
 
 This module will install the desired version of the Apache Tomcat Web Application Container from almost any possible source, including the repositories available on the target system (distribution repositories or third-party sources like [JPackage](http://www.jpackage.org) and [EPEL](https://fedoraproject.org/wiki/EPEL))  
-A long list of parameters permit a fine-tuning of the server and the JVM. Tomcat's most common elements are provided, and virtually any missing parameters can be included using the provided hash parameters in each block.  
-It also possible to configure, besides the server itself, admin applications, extra libraries, the log4j logger, etc.  
-The creation of individual instances following [Apache's guidelines](http://tomcat.apache.org/tomcat-8.0-doc/RUNNING.txt) is also supported via a custom type.
+A long list of parameters permit a fine-tuning of the server and the JVM. Tomcat's most common elements are provided, and virtually any missing parameters can be included using the hash parameters present in each block.  
+It is also possible to configure, besides the server itself, admin applications, extra libraries, the log4j logger, etc.  
+The creation of individual instances following [Apache's guidelines](http://tomcat.apache.org/tomcat-8.0-doc/RUNNING.txt) is supported via a custom type.
 
 ##Setup
 
@@ -54,7 +54,7 @@ class { '::tomcat':
 }
 ```
 
-Disable default instance and setup 2 individual instances
+Disable main instance and setup 2 individual instances
 
 ```puppet
 class { '::tomcat':
@@ -164,6 +164,7 @@ class { '::tomcat':
     { port => 9081,
       allowTrace => true
     }
+  ]
 }
 ```
 
@@ -482,8 +483,8 @@ How long to wait for a graceful shutdown before killing the process. Value in se
 #####`shutdown_verbose`
 Whether to display start/shutdown messages. Boolean value. Only available on RedHat 6 systems if installed from package. Defaults to `false`.
 
-#####`custom_fragment`
-Custom environment variables, one per line.
+#####`custom_variables`
+Hash of custom environment variables.
 
 **Logging**
 

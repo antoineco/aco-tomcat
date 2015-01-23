@@ -232,7 +232,7 @@ class tomcat (
   $lang                       = undef,
   $shutdown_wait              = 30,
   $shutdown_verbose           = false,
-  $custom_fragment            = undef) inherits tomcat::params {
+  $custom_variables           = {}) inherits tomcat::params {
   # get major version
   $array_version = split($version, '[.]')
   $maj_version = $array_version[0]
