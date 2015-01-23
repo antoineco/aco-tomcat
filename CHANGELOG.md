@@ -1,16 +1,43 @@
-###0.8.3
+###0.9.0
 
-* New Host parameters. Warning: old parameters renamed and default values removed!
+* New `listeners` parameters: create custom Listener components within the server configuration
+* New Server parameters. Warning: `control_port` renamed to `server_control_port`
+ - `server_control_port`
+ - `server_shutdown`
+ - `server_address`
+* New Service parameters.
+ - `svc_name`
+ - `svc_params`
+* New Engine parameters. Warning: `jvmroute` renamed to `engine_jvmroute`
+ - `engine_name`
+ - `engine_defaulthost`
+ - `engine_jvmroute`
+ - `engine_params`
+* New Host parameters. Warning: **all** old parameters renamed and default values removed!
+ - `host_name`
+ - `host_appbase`
+ - `host_autodeploy`
+ - `host_deployOnStartup`
+ - `host_undeployoldversions`
+ - `host_unpackwars`
+ - `host_params`
+* Fix instance startup on Fedora 20+, drop support for Fedora 15 and 16
+* Refactoring
 
 ###0.8.2
 
-* New parameters related to Executors (see documentation)
-* Updated documentation
+* New parameters related to Executors
+ - `threadpool_name`
+ - `threadpool_nameprefix`
+ - `threadpool_maxthreads`
+ - `threadpool_minsparethreads`
+ - `threadpool_params`
+ - `executors`
 
 ###0.8.1
 
 * Fix Critical messages generated when concaneting empty fragments to server.xml
-* New parameter `valves`: create custom Valve elements within the server configuration
+* New parameter `valves`: create custom Valve components within the server configuration
 * Change default value for `catalina_pid` (instance context) and manage pid file
 * Improve template formatting
 

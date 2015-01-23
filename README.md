@@ -2,15 +2,17 @@
 
 ####Table of Contents
 
-1. [Overview](#overview)
-2. [Module Description](#module-description)
-3. [Setup](#setup)
-  * [A couple of examples](#a-couple-of-examples)
-4. [Usage](#usage)
+1. [Overview - What is the tomcat module?](#overview)
+2. [Module Description - What does the module do?](#module-description)
+3. [Setup - The basics of getting started with tomcat](#setup)
+  * [Installation scenarios](#installation-scenarios)
+  * [Configuration scenarios](#configuration-scenarios)
+4. [Usage - The classes and defined types available for configuration](#usage)
   * [Classes and Defined Types](#classes-and-defined-types)
     * [Class: tomcat](#class-tomcat)
     * [Define: tomcat::instance](#define-tomcatinstance)
     * [Common parameters](#common-parameters)
+      *
     * [Define: tomcat::userdb_entry](#define-tomcatuserdb_entry)
 5. [To Do](#to-do)
 6. [Contributors](#contributors)
@@ -22,7 +24,8 @@ The tomcat module installs and configures Apache Tomcat instances from either th
 ##Module description
 
 This module will install the desired version of the Apache Tomcat Web Application Container from almost any possible source, including the repositories available on the target system (distribution repositories or third-party sources like [JPackage](http://www.jpackage.org) and [EPEL](https://fedoraproject.org/wiki/EPEL))  
-A long list of parameters permit a fine-tuning of the server and the JVM. It is for example possible to configure admin applications, install extra tomcat libraries, configure log4j as the standard logger, or enable the remote JMX listener.  
+A long list of parameters permit a fine-tuning of the server and the JVM. Tomcat's most common elements are provided, and virtually any missing parameters can be included using the provided hash parameters in each block.  
+It also possible to configure, besides the server itself, admin applications, extra libraries, the log4j logger, etc.  
 The creation of individual instances following [Apache's guidelines](http://tomcat.apache.org/tomcat-8.0-doc/RUNNING.txt) is also supported via a custom type.
 
 ##Setup
@@ -40,7 +43,7 @@ Including the main class is enough to install the default version of tomcat prov
 include ::tomcat
 ```
 
-####A couple of examples
+####Installation scenarios
 
 Install from archive instead of package
 
@@ -81,17 +84,6 @@ class { '::tomcat':
 }
 ```
 
-Enable the AJP connector on non-default port with custom parameters
-
-```puppet
-class { '::tomcat':
-  …
-  ajp_connector => true,
-  ajp_port      => 8090,
-  ajp_params    => { address => '127.0.0.1', packetSize => 12288 }
-}
-```
-
 Enable the manager/host-manager webapps and configure default admin
 
 ```puppet
@@ -107,22 +99,10 @@ Add an additional admin for the manager
 
 ```puppet
 ::tomcat::userdb_entry { 'foo':
+  database => 'main UserDatabase',
   username => 'foo',
   password => 'bar',
   roles    => ['manager-gui', 'manager-script']
-}
-```
-
-Enable the remote [JMX listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener) for remote JVM monitoring
-
-```puppet
-class { '::tomcat':
-  …
-  jmx_listener      => true,
-  jmx_registry_port => '8050',
-  jmx_server_port   => '8051',
-  jmx_bind_address  => $ipaddress_eth0,
-  catalina_opts     => ['-Dcom.sun.management.jmxremote', '-Dcom.sun.management.jmxremote.ssl=false', '-Dcom.sun.management.jmxremote.authenticate=false']
 }
 ```
 
@@ -137,6 +117,7 @@ class { '::tomcat':
   log4j_conf_source => 'puppet:///modules/my_configs/tomcat_log4j.xml'
 }
 ```
+
 Use with custom packages/custom installation layouts (eg. with [Ulyaoth](https://forge.puppetlabs.com/aco/ulyaoth))
 
 ```puppet
@@ -151,6 +132,77 @@ class { '::tomcat':
   tomcat_native              => true,
   tomcat_native_package_name => 'ulyaoth-tomcat-native'
   …
+}
+```
+
+###Configuration scenarios
+
+Enable the standard AJP connector on non-default port with custom parameters
+
+```puppet
+class { '::tomcat':
+  …
+  ajp_connector => true,
+  ajp_port      => 8090,
+  ajp_params    => {
+    address    => '127.0.0.1',
+    packetSize => 12288
+  }
+}
+```
+
+Configure custom connectors
+
+```puppet
+class { '::tomcat':
+  …
+  connectors => [
+    { port        => 9080,
+      protocol    => 'org.apache.coyote.http11.Http11Nio2Protocol',
+      maxPostSize => 2500000
+    },
+    { port => 9081,
+      allowTrace => true
+    }
+}
+```
+
+Configure custom listeners
+
+```puppet
+class { '::tomcat':
+  …
+  listeners => [
+    { className   => 'org.apache.catalina.storeconfig.StoreConfigLifecycleListener'
+    },
+    { className     => 'org.apache.catalina.startup.UserConfig',
+      directoryName => 'public_html'
+    }
+}
+```
+
+Customize Host
+
+```puppet
+class { '::tomcat':
+  …
+  host_autodeploy      => false,
+  host_deployOnStartup => false,
+  host_unpackwars      => true,
+  host_params          => { createDirs => true }
+}
+```
+
+Enable the remote [JMX listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener) and remote JVM monitoring
+
+```puppet
+class { '::tomcat':
+  …
+  jmx_listener      => true,
+  jmx_registry_port => '8050',
+  jmx_server_port   => '8051',
+  jmx_bind_address  => $ipaddress_eth0,
+  catalina_opts     => ['-Dcom.sun.management.jmxremote', '-Dcom.sun.management.jmxremote.ssl=false', '-Dcom.sun.management.jmxremote.authenticate=false']
 }
 ```
 
@@ -262,8 +314,6 @@ Admin user name. Defaults to `tomcatadmin`.
 Admin user password. Defaults to `password`.
 
 **Server configuration**
-
-Parameters for the most common elements are provided, and virtually any missing parameters can be included using the "_params" parameters in each block.
 
 #####`server_control_port`
 Server control port. Defaults to `8005` (global) / `8006` (instance). The Server can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
@@ -469,7 +519,6 @@ User roles (array)
 
 ##To Do
 
-* Create systemd units for Fedora 20+
 * Parameters validation
 
 ##Contributors
