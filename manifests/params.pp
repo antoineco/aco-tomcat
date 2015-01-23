@@ -28,18 +28,6 @@ class tomcat::params {
               # $version = '6.0.35'
               # $package_name = 'tomcat6'
             }
-            '16'    : {
-              $version = '7.0.33'
-              $package_name = 'tomcat'
-              # $version = '6.0.35'
-              # $package_name = 'tomcat6'
-            }
-            '15'    : {
-              $version = '7.0.23'
-              $package_name = 'tomcat'
-              # $version = '6.0.32'
-              # $package_name = 'tomcat6'
-            }
             default : {
               fail("Unsupported OS version ${::operatingsystemmajrelease}")
             }

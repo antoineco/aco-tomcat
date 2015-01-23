@@ -2,7 +2,7 @@
   "name": "aco-tomcat",
   "summary": "Puppet module for Tomcat",
   "author": "Antoine Cotten",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "license": "Apache-2.0",
   "project_page": "https://github.com/tOnI0/aco-tomcat",
   "source": "git://github.com/tOnI0/aco-tomcat.git",
@@ -64,8 +64,6 @@
     {
       "operatingsystem": "Fedora",
       "operatingsystemrelease": [
-        "15",
-        "16",
         "17",
         "18",
         "19",
