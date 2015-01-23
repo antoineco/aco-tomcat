@@ -5,5 +5,5 @@
 # ******************
 -->
 <Server<%- if @server_params_real and ! @server_params_real.empty? -%>
-  <%- server_params_real.each_pair do |attrib, att_value| -%> <%= attrib %>="<%= att_value %>"<%- end -%>
-<%- end -%> >
+  <%- @server_params_real.each_pair do |attrib, att_value| -%> <%= attrib %>="<%= att_value %>"<%- end -%>
+<%- end -%>>

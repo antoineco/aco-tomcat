@@ -271,7 +271,7 @@ define tomcat::instance (
 
   if $service_start == undef {
     case $::tomcat::install_from {
-      'package' : { 
+      'package' : {
         if $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= 20 {
           $service_start_real = '/usr/libexec/tomcat/server start'
         }
