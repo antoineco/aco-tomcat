@@ -157,8 +157,8 @@ class { '::tomcat':
 ##Usage
 
 This module distinguishes two different contexts:
-* global: default instance and global libraries
-* instance: individual tomcat instance
+* **global**: default instance and global libraries
+* **instance**: individual tomcat instance
 
 Both contexts share most of their parameters.
 
@@ -263,11 +263,17 @@ Admin user password. Defaults to `password`.
 
 **Server configuration**
 
-#####`apr_listener`
-Whether to enable the [APR Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/apr.html#APR_Lifecycle_Listener_Configuration)
+Parameters for the most common elements are provided, and virtually any missing parameters can be included using the "_params" parameters in each block.
 
-#####`apr_sslengine`
-Name of the SSLEngine to use with the APR Lifecycle Listener. Defaults to `undef` (use tomcat default).
+#####`server_control_port`
+Server control port. Defaults to `8005` (global) / `8006` (instance). The Server can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+ - `server_shutdown`: command string that must be received in order to shut down Tomcat. Defaults to `SHUTDOWN`.
+ - `server_address`: address on which this server waits for a shutdown command
+ - `server_params`: optional Hash of additional parameters to put in the Server element where the key is the XML attribute name and the value, the attribute's value
+
+#####`apr_listener`
+Whether to enable the [APR Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/apr.html#APR_Lifecycle_Listener_Configuration). The Listener can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+ - `apr_sslengine`: name of the SSLEngine to use with the APR Lifecycle Listener
 
 #####`jmx_listener`
 Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener). The listener can be further configured via a series of parameters:
@@ -275,8 +281,9 @@ Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/t
  - `jmx_server_port`: JMX/RMI server port for the JMX Remote Lifecycle Listener. Defaults to `8051` (global) / `8053` (instance).
  - `jmx_bind_address`: JMX/RMI server interface address for the JMX Remote Lifecycle Listener. Defaults to `undef` (use tomcat default).
 
-#####`control_port`
-Server control port. Defaults to `8005` (global) / `8006` (instance).
+####`svc_name`
+Name of the default [Service](http://tomcat.apache.org/tomcat-8.0-doc/config/service.html). Defaults to `Catalina`. The Service can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+ - `svc_params`: optional Hash of additional parameters to put in the Service element where the key is the XML attribute name and the value, the attribute's value
 
 #####`threadpool_executor`
 Whether to enable the default [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`. The Executor can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
@@ -327,17 +334,11 @@ Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/co
 #####`connectors`
 An array of custom `Connector` entries to be added to the `Service` block. Each entry is to be supplied as a Hash of attributes/values for the `Connector` XML node.
 
-#####`jvmroute`
-Engine's [jvmRoute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes) attribute. Defaults to `undef` (use tomcat default).
-
-#####`hostname`
-Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html). Defaults to `localhost`. The Host can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
- - `host_appbase`: Application Base directory for this virtual host
- - `host_autodeploy`: whether Tomcat should check periodically for new or updated web applications while Tomcat is running
- - `host_deployOnStartup`: whether web applications from this host should be automatically deployed when Tomcat starts
- - `host_undeployoldversions`: whether to clean unused versions of web applications deployed using parallel deployment
- - `host_unpackwars`: whether to unpack web application archive (WAR) files 
- - `host_params`: optional Hash of additional parameters to put in the Host container where the key is the XML attribute name and the value, the attribute's value
+#####`engine_name`
+Name of the default [Engine](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html). Defaults to `Catalina`. The Engine can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+ - `engine_defaulthost`: default host name. Defaults to `${host_name}`
+ - `engine_jvmroute`: identifier which must be used in load balancing scenarios to enable session affinity
+ - `engine_params`: optional Hash of additional parameters to put in the Engine container where the key is the XML attribute name and the value, the attribute's value
 
 #####`lockout_realm`
 Whether to enable the [LockOut Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#LockOut_Realm_-_org.apache.catalina.realm.LockOutRealm). Boolean value. Defaults to `true`.
@@ -348,6 +349,15 @@ Boolean value. Defaults to `true`. The User Database Realm is inserted within th
 
 #####`realms`
 An array of custom `Realm` entries to be added to the `Engine` container. Each entry is to be supplied as a Hash of attributes/values for the `Realm` XML node.
+
+#####`host_name`
+Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html). Defaults to `localhost`. The Host can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+ - `host_appbase`: Application Base directory for this virtual host
+ - `host_autodeploy`: whether Tomcat should check periodically for new or updated web applications while Tomcat is running
+ - `host_deployOnStartup`: whether web applications from this host should be automatically deployed when Tomcat starts
+ - `host_undeployoldversions`: whether to clean unused versions of web applications deployed using parallel deployment
+ - `host_unpackwars`: whether to unpack web application archive (WAR) files 
+ - `host_params`: optional Hash of additional parameters to put in the Host container where the key is the XML attribute name and the value, the attribute's value
 
 #####`singlesignon_valve`
 Whether to enable the [Single Sign On Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Single_Sign_On_Valve). Boolean value. Defaults to `false`.
@@ -417,10 +427,10 @@ Whether to enable the security manager. Boolean value. Defaults to `false`.
 Tomcat locale. Defaults to `undef` (use tomcat default).
 
 #####`shutdown_wait`
-How long to wait for a graceful shutdown before killing the process. Value in seconds. Only available on RedHat 6- systems and if installed from package. Defaults to `30`.
+How long to wait for a graceful shutdown before killing the process. Value in seconds. Only available on RedHat 6 systems if installed from package. Defaults to `30`.
 
 #####`shutdown_verbose`
-Whether to display start/shutdown messages. Boolean value. Only available on RedHat 6- systems and if installed from package. Defaults to `false`.
+Whether to display start/shutdown messages. Boolean value. Only available on RedHat 6 systems if installed from package. Defaults to `false`.
 
 #####`custom_fragment`
 Custom environment variables, one per line.
@@ -445,6 +455,9 @@ Create tomcat UserDatabase entries
 
 **Parameters within `tomcat::userdb_entry`:**
 
+#####`database`
+Which database file the entry should be added to. `main UserDatabase` (global) / `instance ${name} UserDatabase` (instance)
+
 #####`username`
 User name (string)
 
@@ -452,7 +465,7 @@ User name (string)
 User password (string)
 
 #####`roles`
-User roles (array of strings)
+User roles (array)
 
 ##To Do
 
