@@ -2,9 +2,6 @@
 # Managed by Puppet
 # ******************
 
-<% if @instance %>SERVICE_NAME="<%= @service_name_real %>"
-
-<% end -%>
 <% if @java_home and @java_home != '' %>JAVA_HOME="<%= @java_home %>"
 
 <% end -%>

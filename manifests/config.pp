@@ -6,8 +6,6 @@ class tomcat::config {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
-  $instance = false
-
   # forward variables used in templates
   $server_params_real = $::tomcat::server_params_real
   $jmx_listener = $::tomcat::jmx_listener
