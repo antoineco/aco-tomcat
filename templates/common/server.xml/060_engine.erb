@@ -1,2 +1,4 @@
 
-    <Engine name="Catalina" defaultHost="<%= @hostname %>"<% if @jvmroute and @jvmroute != '' -%> jvmRoute="<%= @jvmroute %>"<% end -%>>
+    <Engine<%- if @engine_params_real and ! @engine_params_real.empty? -%>
+      <%- engine_params_real.each_pair do |attrib, att_value| -%> <%= attrib %>="<%= att_value %>"<%- end -%>
+    <%- end -%>>

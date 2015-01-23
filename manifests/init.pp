@@ -106,6 +106,12 @@ class tomcat (
   #..................................................................................
   # server configuration
   #..................................................................................
+  # server
+  $server_control_port        = 8005,
+  $server_shutdown            = 'SHUTDOWN',
+  $server_address             = undef,
+  $server_params              = {},
+  #..................................................................................
   # listeners
   $apr_listener               = false,
   $apr_sslengine              = undef,
@@ -114,9 +120,12 @@ class tomcat (
   $jmx_registry_port          = 8050,
   $jmx_server_port            = 8051,
   $jmx_bind_address           = '',
+  # custom listeners
+  $listeners                  = [],
   #..................................................................................
-  # server
-  $control_port               = 8005,
+  # service
+  $svc_name                   = 'Catalina',
+  $svc_params                 = {},
   #..................................................................................
   # executors
   $threadpool_executor        = false,
@@ -165,16 +174,10 @@ class tomcat (
   $connectors                 = [],
   #..................................................................................
   # engine
-  $jvmroute                   = undef,
-  #..................................................................................
-  # host
-  $hostname                   = 'localhost',
-  $host_appbase               = undef,
-  $host_autodeploy            = undef,
-  $host_deployOnStartup       = undef,
-  $host_undeployoldversions   = undef,
-  $host_unpackwars            = undef,
-  $host_params                = {},
+  $engine_name                = 'Catalina',
+  $engine_defaulthost         = undef,
+  $engine_jvmroute            = undef,
+  $engine_params              = {},
   #..................................................................................
   # cluster (experimental)
   $use_simpletcpcluster       = false,
@@ -186,6 +189,15 @@ class tomcat (
   $lockout_realm              = true,
   $userdatabase_realm         = true,
   $realms                     = [],
+  #..................................................................................
+  # host
+  $host_name                  = 'localhost',
+  $host_appbase               = undef,
+  $host_autodeploy            = undef,
+  $host_deployOnStartup       = undef,
+  $host_undeployoldversions   = undef,
+  $host_unpackwars            = undef,
+  $host_params                = {},
   #..................................................................................
   # valves
   $singlesignon_valve         = false,
@@ -336,10 +348,6 @@ class tomcat (
     $service_stop_real = $service_stop
   }
 
-  $java_opts_real = join($java_opts, ' ')
-  $catalina_opts_real = join($catalina_opts, ' ')
-  $jpda_opts_real = join($jpda_opts, ' ')
-
   if $tomcat_user == undef {
     case $install_from {
       'package' : {
@@ -369,7 +377,28 @@ class tomcat (
     $security_manager_real = $security_manager
   }
   
+  $engine_defaulthost_real = $engine_defaulthost ? {
+    undef   => $host_name,
+    default => $engine_defaulthost
+  }
+
+  $java_opts_real = join($java_opts, ' ')
+  $catalina_opts_real = join($catalina_opts, ' ')
+  $jpda_opts_real = join($jpda_opts, ' ')
+  
   # generate params hash
+  $server_params_real = merge(delete_undef_values({
+    'port'     => $server_control_port,
+    'shutdown' => $server_shutdown,
+    'address'  => $server_address
+  }
+  ), $server_params)
+
+  $svc_params_real = merge(delete_undef_values({
+    'name' => $svc_name
+  }
+  ), $svc_params)
+
   $threadpool_params_real = merge(delete_undef_values({
     'namePrefix'      => $threadpool_nameprefix,
     'maxThreads'      => $threadpool_maxthreads,
@@ -413,7 +442,6 @@ class tomcat (
   ), $ssl_params)
 
   $ajp_params_real = merge(delete_undef_values({
-    'protocol'          => $ajp_protocol,
     'executor'          => $ajp_use_threadpool ? {
       true    => $threadpool_name,
       default => undef
@@ -423,6 +451,13 @@ class tomcat (
     'maxThreads'        => $ajp_maxthreads
   }
   ), $ajp_params)
+
+  $engine_params_real = merge(delete_undef_values({
+    'name'        => $engine_name,
+    'defaultHost' => $engine_defaulthost_real,
+    'jvmRoute'    => $engine_jvmroute
+  }
+  ), $engine_params)
 
   $host_params_real = merge(delete_undef_values({
     'appBase'             => $host_appbase,

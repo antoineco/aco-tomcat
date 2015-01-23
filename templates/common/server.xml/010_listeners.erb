@@ -1,5 +1,4 @@
 
-
 <%- if scope.function_versioncmp([scope['::tomcat::version'], '8.0.14']) >= 0 -%>
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
 <%- end -%>
@@ -20,3 +19,8 @@
 <%- end -%>
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+<%- if @listeners and ! @listeners.empty? -%>
+  <%- [@listeners].flatten.compact.each do |listener| -%>
+  <Listener<%- listener.each_pair do |attrib, att_value| -%> <%= attrib %>="<%= att_value %>"<%- end -%> />
+  <%- end -%>
+<%- end -%>

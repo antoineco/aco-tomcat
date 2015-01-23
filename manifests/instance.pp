@@ -71,6 +71,12 @@ define tomcat::instance (
   #..................................................................................
   # server configuration
   #..................................................................................
+  # server
+  $server_control_port        = 8006,
+  $server_shutdown            = 'SHUTDOWN',
+  $server_address             = undef,
+  $server_params              = {},
+  #..................................................................................
   # listeners
   $apr_listener               = false,
   $apr_sslengine              = undef,
@@ -79,9 +85,12 @@ define tomcat::instance (
   $jmx_registry_port          = 8052,
   $jmx_server_port            = 8053,
   $jmx_bind_address           = '',
+  # custom listeners
+  $listeners                  = [],
   #..................................................................................
-  # server
-  $control_port               = 8006,
+  # service
+  $svc_name                   = 'Catalina',
+  $svc_params                 = {},
   #..................................................................................
   # executors
   $threadpool_executor        = false,
@@ -130,16 +139,10 @@ define tomcat::instance (
   $connectors                 = [],
   #..................................................................................
   # engine
-  $jvmroute                   = undef,
-  #..................................................................................
-  # host
-  $hostname                   = 'localhost',
-  $host_appbase               = undef,
-  $host_autodeploy            = undef,
-  $host_deployOnStartup       = undef,
-  $host_undeployoldversions   = undef,
-  $host_unpackwars            = undef,
-  $host_params                = {},
+  $engine_name                = 'Catalina',
+  $engine_defaulthost         = undef,
+  $engine_jvmroute            = undef,
+  $engine_params              = {},
   #..................................................................................
   # cluster (experimental)
   $use_simpletcpcluster       = false,
@@ -151,6 +154,15 @@ define tomcat::instance (
   $lockout_realm              = true,
   $userdatabase_realm         = true,
   $realms                     = [],
+  #..................................................................................
+  # host
+  $host_name                  = 'localhost',
+  $host_appbase               = undef,
+  $host_autodeploy            = undef,
+  $host_deployOnStartup       = undef,
+  $host_undeployoldversions   = undef,
+  $host_unpackwars            = undef,
+  $host_params                = {},
   #..................................................................................
   # valves
   $singlesignon_valve         = false,
@@ -284,10 +296,6 @@ define tomcat::instance (
     $service_stop_real = $service_stop
   }
 
-  $java_opts_real = join($java_opts, ' ')
-  $catalina_opts_real = join($catalina_opts, ' ')
-  $jpda_opts_real = join($jpda_opts, ' ')
-
   if $::osfamily == 'Debian' {
     $security_manager_real = $security_manager ? {
       true    => 'yes',
@@ -296,7 +304,28 @@ define tomcat::instance (
     $security_manager_real = $security_manager
   }
   
+  $engine_defaulthost_real = $engine_defaulthost ? {
+    undef   => $host_name,
+    default => $engine_defaulthost
+  }
+
+  $java_opts_real = join($java_opts, ' ')
+  $catalina_opts_real = join($catalina_opts, ' ')
+  $jpda_opts_real = join($jpda_opts, ' ')
+  
   # generate params hash
+  $server_params_real = merge(delete_undef_values({
+    'port'     => $server_control_port,
+    'shutdown' => $server_shutdown,
+    'address'  => $server_address
+  }
+  ), $server_params)
+
+  $svc_params_real = merge(delete_undef_values({
+    'name' => $svc_name
+  }
+  ), $svc_params)
+
   $threadpool_params_real = merge(delete_undef_values({
     'namePrefix'      => $threadpool_nameprefix,
     'maxThreads'      => $threadpool_maxthreads,
@@ -340,7 +369,6 @@ define tomcat::instance (
   ), $ssl_params)
 
   $ajp_params_real = merge(delete_undef_values({
-    'protocol'          => $ajp_protocol,
     'executor'          => $ajp_use_threadpool ? {
       true    => 'tomcatThreadPool',
       default => undef
@@ -350,6 +378,13 @@ define tomcat::instance (
     'maxThreads'        => $ajp_maxthreads
   }
   ), $ajp_params)
+
+  $engine_params_real = merge(delete_undef_values({
+    'name'        => $engine_name,
+    'defaultHost' => $engine_defaulthost_real,
+    'jvmRoute'    => $engine_jvmroute
+  }
+  ), $engine_params)
 
   $host_params_real = merge(delete_undef_values({
     'appBase'             => $host_appbase,
@@ -558,17 +593,20 @@ define tomcat::instance (
   Concat::Fragment { target  => "instance ${name} server configuration" }
 
   # Template uses:
-  # - $control_port
+  # - $server_params_real
   concat::fragment { "instance ${name} server.xml header":
     order   => 0,
     content => template("${module_name}/common/server.xml/000_header.erb")
   }
 
   # Template uses:
+  # - $jmx_listener
   # - $jmx_registry_port
   # - $jmx_server_port
   # - $jmx_bind_address
+  # - $apr_listener
   # - $apr_sslengine
+  # - $listeners
   # - $tomcat::maj_version
   concat::fragment { "instance ${name} server.xml listeners":
     order   => 10,
@@ -585,6 +623,8 @@ define tomcat::instance (
     }
   }
 
+  # Template uses:
+  # - $svc_params_real
   concat::fragment { "instance ${name} server.xml service":
     order   => 30,
     content => template("${module_name}/common/server.xml/030_service.erb")
@@ -637,6 +677,7 @@ define tomcat::instance (
   # Template uses:
   # - $ajp_connector
   # - $ajp_port
+  # - $ajp_protocol
   # - $ajp_params_real
   # - $ssl_connector
   # - $ssl_port
@@ -657,8 +698,7 @@ define tomcat::instance (
   }
   
   # Template uses:
-  # - $hostname
-  # - $jvmroute
+  # - $engine_params_real
   concat::fragment { "instance ${name} server.xml engine":
     order   => 60,
     content => template("${module_name}/common/server.xml/060_engine.erb")
@@ -688,7 +728,7 @@ define tomcat::instance (
   }
 
   # Template uses:
-  # - $hostname
+  # - $host_name
   # - $host_params_real
   # - $tomcat::maj_version
   concat::fragment { "instance ${name} server.xml host":
@@ -700,6 +740,7 @@ define tomcat::instance (
   # - $singlesignon_valve
   # - $accesslog_valve
   # - $valves
+  # - $host_name
   # - $tomcat::maj_version
   if $singlesignon_valve or $accesslog_valve or ($valves and $valves != []) {
     concat::fragment { "instance ${name} server.xml valves":
@@ -814,17 +855,17 @@ define tomcat::instance (
       path    => "${catalina_base_real}/conf/Catalina",
       require => File["${catalina_base_real}/conf"]
     } ->
-    file { "instance ${name} Catalina/${hostname} dir":
+    file { "instance ${name} Catalina/${host_name} dir":
       ensure => directory,
-      path   => "${catalina_base_real}/conf/Catalina/${hostname}"
+      path   => "${catalina_base_real}/conf/Catalina/${host_name}"
     } ->
     file {
       "instance ${name} manager.xml":
-        path    => "${catalina_base_real}/conf/Catalina/${hostname}/manager.xml",
+        path    => "${catalina_base_real}/conf/Catalina/${host_name}/manager.xml",
         content => template("${module_name}/instance/manager.xml.erb");
 
       "instance ${name} host-manager.xml":
-        path    => "${catalina_base_real}/conf/Catalina/${hostname}/host-manager.xml",
+        path    => "${catalina_base_real}/conf/Catalina/${host_name}/host-manager.xml",
         content => template("${module_name}/instance/host-manager.xml.erb")
     }
   }

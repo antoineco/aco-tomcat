@@ -9,11 +9,14 @@ class tomcat::config {
   $instance = false
 
   # forward variables used in templates
-  $control_port = $::tomcat::control_port
+  $server_params_real = $::tomcat::server_params_real
+  $jmx_listener = $::tomcat::jmx_listener
   $jmx_registry_port = $::tomcat::jmx_registry_port
   $jmx_server_port = $::tomcat::jmx_server_port
   $jmx_bind_address = $::tomcat::jmx_bind_address
+  $apr_listener = $::tomcat::apr_listener
   $apr_sslengine = $::tomcat::apr_sslengine
+  $svc_params_real = $::tomcat::svc_params_real
   $threadpool_executor = $::tomcat::threadpool_executor
   $threadpool_name = $::tomcat::threadpool_name
   $threadpool_params_real = $::tomcat::threadpool_params_real
@@ -26,9 +29,11 @@ class tomcat::config {
   $ssl_params_real = $::tomcat::ssl_params_real
   $ajp_connector = $::tomcat::ajp_connector
   $ajp_port = $::tomcat::ajp_port
+  $ajp_protocol = $::tomcat::ajp_protocol
   $ajp_params_real = $::tomcat::ajp_params_real
   $connectors = $::tomcat::connectors
-  $hostname = $::tomcat::hostname
+  $engine_params_real = $::tomcat::engine_params_real
+  $host_name = $::tomcat::host_name
   $host_params_real = $::tomcat::host_params_real
   $use_simpletcpcluster = $::tomcat::use_simpletcpcluster
   $cluster_membership_port = $::tomcat::cluster_membership_port
@@ -73,17 +78,20 @@ class tomcat::config {
   Concat::Fragment { target  => 'tomcat server configuration' }
 
   # Template uses:
-  # - $control_port
+  # - $server_params_real
   concat::fragment { 'server.xml header':
     order   => 0,
     content => template("${module_name}/common/server.xml/000_header.erb")
   }
 
   # Template uses:
+  # - $jmx_listener
   # - $jmx_registry_port
   # - $jmx_server_port
   # - $jmx_bind_address
+  # - $apr_listener
   # - $apr_sslengine
+  # - $listeners
   # - $tomcat::maj_version
   concat::fragment { 'server.xml listeners':
     order   => 10,
@@ -100,6 +108,8 @@ class tomcat::config {
     }
   }
 
+  # Template uses:
+  # - $svc_params_real
   concat::fragment { 'server.xml service':
     order   => 30,
     content => template("${module_name}/common/server.xml/030_service.erb")
@@ -152,6 +162,7 @@ class tomcat::config {
   # Template uses:
   # - $ajp_connector
   # - $ajp_port
+  # - $ajp_protocol
   # - $ajp_params_real
   # - $ssl_connector
   # - $ssl_port
@@ -172,8 +183,7 @@ class tomcat::config {
   }
 
   # Template uses:
-  # - $hostname
-  # - $jvmroute
+  # - $engine_params_real
   concat::fragment { 'server.xml engine':
     order   => 60,
     content => template("${module_name}/common/server.xml/060_engine.erb")
@@ -203,7 +213,7 @@ class tomcat::config {
   }
 
   # Template uses:
-  # - $hostname
+  # - $host_name
   # - $host_params_real
   # - $tomcat::maj_version
   concat::fragment { 'server.xml host':
@@ -215,6 +225,7 @@ class tomcat::config {
   # - $singlesignon_valve
   # - $accesslog_valve
   # - $valves
+  # - $host_name
   # - $tomcat::maj_version
   if $singlesignon_valve or $accesslog_valve or ($valves and $valves != []) {
     concat::fragment { 'server.xml valves':
