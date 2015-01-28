@@ -9,7 +9,10 @@ class tomcat::install::archive {
   }
 
   # create user if not present
-  group { $::tomcat::tomcat_group_real: ensure => present } ->
+  group { $::tomcat::tomcat_group_real:
+    ensure => present,
+    system => true
+  } ->
   user { $::tomcat::tomcat_user_real:
     ensure => present,
     gid    => $::tomcat::tomcat_group_real,
