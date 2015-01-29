@@ -1,3 +1,7 @@
+###0.9.1
+
+Fix compatibility with future parser in Puppet 3.7.4 ([PUP-3615](https://tickets.puppetlabs.com/browse/PUP-3615))
+
 ###0.9.0
 
 **Warning:** this release is a big step forward, please read the documentation carefully

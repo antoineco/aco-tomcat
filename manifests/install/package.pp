@@ -23,7 +23,7 @@ class tomcat::install::package {
   }
 
   # fix broken bits in some tomcat init scripts
-  if $::osfamily == 'RedHat' and $::operatingsystemmajrelease < 7 { #fix 'status' command for instances
+  if $::osfamily == 'RedHat' and $::operatingsystemmajrelease < '7' { #fix 'status' command for instances
     file_line { 'fix broken tomcat init script':
       path     => "/etc/init.d/${::tomcat::service_name_real}",
       line     => "            pid=\"$(/usr/bin/pgrep -d , -u \${TOMCAT_USER} -G \${TOMCAT_USER} -f Dcatalina.base=\${CATALINA_BASE})\"",
@@ -32,7 +32,7 @@ class tomcat::install::package {
       require  => Package['tomcat server']
     }
   }
-  elsif $::osfamily == 'Debian' and $::tomcat::maj_version > 6 { #support symlinking init script to create instances
+  elsif $::osfamily == 'Debian' and $::tomcat::maj_version > '6' { #support symlinking init script to create instances
     file_line { 'fix broken tomcat init script':
       path    => "/etc/init.d/${::tomcat::service_name_real}",
       line    => "NAME=\"$(basename \$0)\"",

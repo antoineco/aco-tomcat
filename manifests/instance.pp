@@ -272,7 +272,7 @@ define tomcat::instance (
   if $service_start == undef {
     case $::tomcat::install_from {
       'package' : {
-        if $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= 20 {
+        if $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= '20' {
           $service_start_real = '/usr/libexec/tomcat/server start'
         }
         else {
@@ -294,7 +294,7 @@ define tomcat::instance (
   if $service_stop == undef {
     case $::tomcat::install_from {
       'package' : {
-        if $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= 20 {
+        if $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= '20' {
           $service_stop_real = '/usr/libexec/tomcat/server stop'
         }
         else {
@@ -432,7 +432,7 @@ define tomcat::instance (
         group   => 'root',
         content => template("${module_name}/instance/systemd_unit_suse.erb")
       }
-    } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= 20 { # Fedora 20+
+    } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= '20' { # Fedora 20+
       file { "${service_name_real} service unit":
         path    => "/usr/lib/systemd/system/${service_name_real}.service",
         owner   => 'root',

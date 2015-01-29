@@ -17,7 +17,7 @@ class tomcat::service::archive {
         group   => 'root',
         content => template("${module_name}/instance/systemd_unit_suse.erb")
       }
-    } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= 20 { # Fedora 20+
+    } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= '20' { # Fedora 20+
       file { "${::tomcat::service_name_real} service unit":
         path    => "/usr/lib/systemd/system/${::tomcat::service_name_real}.service",
         owner   => 'root',
