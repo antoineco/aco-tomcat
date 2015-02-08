@@ -356,7 +356,7 @@ class tomcat (
           default  => 'tomcat'
         } }
       default   : {
-        $tomcat_user_real = $service_name_real
+        $tomcat_user_real = 'tomcat'
       }
     }
   } else {
