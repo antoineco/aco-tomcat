@@ -100,6 +100,7 @@ class tomcat (
   #..................................................................................
   # logging
   #..................................................................................
+  $log_path                   = undef,
   $log4j_enable               = false,
   $log4j_conf_type            = 'ini',
   $log4j_conf_source          = "puppet:///modules/${module_name}/log4j/log4j.properties",
@@ -306,6 +307,12 @@ class tomcat (
     $catalina_pid_real = "/var/run/${service_name_real}.pid"
   } else {
     $catalina_pid_real = $catalina_pid
+  }
+
+  if $log_path == undef {
+    $log_path_real = "/var/log/${service_name_real}"
+  } else {
+    $log_path_real = $log_path
   }
 
   if $config_path == undef {

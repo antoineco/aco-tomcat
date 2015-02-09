@@ -65,6 +65,7 @@ define tomcat::instance (
   #..................................................................................
   # logging
   #..................................................................................
+  $log_path                   = undef,
   $log4j_enable               = false,
   $log4j_conf_type            = 'ini',
   $log4j_conf_source          = "puppet:///modules/${module_name}/log4j/log4j.properties",
@@ -252,6 +253,12 @@ define tomcat::instance (
     $catalina_pid_real = "/var/run/${service_name_real}.pid"
   } else {
     $catalina_pid_real = $catalina_pid
+  }
+
+  if $log_path == undef {
+    $log_path_real = "/var/log/${service_name_real}"
+  } else {
+    $log_path_real = $log_path
   }
 
   if $config_path == undef {
@@ -508,7 +515,7 @@ define tomcat::instance (
 
     "instance ${name} logs directory":
       ensure => directory,
-      path   => "/var/log/${service_name_real}",
+      path   => $log_path_real,
       mode   => '0660',
   } ->
   file {
@@ -527,8 +534,8 @@ define tomcat::instance (
     "instance ${name} logs symlink":
       ensure => link,
       path   => "${catalina_base_real}/logs",
-      target => "/var/log/${service_name_real}",
-      mode    => '0777';
+      target => $log_path_real,
+      mode   => '0777';
 
     "instance ${name} webapps directory":
       ensure => directory,

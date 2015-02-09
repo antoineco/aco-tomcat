@@ -41,14 +41,14 @@ class tomcat::install::archive {
   file { 'tomcat logs symlink':
     ensure => link,
     path   => "${::tomcat::catalina_base_real}/logs",
-    target => "/var/log/${::tomcat::service_name_real}",
+    target => $::tomcat::log_path_real,
     mode   => '0777',
     force  => true
   }
 
   file { 'tomcat logs directory':
     ensure => directory,
-    path   => "/var/log/${::tomcat::service_name_real}",
+    path   => $::tomcat::log_path_real,
     mode   => '0660',
   }
   
