@@ -219,7 +219,7 @@ define tomcat::instance (
   if $service_name == undef {
     $service_name_real = $::tomcat::install_from ? {
       'package' => "${::tomcat::package_name}_${name}",
-      default   => "${::tomcat::service_name_real}_${name}"
+      default   => "tomcat${maj_version}_${name}"
     } } else {
     $service_name_real = $service_name
   }
@@ -441,7 +441,8 @@ define tomcat::instance (
   File {
     owner   => $::tomcat::tomcat_user_real,
     group   => $::tomcat::tomcat_group_real,
-    mode    => '0644'
+    mode    => '0644',
+    require => Class['::tomcat::install']
   }
 
   if !defined(File['tomcat instances root']) {
