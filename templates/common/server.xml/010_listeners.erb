@@ -1,14 +1,14 @@
 
-<%- if scope.function_versioncmp([scope['::tomcat::version'], '8.0.14']) >= 0 -%>
+<%- if scope.function_versioncmp([@version, '8.0.14']) >= 0 -%>
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
 <%- end -%>
-<%- if scope.function_versioncmp([scope['::tomcat::maj_version'], '7']) >= 0 -%>
+<%- if scope.function_versioncmp([@maj_version, '7']) >= 0 -%>
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 <%- end -%>
-<%- if scope['::tomcat::maj_version'] == '7' -%>
+<%- if @maj_version == '7' -%>
   <Listener className="org.apache.catalina.core.JasperListener" />
 <%- end -%>
-<%- if scope['::tomcat::maj_version'] == '6' -%>
+<%- if @maj_version == '6' -%>
   <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
 <%- end -%>
 <%- if @jmx_listener -%>

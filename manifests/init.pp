@@ -6,10 +6,10 @@
 #
 # [*install_from*]
 #   what type of source to install from (valid: 'package'|'archive')
-# [*archive_source*]
-#   where to download archive from (only if installed from archive)
 # [*version*]
 #   tomcat full version number (valid format: x.y.z)
+# [*archive_source*]
+#   where to download archive from (only if installed from archive)
 # [*package_name*]
 #   tomcat package name
 # [*service_name*]
@@ -73,8 +73,8 @@ class tomcat (
   # packages and service
   #..................................................................................
   $install_from               = 'package',
-  $archive_source             = undef,
   $version                    = $::tomcat::params::version,
+  $archive_source             = undef,
   $package_name               = $::tomcat::params::package_name,
   $service_name               = undef,
   $service_ensure             = 'running',
