@@ -44,7 +44,7 @@ include ::tomcat
 
 ####Installation scenarios
 
-Install from archive instead of package
+Install from archive instead of distribution package
 
 ```puppet
 class { '::tomcat':
@@ -70,6 +70,20 @@ tomcat::instance { 'instance2':
   control_port    => 8006,
   http_port       => 8081,
   manage_firewall => true,
+  …
+}
+```
+
+Start a second instance with a different tomcat version
+
+```puppet
+class { '::tomcat':
+  install_from => 'archive',
+  version      => '7.0.55'
+  …
+}
+tomcat::instance { 'my_app':
+  version => '8.0.18'
   …
 }
 ```
@@ -228,12 +242,6 @@ Primary class and entry point of the module
 #####`install_from`
 What type of source to install from. The module will download the necessary files by itself. Valid values are `package` and `archive`. Defaults to `package`.
 
-#####`archive_source`
-Source of the tomcat server archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version}/bin/apache-tomcat-${version}.tar.gz`
-
-#####`version`
-Tomcat full version number. The valid format is 'x.y.z'. If you install tomcat from package and define this value manually, make **sure** this version of tomcat if available in your system's repositories, since several sub-parameters depend on it. Default depends on the distribution.
-
 #####`package_name`
 Tomcat package name. Ignored if installed from archive. Default depends on the distribution.
 
@@ -268,6 +276,13 @@ See also [Common parameters](#common-parameters)
 Parameters common to both `tomcat` and `tomcat::instance`
 
 **Packages and service**
+
+#####`version`
+Tomcat full version number. The valid format is 'x.y.z'. If you install tomcat from package and define this value manually, make **sure** this version of tomcat if available in your system's repositories, since several sub-parameters depend on it. Default depends on the distribution.
+*Note:* multi-version only supported if installed from archive
+
+#####`archive_source`
+Source of the tomcat server archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version}/bin/apache-tomcat-${version}.tar.gz`
 
 #####`service_name`
 Tomcat service name. Defaults to `${package_name}` (global) / `${package_name}_${title}` (instance).
