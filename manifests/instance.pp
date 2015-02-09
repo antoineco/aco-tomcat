@@ -813,7 +813,7 @@ define tomcat::instance (
 
   # configure authorized access
   unless !$create_default_admin {
-    ::tomcat::userdb_entry { "instance ${name} ${::tomcat::admin_user}":
+    ::tomcat::userdb_entry { "instance ${name} ${admin_user}":
       database => "instance ${name} UserDatabase",
       username => $admin_user,
       password => $admin_password,
