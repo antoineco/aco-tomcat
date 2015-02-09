@@ -522,13 +522,13 @@ define tomcat::instance (
 
     "instance ${name} logs directory":
       ensure => directory,
-      path   => "/var/log/${service_name_real}",
+      path   => $log_path_real,
       mode   => '0660';
 
     "instance ${name} logs symlink":
       ensure => link,
       path   => "${catalina_base_real}/logs",
-      target => "/var/log/${service_name_real}",
+      target => $log_path_real,
       mode   => '0777',
       force  => true,
       tag    => 'instance_tree';

@@ -2,6 +2,7 @@
 
 * Enable multi-version tomcat installation
 * New parameter `log_path`: define log directory
+* Fix issue with generic init script always returning 0
 
 ###0.9.1
 
