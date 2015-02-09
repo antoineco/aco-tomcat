@@ -208,6 +208,12 @@ define tomcat::instance (
   if !defined(Class['tomcat']) {
     fail('You must include the tomcat base class before using any tomcat defined resources')
   }
+
+  # multi-version installation only supported with archive installation
+  if $version != $::tomcat::version and $tomcat::install_from == 'package' {
+    fail('Multi-version tomcat instances do not support \'package\' installation. Please set the value of $install_from to \'archive\'')
+  }
+
   # get major version
   $array_version = split($version, '[.]')
   $maj_version = $array_version[0]
