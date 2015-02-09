@@ -1,6 +1,10 @@
 # == Define: tomcat::userdb_entry
 #
-define tomcat::userdb_entry ($database, $username, $password, $roles) {
+define tomcat::userdb_entry (
+  $username,
+  $password,
+  $roles,
+  $database = 'main UserDatabase') {
   # The base class must be included first
   if !defined(Class['tomcat']) {
     fail('You must include the tomcat base class before using any tomcat defined resources')
