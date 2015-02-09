@@ -1,3 +1,8 @@
+###0.9.2
+
+* Enable multi-version tomcat installation
+* New parameter `log_path`: define log directory
+
 ###0.9.1
 
 Fix compatibility with future parser in Puppet 3.7.4 ([PUP-3615](https://tickets.puppetlabs.com/browse/PUP-3615))

@@ -508,6 +508,9 @@ Hash of custom environment variables.
 
 Some extra documentation about [log4j](http://logging.apache.org/log4j/)'s usage with tomcat is available on [this page](http://tomcat.apache.org/tomcat-8.0-doc/logging.html#Using_Log4j).
 
+#####`log_path`
+Absolute path to the log directory. Defaults to `/var/log/$service_name`.
+
 #####`log4j_enable`
 Whether to use log4j rather than *java.util.logging* for Tomcat internal logging. Boolean value. Defaults to `false`.  
 *Warning:* log4j is enabled globally if defined within the global context
