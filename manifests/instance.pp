@@ -655,7 +655,8 @@ define tomcat::instance (
   # - $apr_listener
   # - $apr_sslengine
   # - $listeners
-  # - $tomcat::maj_version
+  # - $version
+  # - $maj_version
   concat::fragment { "instance ${name} server.xml listeners":
     order   => 10,
     content => template("${module_name}/common/server.xml/010_listeners.erb")
@@ -778,7 +779,6 @@ define tomcat::instance (
   # Template uses:
   # - $host_name
   # - $host_params_real
-  # - $tomcat::maj_version
   concat::fragment { "instance ${name} server.xml host":
     order   => 90,
     content => template("${module_name}/common/server.xml/090_host.erb")
@@ -789,7 +789,7 @@ define tomcat::instance (
   # - $accesslog_valve
   # - $valves
   # - $host_name
-  # - $tomcat::maj_version
+  # - $maj_version
   if $singlesignon_valve or $accesslog_valve or ($valves and $valves != []) {
     concat::fragment { "instance ${name} server.xml valves":
       order   => 100,
@@ -828,7 +828,7 @@ define tomcat::instance (
   # - $catalina_opts_real
   # - $tomcat::tomcat_user_real
   # - $tomcat::tomcat_group_real
-  # - $tomcat::maj_version
+  # - $maj_version
   # - $lang
   # - $security_manager_real
   # - $shutdown_wait

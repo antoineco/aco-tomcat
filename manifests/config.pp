@@ -7,6 +7,8 @@ class tomcat::config {
   }
 
   # forward variables used in templates
+  $version = $::tomcat::version
+  $maj_version = $::tomcat::maj_version
   $server_params_real = $::tomcat::server_params_real
   $jmx_listener = $::tomcat::jmx_listener
   $jmx_registry_port = $::tomcat::jmx_registry_port
@@ -90,7 +92,8 @@ class tomcat::config {
   # - $apr_listener
   # - $apr_sslengine
   # - $listeners
-  # - $tomcat::maj_version
+  # - $version
+  # - $maj_version
   concat::fragment { 'server.xml listeners':
     order   => 10,
     content => template("${module_name}/common/server.xml/010_listeners.erb")
@@ -213,7 +216,6 @@ class tomcat::config {
   # Template uses:
   # - $host_name
   # - $host_params_real
-  # - $tomcat::maj_version
   concat::fragment { 'server.xml host':
     order   => 90,
     content => template("${module_name}/common/server.xml/090_host.erb")
@@ -224,7 +226,7 @@ class tomcat::config {
   # - $accesslog_valve
   # - $valves
   # - $host_name
-  # - $tomcat::maj_version
+  # - $maj_version
   if $singlesignon_valve or $accesslog_valve or ($valves and $valves != []) {
     concat::fragment { 'server.xml valves':
       order   => 100,
@@ -263,7 +265,7 @@ class tomcat::config {
   # - $catalina_opts_real
   # - $tomcat::tomcat_user_real
   # - $tomcat::tomcat_group_real
-  # - $tomcat::maj_version
+  # - $maj_version
   # - $lang
   # - $security_manager_real
   # - $shutdown_wait

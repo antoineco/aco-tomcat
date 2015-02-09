@@ -18,8 +18,8 @@ CATALINA_TMPDIR="<%= @catalina_tmpdir_real %>"
 <% end -%>
 
 <% if scope['::osfamily'] == 'Debian' -%>
-TOMCAT<%= scope['::tomcat::maj_version'] %>_USER="<%= scope['::tomcat::tomcat_user_real'] %>"
-TOMCAT<%= scope['::tomcat::maj_version'] %>_GROUP="<%= scope['::tomcat::tomcat_group_real'] %>"
+TOMCAT<%= @maj_version %>_USER="<%= scope['::tomcat::tomcat_user_real'] %>"
+TOMCAT<%= @maj_version %>_GROUP="<%= scope['::tomcat::tomcat_group_real'] %>"
 
 <% else -%>
 TOMCAT_USER="<%= scope['::tomcat::tomcat_user_real'] %>"
@@ -28,7 +28,7 @@ TOMCAT_GROUP="<%= scope['::tomcat::tomcat_group_real'] %>"
 <% end -%>
 <% if @lang and @lang != '' -%>LANG="<%= @lang %>"<% end -%>
 <% if scope['::osfamily'] == 'Debian' -%>
-TOMCAT<%= scope['::tomcat::maj_version'] %>_SECURITY="<%= @security_manager_real %>"
+TOMCAT<%= @maj_version %>_SECURITY="<%= @security_manager_real %>"
 <% else -%>
 SECURITY_MANAGER="<%= @security_manager_real %>"
 <% end -%>
