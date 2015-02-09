@@ -88,9 +88,10 @@ Enable the manager/host-manager webapps and configure default admin
 ```puppet
 class { '::tomcat':
   …
-  admin_webapps  => true,
-  admin_user     => 'tomcatmaster',
-  admin_password => 'meow'
+  admin_webapps        => true,
+  create_default_admin => true,
+  admin_user           => 'tomcatmaster',
+  admin_password       => 'meow'
 }
 ```
 
