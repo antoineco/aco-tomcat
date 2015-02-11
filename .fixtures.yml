@@ -1,0 +1,8 @@
+fixtures:
+  forge_modules:
+    concat: puppetlabs/concat
+    firewall: puppetlabs/firewall
+    staging: nanliu/staging
+    stdlib: puppetlabs/stdlib
+  symlinks:
+    tomcat: "#{source_dir}"
