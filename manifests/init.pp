@@ -1,6 +1,6 @@
 # == Class: tomcat
 #
-# This module installs the Tomcat application server from available repositories
+# This module installs the Tomcat application server from available repositories or archive
 #
 # === Parameters:
 #
@@ -483,15 +483,12 @@ class tomcat (
   }
 
   # start the real action
-  include tomcat::install
-  include tomcat::service
+  class { 'tomcat::install': } ->
+  class { 'tomcat::service': }
 
   class { 'tomcat::config':
     require => Class['::tomcat::install']
   }
-
-  Class['::tomcat::install'] ->
-  Class['::tomcat::service']
 
   if $log4j_enable {
     class { 'tomcat::log4j':
