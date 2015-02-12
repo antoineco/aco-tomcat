@@ -1,4 +1,5 @@
 #tomcat
+[![Build Status](https://travis-ci.org/tOnI0/aco-tomcat.svg?branch=master)](https://travis-ci.org/tOnI0/aco-tomcat)
 
 ####Table of Contents
 
@@ -13,7 +14,7 @@
     * [Define: tomcat::instance](#define-tomcatinstance)
     * [Common parameters](#common-parameters)
     * [Define: tomcat::userdb_entry](#define-tomcatuserdb_entry)
-5. [To Do](#to-do)
+5. [Testing - How to run the included spec tests](#testing)
 6. [Contributors](#contributors)
 
 ##Overview
@@ -539,9 +540,27 @@ User password (string)
 #####`roles`
 User roles (array)
 
-##To Do
+##Testing
 
-* Parameters validation
+The only prerequisite is to have the [Bundler](http://bundler.io/) gem installed:
+
+```shell
+$ gem install bundler
+```
+
+Install gem dependencies using Bundler (related documentation page [here](http://bundler.io/bundle_install.html)):
+
+```shell
+$ bundle install
+```
+
+When your environment is set up, run the spec tests inside the module directory using:
+
+```shell
+$ bundle exec rake spec
+```
+
+Check the [puppetlabs_spec_helper](https://github.com/puppetlabs/puppetlabs_spec_helper) GitHub repository for more information.
 
 ##Contributors
 
