@@ -65,12 +65,9 @@ class tomcat::params {
       case $::operatingsystem {
         'OpenSuSE'           : {
           case $::operatingsystemrelease {
-            '12.3'  : {
-              $version = '7.0.35'
+            '13.2'  : {
+              $version = '7.0.55'
               $package_name = 'tomcat'
-              # = JAVA repo =
-              # $version = '7.0.55'
-              # $package_name = 'tomcat'
             }
             '13.1'  : {
               $version = '7.0.42'
@@ -79,9 +76,12 @@ class tomcat::params {
               # $version = '7.0.55'
               # $package_name = 'tomcat'
             }
-            '13.2'  : {
-              $version = '7.0.55'
+            '12.3'  : {
+              $version = '7.0.35'
               $package_name = 'tomcat'
+              # = JAVA repo =
+              # $version = '7.0.55'
+              # $package_name = 'tomcat'
             }
             default : {
               fail("Unsupported OS version ${::operatingsystemrelease}")
@@ -91,15 +91,15 @@ class tomcat::params {
         }
         /^(SLES|SLED|SuSE)$/ : {
           case $::operatingsystemrelease {
-            /^11\.[23]$/ : {
-              $version = '6.0.18'
-              $package_name = 'tomcat6'
-              $systemd = false
-            }
             '12.0'       : {
               $version = '7.0.55'
               $package_name = 'tomcat'
               $systemd = true
+            }
+            /^11\.[23]$/ : {
+              $version = '6.0.18'
+              $package_name = 'tomcat6'
+              $systemd = false
             }
             default      : {
               fail("Unsupported OS version ${::operatingsystemrelease}")
@@ -134,34 +134,12 @@ class tomcat::params {
         }
         'Ubuntu' : {
           case $::operatingsystemrelease {
-            '12.04' : {
-              $version = '7.0.26'
-              $package_name = 'tomcat7'
-              # $version = '6.0.35'
-              # $package_name = 'tomcat6'
-            }
-            '12.10' : {
-              $version = '7.0.30'
-              $package_name = 'tomcat7'
-              # $version = '6.0.35'
-              # $package_name = 'tomcat6'
-            }
-            '13.04' : {
-              $version = '7.0.35'
-              $package_name = 'tomcat7'
-              # $version = '6.0.35'
-              # $package_name = 'tomcat6'
-            }
-            '13.10' : {
-              $version = '7.0.42'
-              $package_name = 'tomcat7'
-              # $version = '6.0.37'
-              # $package_name = 'tomcat6'
-            }
-            '14.04' : {
-              $version = '7.0.52'
-              $package_name = 'tomcat7'
-              # $version = '6.0.39'
+            '15.04' : {
+              $version = '8.0.14 '
+              $package_name = 'tomcat8'
+              # $version = '7.0.56'
+              # $package_name = 'tomcat7'
+              # $version = '6.0.41'
               # $package_name = 'tomcat6'
             }
             '14.10' : {
@@ -172,12 +150,34 @@ class tomcat::params {
               # $version = '6.0.41'
               # $package_name = 'tomcat6'
             }
-            '15.04' : {
-              $version = '8.0.14 '
-              $package_name = 'tomcat8'
-              # $version = '7.0.56'
-              # $package_name = 'tomcat7'
-              # $version = '6.0.41'
+            '14.04' : {
+              $version = '7.0.52'
+              $package_name = 'tomcat7'
+              # $version = '6.0.39'
+              # $package_name = 'tomcat6'
+            }
+            '13.10' : {
+              $version = '7.0.42'
+              $package_name = 'tomcat7'
+              # $version = '6.0.37'
+              # $package_name = 'tomcat6'
+            }
+            '13.04' : {
+              $version = '7.0.35'
+              $package_name = 'tomcat7'
+              # $version = '6.0.35'
+              # $package_name = 'tomcat6'
+            }
+            '12.10' : {
+              $version = '7.0.30'
+              $package_name = 'tomcat7'
+              # $version = '6.0.35'
+              # $package_name = 'tomcat6'
+            }
+            '12.04' : {
+              $version = '7.0.26'
+              $package_name = 'tomcat7'
+              # $version = '6.0.35'
               # $package_name = 'tomcat6'
             }
             default : {
