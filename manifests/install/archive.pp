@@ -37,19 +37,29 @@ class tomcat::install::archive {
     user    => $::tomcat::tomcat_user_real,
     group   => $::tomcat::tomcat_group_real,
     strip   => 1
-  } ->
-  file { 'tomcat logs symlink':
-    ensure => link,
-    path   => "${::tomcat::catalina_base_real}/logs",
-    target => $::tomcat::log_path_real,
-    mode   => '0777',
-    force  => true
+  }
+  
+  # ordering
+  Staging::Extract <| title == "apache-tomcat-${::tomcat::version}.tar.gz" |> -> File <| tag == 'tomcat_tree' |>
+
+  if $::tomcat::log_path_real != "${::tomcat::catalina_base_real}/logs" {
+    file {
+      'tomcat logs symlink':
+        ensure => link,
+        path   => "${::tomcat::catalina_base_real}/logs",
+        target => $::tomcat::log_path_real,
+        mode   => '0777',
+        force  => true,
+        tag    => 'tomcat_tree'
+    }
   }
 
-  file { 'tomcat logs directory':
+  file { $::tomcat::log_path_real:
     ensure => directory,
     path   => $::tomcat::log_path_real,
     mode   => '0660',
+    alias  => 'tomcat logs directory',
+    tag    => 'tomcat_tree'
   }
   
   # pid file management

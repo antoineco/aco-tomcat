@@ -209,6 +209,7 @@ define tomcat::instance (
   if !defined(Class['tomcat']) {
     fail('You must include the tomcat base class before using any tomcat defined resources')
   }
+  require ::tomcat::install
 
   # multi-version installation only supported with archive installation
   if $version != $::tomcat::version and $tomcat::install_from == 'package' {
@@ -454,8 +455,7 @@ define tomcat::instance (
   File {
     owner   => $::tomcat::tomcat_user_real,
     group   => $::tomcat::tomcat_group_real,
-    mode    => '0644',
-    require => Class['::tomcat::install']
+    mode    => '0644'
   }
 
   if !defined(File['tomcat instances root']) {
@@ -488,7 +488,7 @@ define tomcat::instance (
     }
 
     # ordering
-    Staging::Extract <| |> -> File <| tag == 'instance_tree' |>
+    Staging::Extract <| title == "apache-tomcat-${version}.tar.gz" |> -> File <| tag == "instance_${name}_tree" |>
   }
   
   # create/ensure instance directory tree
@@ -501,52 +501,60 @@ define tomcat::instance (
     }
 
     # ordering
-    File["instance ${name} catalina_base"] -> File <| tag == 'instance_tree' |>
+    File["instance ${name} catalina_base"] -> File <| tag == "instance_${name}_tree" |>
+  }
+
+  if $log_path_real != "${catalina_base_real}/logs" {
+    file { "instance ${name} logs symlink":
+      ensure => link,
+      path   => "${catalina_base_real}/logs",
+      target => $log_path_real,
+      mode   => '0777',
+      force  => true,
+      tag    => "instance_${name}_tree"
+    }
+  }
+
+  if !defined(File[$log_path_real]) {
+    file { $log_path_real:
+      ensure => directory,
+      path   => $log_path_real,
+      mode   => '0660',
+      alias  => "instance ${name} logs directory",
+      tag    => "instance_${name}_tree"
+    }
   }
 
   file {
     "instance ${name} bin directory":
       ensure => directory,
       path   => "${catalina_base_real}/bin",
-      tag    => 'instance_tree';
+      tag    => "instance_${name}_tree";
 
     "instance ${name} conf directory":
       ensure => directory,
       path   => "${catalina_base_real}/conf",
-      tag    => 'instance_tree';
+      tag    => "instance_${name}_tree";
 
     "instance ${name} lib directory":
       ensure => directory,
       path   => "${catalina_base_real}/lib",
-      tag    => 'instance_tree';
-
-    "instance ${name} logs directory":
-      ensure => directory,
-      path   => $log_path_real,
-      mode   => '0660';
-
-    "instance ${name} logs symlink":
-      ensure => link,
-      path   => "${catalina_base_real}/logs",
-      target => $log_path_real,
-      mode   => '0777',
-      force  => true,
-      tag    => 'instance_tree';
+      tag    => "instance_${name}_tree";
 
     "instance ${name} webapps directory":
       ensure => directory,
       path   => "${catalina_base_real}/webapps",
-      tag    => 'instance_tree';
+      tag    => "instance_${name}_tree";
 
     "instance ${name} work directory":
       ensure => directory,
       path   => "${catalina_base_real}/work",
-      tag    => 'instance_tree';
+      tag    => "instance_${name}_tree";
 
     "instance ${name} temp directory":
       ensure => directory,
       path   => "${catalina_base_real}/temp",
-      tag    => 'instance_tree'
+      tag    => "instance_${name}_tree"
   }
 
   if $::osfamily == 'Debian' and $::tomcat::install_from == 'package' {
