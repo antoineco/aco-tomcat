@@ -1,3 +1,9 @@
+###0.9.3
+
+* Allow several instances to use the same `log_path`
+* Parameters validation
+* Partial spec tests
+
 ###0.9.2
 
 * Enable multi-version tomcat installation
