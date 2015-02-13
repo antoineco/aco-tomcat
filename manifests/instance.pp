@@ -211,6 +211,12 @@ define tomcat::instance (
   }
   require ::tomcat::install
 
+  # parameters validation
+  validate_re($version, '^[0-9]|[0-9]u[0-9]{1,2}$', 'incorrect tomcat version number')
+  validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
+  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_resources, $catalina_opts, $java_opts, $jpda_opts)
+  validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $custom_variables)
+
   # multi-version installation only supported with archive installation
   if $version != $::tomcat::version and $tomcat::install_from == 'package' {
     fail('Multi-version tomcat instances do not support \'package\' installation. Please set the value of $install_from to \'archive\'')
