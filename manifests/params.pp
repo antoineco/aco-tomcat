@@ -6,6 +6,10 @@ class tomcat::params {
       case $::operatingsystem {
         'Fedora' : {
           case $::operatingsystemmajrelease {
+            '22'    : {
+              $version = '7.0.59'
+              $package_name = 'tomcat'
+            }
             '21'    : {
               $version = '7.0.54'
               $package_name = 'tomcat'
@@ -50,6 +54,16 @@ class tomcat::params {
               # = jpackage6 repo =
               # $version = '7.0.54'
               # $package_name = 'tomcat7'
+              $systemd = false
+            }
+            '5'     : {
+              $version = '5.5.23'
+              $package_name = 'tomcat5'
+              # = jpackage5 repo =
+              # $version = '5.5.27'
+              # $package_name = 'tomcat5'
+              # $version = '6.0.18'
+              # $package_name = 'tomcat6'
               $systemd = false
             }
             default : {

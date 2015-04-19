@@ -58,6 +58,17 @@ describe 'tomcat::install::archive' do
           is_expected.to contain_user('tomcat').with({ 'home' => '/usr/share/tomcat6' })
         end
       end
+      context 'on RedHat 5' do
+        let :facts do
+          super().merge({
+            :operatingsystem           => 'RedHat',
+            :operatingsystemmajrelease => '5'
+          })
+        end
+        it do
+          is_expected.to contain_user('tomcat').with({ 'home' => '/usr/share/tomcat5' })
+        end
+      end
       context 'on Fedora' do
         let :facts do
           super().merge({

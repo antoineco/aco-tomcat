@@ -8,17 +8,22 @@
 <%- if @maj_version == '7' -%>
   <Listener className="org.apache.catalina.core.JasperListener" />
 <%- end -%>
-<%- if @maj_version == '6' -%>
+<%- if scope.function_versioncmp([@maj_version, '6']) <= 0 -%>
   <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
 <%- end -%>
+<%- if @maj_version == '5' -%>
+  <Listener className="org.apache.catalina.storeconfig.StoreConfigLifecycleListener" />
+<%- end -%>
+<%- if scope.function_versioncmp([@maj_version, '6']) >= 0 -%>
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+<%- end -%>
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
 <%- if @jmx_listener -%>
   <Listener className="org.apache.catalina.mbeans.JmxRemoteLifecycleListener" rmiRegistryPortPlatform="<%= @jmx_registry_port %>" rmiServerPortPlatform="<%= @jmx_server_port %>"<% if @jmx_bind_address and @jmx_bind_address != '' -%> rmiBindAddress="<%= @jmx_bind_address %>"<% end -%> />
 <%- end -%>
 <%- if @apr_listener -%>
   <Listener className="org.apache.catalina.core.AprLifecycleListener" <% if @apr_sslengine and @apr_sslengine != '' -%>SSLEngine="<%= @apr_sslengine %>" <% end -%>/>
 <%- end -%>
-  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
-  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
 <%- if @listeners and ! @listeners.empty? -%>
   <%- [@listeners].flatten.compact.each do |listener| -%>
   <Listener<%- listener.each_pair do |attrib, att_value| -%> <%= attrib %>="<%= att_value %>"<%- end -%> />
