@@ -46,7 +46,17 @@ class tomcat::config {
   $accesslog_valve = $::tomcat::accesslog_valve
   $valves = $::tomcat::valves
   $globalnaming_resources = $::tomcat::globalnaming_resources
+  $context_params = $::tomcat::context_params
+  $context_loader = $::tomcat::context_loader
+  $context_manager = $::tomcat::context_manager
+  $context_realm = $::tomcat::context_realm
   $context_resources = $::tomcat::context_resources
+  $context_parameters = $::tomcat::context_parameters
+  $context_environments = $::tomcat::context_environments
+  $context_listeners = $::tomcat::context_listeners
+  $context_valves = $::tomcat::context_valves
+  $context_resourcedefs = $::tomcat::context_resourcedefs
+  $context_resourcelinks = $::tomcat::context_resourcelinks
   $java_home = $::tomcat::java_home
   $catalina_base_real = $::tomcat::catalina_base_real
   $catalina_home_real = $::tomcat::catalina_home_real
@@ -75,13 +85,12 @@ class tomcat::config {
     notify => Service[$::tomcat::service_name_real]
   }
 
-  Concat::Fragment { target  => 'tomcat server configuration' }
-
   # Template uses:
   # - $server_params_real
   concat::fragment { 'server.xml header':
     order   => 0,
-    content => template("${module_name}/common/server.xml/000_header.erb")
+    content => template("${module_name}/common/server.xml/000_header.erb"),
+    target  => 'tomcat server configuration'
   }
 
   # Template uses:
@@ -96,7 +105,8 @@ class tomcat::config {
   # - $maj_version
   concat::fragment { 'server.xml listeners':
     order   => 10,
-    content => template("${module_name}/common/server.xml/010_listeners.erb")
+    content => template("${module_name}/common/server.xml/010_listeners.erb"),
+    target  => 'tomcat server configuration'
   }
 
   # Template uses:
@@ -105,7 +115,8 @@ class tomcat::config {
   if $userdatabase_realm or ($globalnaming_resources and $globalnaming_resources != []) {
     concat::fragment { 'server.xml globalnamingresources':
       order   => 20,
-      content => template("${module_name}/common/server.xml/020_globalnamingresources.erb")
+      content => template("${module_name}/common/server.xml/020_globalnamingresources.erb"),
+      target  => 'tomcat server configuration'
     }
   }
 
@@ -113,7 +124,8 @@ class tomcat::config {
   # - $svc_params_real
   concat::fragment { 'server.xml service':
     order   => 30,
-    content => template("${module_name}/common/server.xml/030_service.erb")
+    content => template("${module_name}/common/server.xml/030_service.erb"),
+    target  => 'tomcat server configuration'
   }
 
   # Template uses:
@@ -123,7 +135,8 @@ class tomcat::config {
   if $threadpool_executor {
     concat::fragment { 'server.xml threadpool executor':
       order   => 40,
-      content => template("${module_name}/common/server.xml/040_threadpool_executor.erb")
+      content => template("${module_name}/common/server.xml/040_threadpool_executor.erb"),
+      target  => 'tomcat server configuration'
     }
   }
 
@@ -132,7 +145,8 @@ class tomcat::config {
   if $executors and $executors != [] {
     concat::fragment { 'server.xml executors':
       order   => 41,
-      content => template("${module_name}/common/server.xml/041_executors.erb")
+      content => template("${module_name}/common/server.xml/041_executors.erb"),
+      target  => 'tomcat server configuration'
     }
   }
 
@@ -145,7 +159,8 @@ class tomcat::config {
   if $http_connector {
     concat::fragment { 'server.xml http connector':
       order   => 50,
-      content => template("${module_name}/common/server.xml/050_http_connector.erb")
+      content => template("${module_name}/common/server.xml/050_http_connector.erb"),
+      target  => 'tomcat server configuration'
     }
   }
 
@@ -156,7 +171,8 @@ class tomcat::config {
   if $ssl_connector {
     concat::fragment { 'server.xml ssl connector':
       order   => 51,
-      content => template("${module_name}/common/server.xml/051_ssl_connector.erb")
+      content => template("${module_name}/common/server.xml/051_ssl_connector.erb"),
+      target  => 'tomcat server configuration'
     }
   }
 
@@ -170,7 +186,8 @@ class tomcat::config {
   if $ajp_connector {
     concat::fragment { 'server.xml ajp connector':
       order   => 52,
-      content => template("${module_name}/common/server.xml/052_ajp_connector.erb")
+      content => template("${module_name}/common/server.xml/052_ajp_connector.erb"),
+      target  => 'tomcat server configuration'
     }
   }
 
@@ -179,7 +196,8 @@ class tomcat::config {
   if $connectors and $connectors != [] {
     concat::fragment { 'server.xml connectors':
       order   => 53,
-      content => template("${module_name}/common/server.xml/053_connectors.erb")
+      content => template("${module_name}/common/server.xml/053_connectors.erb"),
+      target  => 'tomcat server configuration'
     }
   }
 
@@ -187,7 +205,8 @@ class tomcat::config {
   # - $engine_params_real
   concat::fragment { 'server.xml engine':
     order   => 60,
-    content => template("${module_name}/common/server.xml/060_engine.erb")
+    content => template("${module_name}/common/server.xml/060_engine.erb"),
+    target  => 'tomcat server configuration'
   }
 
   # Template uses:
@@ -198,7 +217,8 @@ class tomcat::config {
   if $use_simpletcpcluster {
     concat::fragment { 'server.xml cluster':
       order   => 70,
-      content => template("${module_name}/common/server.xml/070_cluster.erb")
+      content => template("${module_name}/common/server.xml/070_cluster.erb"),
+      target  => 'tomcat server configuration'
     }
   }
 
@@ -209,7 +229,8 @@ class tomcat::config {
   if $lockout_realm or $userdatabase_realm or ($realms and $realms != []) {
     concat::fragment { 'server.xml realms':
       order   => 80,
-      content => template("${module_name}/common/server.xml/080_realms.erb")
+      content => template("${module_name}/common/server.xml/080_realms.erb"),
+      target  => 'tomcat server configuration'
     }
   }
 
@@ -218,7 +239,8 @@ class tomcat::config {
   # - $host_params_real
   concat::fragment { 'server.xml host':
     order   => 90,
-    content => template("${module_name}/common/server.xml/090_host.erb")
+    content => template("${module_name}/common/server.xml/090_host.erb"),
+    target  => 'tomcat server configuration'
   }
 
   # Template uses:
@@ -230,25 +252,139 @@ class tomcat::config {
   if $singlesignon_valve or $accesslog_valve or ($valves and $valves != []) {
     concat::fragment { 'server.xml valves':
       order   => 100,
-      content => template("${module_name}/common/server.xml/100_valves.erb")
+      content => template("${module_name}/common/server.xml/100_valves.erb"),
+      target  => 'tomcat server configuration'
     }
   }
 
   concat::fragment { 'server.xml footer':
     order   => 200,
-    content => template("${module_name}/common/server.xml/200_footer.erb")
+    content => template("${module_name}/common/server.xml/200_footer.erb"),
+    target  => 'tomcat server configuration'
   }
 
-  # generate and manage server context configuration
+  # generate and manage context configuration
+  concat { 'tomcat context configuration':
+    path   => "${::tomcat::catalina_base_real}/conf/context.xml",
+    owner  => $::tomcat::tomcat_user_real,
+    group  => $::tomcat::tomcat_group_real,
+    mode   => '0600',
+    order  => 'numeric',
+    notify => Service[$::tomcat::service_name_real]
+  }
+
+  # Template uses:
+  # - $context_params
+  concat::fragment { 'context.xml header':
+    order   => 0,
+    content => template("${module_name}/common/context.xml/000_header.erb"),
+    target  => 'tomcat context configuration'
+  }
+
+  # Template uses:
+  # - $context_loader
+  if $context_loader and $context_loader != {} {
+    concat::fragment { 'context.xml loader':
+      order   => 010,
+      content => template("${module_name}/common/context.xml/010_loader.erb"),
+      target  => 'tomcat context configuration'
+    }
+  }
+
+  # Template uses:
+  # - $context_manager
+  if $context_manager and $context_manager != {} {
+    concat::fragment { 'context.xml manager':
+      order   => 011,
+      content => template("${module_name}/common/context.xml/011_manager.erb"),
+      target  => 'tomcat context configuration'
+    }
+  }
+
+  # Template uses:
+  # - $context_realm
+  if $context_realm and $context_realm != {} {
+    concat::fragment { 'context.xml realm':
+      order   => 012,
+      content => template("${module_name}/common/context.xml/012_realm.erb"),
+      target  => 'tomcat context configuration'
+    }
+  }
+
   # Template uses:
   # - $context_resources
-  file { 'tomcat context configuration':
-    path    => "${::tomcat::catalina_base_real}/conf/context.xml",
-    content => template("${module_name}/common/context.xml.erb"),
-    owner   => $::tomcat::tomcat_user_real,
-    group   => $::tomcat::tomcat_group_real,
-    mode    => '0600',
-    notify  => Service[$::tomcat::service_name_real]
+  if $context_resources and $context_resources != {} {
+    concat::fragment { 'context.xml resources':
+      order   => 013,
+      content => template("${module_name}/common/context.xml/013_resources.erb"),
+      target  => 'tomcat context configuration'
+    }
+  }
+
+  # Template uses:
+  # - $context_parameters
+  if $context_parameters and $context_parameters != [] {
+    concat::fragment { 'context.xml parameters':
+      order   => 020,
+      content => template("${module_name}/common/context.xml/020_parameters.erb"),
+      target  => 'tomcat context configuration'
+    }
+  }
+
+  # Template uses:
+  # - $context_environments
+  if $context_environments and $context_environments != [] {
+    concat::fragment { 'context.xml environments':
+      order   => 030,
+      content => template("${module_name}/common/context.xml/030_environments.erb"),
+      target  => 'tomcat context configuration'
+    }
+  }
+
+  # Template uses:
+  # - $context_listeners
+  if $context_listeners and $context_listeners != [] {
+    concat::fragment { 'context.xml listeners':
+      order   => 040,
+      content => template("${module_name}/common/context.xml/040_listeners.erb"),
+      target  => 'tomcat context configuration'
+    }
+  }
+
+  # Template uses:
+  # - $context_valves
+  if $context_valves and $context_valves != [] {
+    concat::fragment { 'context.xml valves':
+      order   => 050,
+      content => template("${module_name}/common/context.xml/050_valves.erb"),
+      target  => 'tomcat context configuration'
+    }
+  }
+
+  # Template uses:
+  # - $context_resourcedefs
+  if $context_resourcedefs and $context_resourcedefs != [] {
+    concat::fragment { 'context.xml resourcedefs':
+      order   => 060,
+      content => template("${module_name}/common/context.xml/060_resourcedefs.erb"),
+      target  => 'tomcat context configuration'
+    }
+  }
+
+  # Template uses:
+  # - $context_resourcelinks
+  if $context_resourcelinks and $context_resourcelinks != [] {
+    concat::fragment { 'context.xml resourcelinks':
+      order   => 070,
+      content => template("${module_name}/common/context.xml/070_resourcelinks.erb"),
+      target  => 'tomcat context configuration'
+    }
+  }
+
+  concat::fragment { 'context.xml footer':
+    order   => 200,
+    content => template("${module_name}/common/context.xml/200_footer.erb"),
+      target  => 'tomcat context configuration'
   }
 
   # generate and manage global parameters

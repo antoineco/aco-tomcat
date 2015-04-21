@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+# ******************
+# Managed by Puppet
+# ******************
+-->
+<Context<%- if @context_params and ! @context_params.empty? -%>
+  <%- @context_params.each_pair do |attrib, value| -%> <%= attrib %>="<%= value %>"<%- end -%>
+<%- end -%>>
