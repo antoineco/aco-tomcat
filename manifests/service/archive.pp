@@ -8,6 +8,12 @@ class tomcat::service::archive {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
+  # forward variables used in templates
+  $service_start_real = $::tomcat::service_start_real
+  $service_stop_real = $::tomcat::service_stop_real
+  $service_name_real = $::tomcat::service_name_real
+  $config_path_real = $::tomcat::config_path_real
+
   if $::tomcat::params::systemd {
     # manage systemd unit on compatible systems
     if $::osfamily == 'Suse' { # SuSE

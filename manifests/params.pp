@@ -41,7 +41,7 @@ class tomcat::params {
         default  : {
           case $::operatingsystemmajrelease {
             '7'     : {
-              $version = '7.0.42'
+              $version = '7.0.54'
               $package_name = 'tomcat'
               $systemd = true
             }
