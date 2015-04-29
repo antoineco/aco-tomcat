@@ -1,5 +1,5 @@
 #tomcat
-[![Build Status](https://travis-ci.org/tOnI0/aco-tomcat.svg?branch=master)](https://travis-ci.org/tOnI0/aco-tomcat)
+[![Build Status](https://travis-ci.org/antoineco/aco-tomcat.svg?branch=master)](https://travis-ci.org/antoineco/aco-tomcat)
 
 ####Table of Contents
 
