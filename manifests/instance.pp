@@ -835,7 +835,7 @@ define tomcat::instance (
   # Template uses:
   # - $context_resources
   file { "instance ${name} context configuration":
-    file    => 'file',
+    ensure  => 'file',
     path    => "${catalina_base_real}/conf/context.xml",
     content => template("${module_name}/common/context.xml.erb"),
     owner   => $::tomcat::tomcat_user_real,
