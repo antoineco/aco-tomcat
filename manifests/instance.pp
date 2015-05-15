@@ -636,6 +636,7 @@ define tomcat::instance (
 
         # create init script
         file { "${service_name_real} service unit":
+          ensure  => 'file',
           path    => "/etc/init.d/${service_name_real}",
           owner   => 'root',
           group   => 'root',
