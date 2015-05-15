@@ -8,18 +8,6 @@ class tomcat::install::archive {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
-  # create user if not present
-  ensure_resource('group', $::tomcat::tomcat_group_real, {
-    ensure => present,
-    system => true
-  })->
-  ensure_resource('user', $::tomcat::tomcat_user_real, {
-    ensure => present,
-    gid    => $::tomcat::tomcat_group_real,
-    home   => $::tomcat::catalina_home_real,
-    system => true
-  })
-
   File {
     owner => $::tomcat::tomcat_user_real,
     group => $::tomcat::tomcat_group_real,
@@ -38,7 +26,7 @@ class tomcat::install::archive {
     group   => $::tomcat::tomcat_group_real,
     strip   => 1
   }
-  
+
   # ordering
   Staging::Extract <| title == "apache-tomcat-${::tomcat::version}.tar.gz" |> -> File <| tag == 'tomcat_tree' |>
 
@@ -61,7 +49,7 @@ class tomcat::install::archive {
     alias  => 'tomcat logs directory',
     tag    => 'tomcat_tree'
   }
-  
+
   # pid file management
   file { 'tomcat pid file':
     ensure => present,
