@@ -243,6 +243,7 @@ class tomcat::config {
   # Template uses:
   # - $context_resources
   file { 'tomcat context configuration':
+    ensure  => 'file',
     path    => "${::tomcat::catalina_base_real}/conf/context.xml",
     content => template("${module_name}/common/context.xml.erb"),
     owner   => $::tomcat::tomcat_user_real,
