@@ -9,16 +9,16 @@ class tomcat::install::archive {
   }
 
   # create user if not present
-  group { $::tomcat::tomcat_group_real:
+  ensure_resource('group', $::tomcat::tomcat_group_real, {
     ensure => present,
     system => true
-  } ->
-  user { $::tomcat::tomcat_user_real:
+  })->
+  ensure_resource('user', $::tomcat::tomcat_user_real, {
     ensure => present,
     gid    => $::tomcat::tomcat_group_real,
     home   => $::tomcat::catalina_home_real,
     system => true
-  }
+  })
 
   File {
     owner => $::tomcat::tomcat_user_real,
