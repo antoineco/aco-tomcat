@@ -18,7 +18,7 @@ describe 'tomcat::service' do
   describe 'main class not included' do
     let(:pre_condition) {}
     it do
-      is_expected.to raise_error(Puppet::Error, /^You must include the tomcat base class before using any tomcat sub class/)
+      is_expected.to raise_error(Puppet::Error, /You must include the tomcat base class before using any tomcat sub class/)
     end
   end
   describe 'create tomcat service' do
