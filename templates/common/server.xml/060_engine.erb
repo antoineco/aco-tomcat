@@ -1,4 +1,4 @@
 
     <Engine<%- if @engine_params_real and ! @engine_params_real.empty? -%>
-      <%- @engine_params_real.each_pair do |attrib, att_value| -%> <%= attrib %>="<%= att_value %>"<%- end -%>
+      <%- @engine_params_real.each_pair do |attrib, value| -%> <%= attrib %>="<%= value %>"<%- end -%>
     <%- end -%>>

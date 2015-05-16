@@ -1,0 +1,9 @@
+<%- [@context_listeners].flatten.compact.each do |listener| %>
+  <%- listener.each_pair do |attrib, value| -%>
+    <%- if attrib == listener.keys.first -%>
+  <Listener <%= attrib %>="<%= value %>"<% if attrib == listener.keys.last %> /><% end %>
+    <%- else -%>
+            <%= attrib %>="<%= value %>"<% if attrib == listener.keys.last %> /><% end %>
+    <%- end -%>
+  <%- end -%>
+<%- end -%>

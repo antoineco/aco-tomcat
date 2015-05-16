@@ -207,7 +207,20 @@ class tomcat (
   #..................................................................................
   # misc
   $globalnaming_resources     = [],
-  $context_resources          = [],
+  #..................................................................................
+  # context configuration
+  #..................................................................................
+  $context_params             = {},
+  $context_loader             = {},
+  $context_manager            = {},
+  $context_realm              = {},
+  $context_resources          = {},
+  $context_parameters         = [],
+  $context_environments       = [],
+  $context_listeners          = [],
+  $context_valves             = [],
+  $context_resourcedefs       = [],
+  $context_resourcelinks      = [],
   #..................................................................................
   # environment variables
   #..................................................................................
@@ -238,8 +251,8 @@ class tomcat (
   validate_re($install_from, '^(package|archive)$', '$install_from must be either \'package\' or \'archive\'')
   validate_re($version, '^[0-9]|[0-9]u[0-9]{1,2}$', 'incorrect tomcat version number')
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
-  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_resources, $catalina_opts, $java_opts, $jpda_opts)
-  validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $custom_variables)
+  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
+  validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
 
   # get major version
   $array_version = split($version, '[.]')
