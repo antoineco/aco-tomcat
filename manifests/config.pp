@@ -297,7 +297,6 @@ class tomcat::config {
 
   # generate and manage UserDatabase file
   concat { 'main UserDatabase':
-    ensure => 'file',
     path   => "${::tomcat::catalina_base_real}/conf/tomcat-users.xml",
     owner  => $::tomcat::tomcat_user_real,
     group  => $::tomcat::tomcat_group_real,
