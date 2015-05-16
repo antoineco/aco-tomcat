@@ -1,7 +1,7 @@
 
       <Host name="<%= @host_name %>"<% if @host_params_real and ! @host_params_real.empty? %>
              <%- @host_params_real.sort.map do |attrib, value| -%>
-            <%= attrib %>="<%= value %>"<% if attrib == @host_params_real.sort.keys.last %>><% end %>
+            <%= attrib %>="<%= value %>"<% if attrib == @host_params_real.keys.sort.last %>><% end %>
              <%- end -%>
            <%- else -%>
 >
