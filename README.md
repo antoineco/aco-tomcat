@@ -159,10 +159,7 @@ class { '::tomcat':
   …
   ajp_connector => true,
   ajp_port      => 8090,
-  ajp_params    => {
-    address    => '127.0.0.1',
-    packetSize => 12288
-  }
+  ajp_params    => { address => '127.0.0.1', packetSize => 12288 }
 }
 ```
 
@@ -189,7 +186,7 @@ Configure custom listeners
 class { '::tomcat':
   …
   listeners => [
-    { className   => 'org.apache.catalina.storeconfig.StoreConfigLifecycleListener'
+    { className => 'org.apache.catalina.storeconfig.StoreConfigLifecycleListener'
     },
     { className     => 'org.apache.catalina.startup.UserConfig',
       directoryName => 'public_html'
@@ -218,7 +215,29 @@ class { '::tomcat':
   jmx_registry_port => '8050',
   jmx_server_port   => '8051',
   jmx_bind_address  => $ipaddress_eth0,
-  catalina_opts     => ['-Dcom.sun.management.jmxremote', '-Dcom.sun.management.jmxremote.ssl=false', '-Dcom.sun.management.jmxremote.authenticate=false']
+  catalina_opts     => [ '-Dcom.sun.management.jmxremote',
+                         '-Dcom.sun.management.jmxremote.ssl=false',
+                         '-Dcom.sun.management.jmxremote.authenticate=false' ]
+}
+```
+
+Configure main context.xml
+
+```puppet
+class { '::tomcat':
+  …
+  context_params  => { docBase => 'myapproot', useHttpOnly => false },
+  context_manager => { maxActiveSessions => 1000 },
+  context_resourcelinks => [
+    { name   => 'linkToGlobalResource',
+      global => 'simpleValue',
+      type   => 'java.lang.Integer'
+    },
+    { name   => 'appDataSource',
+      global => 'sharedDataSource',
+      type   => 'javax.sql.DataSource'
+    }
+  ]
 }
 ```
 
@@ -443,37 +462,37 @@ An array of `Resource` entries to be added to the `GlobalNamingResources` compon
 
 **Context configuration**
 
-####`context_params`
+#####`context_params`
 A hash of attributes/values for the `Context` container. See [Context](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Attributes) for the list of possible attributes.
 
-####`context_loader`
+#####`context_loader`
 A hash of attributes/values for the `Loader` nested component. See [Loader](http://tomcat.apache.org/tomcat-8.0-doc/config/loader.html) for the list of possible attributes.
 
-####`context_manager`
+#####`context_manager`
 A hash of attributes/values for the `Manager` nested component. See [Manager](http://tomcat.apache.org/tomcat-8.0-doc/config/manager.html) for the list of possible attributes.
 
-####`context_realm`
+#####`context_realm`
 A hash of attributes/values for the `Realm` nested component. See [Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html) for the list of possible attributes.
 
 #####`context_resources`
 A hash of attributes/values for the `Resources` nested component. See [Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/resources.html) for the list of possible attributes.
 
-####`context_parameters`
+#####`context_parameters`
 An array of `Parameter` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Parameter` XML node. See [Context Parameters](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Context_Parameters) for the list of possible attributes.
 
-####`context_environments`
-An array of `Environment` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Environment` XML node. See [http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Environment_Entries](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Environment_Entries) for the list of possible attributes.
+#####`context_environments`
+An array of `Environment` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Environment` XML node. See [Environment Entries](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Environment_Entries) for the list of possible attributes.
 
-####`context_listeners`
+#####`context_listeners`
 An array of `Listener` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Listener` XML node. See [Lifecycle Listeners](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Lifecycle_Listeners) for the list of possible attributes.
 
-####`context_valves`
+#####`context_valves`
 An array of `Valve` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Valve` XML node. See [Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html) for the list of possible attributes.
 
-####`context_resourcedefs`
+#####`context_resourcedefs`
 An array of `Resource` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Resource` XML node. See [Resource Definitions](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Definitions) for the list of possible attributes.
 
-####`context_resourcelinks`
+#####`context_resourcelinks`
 An array of `ResourceLink` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `ResourceLink` XML node. See [Resource Links](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Links) for the list of possible attributes.
 
 **Global configuration file / environment variables**
