@@ -8,7 +8,7 @@
 <% end -%>
 <%- if @valves and ! @valves.empty? -%>
   <%- [@valves].flatten.compact.each do |valve| %>
-    <%- valve.each_pair do |attrib, att_value| -%>
+    <%- valve.sort.map do |attrib, att_value| -%>
       <%- if attrib == valve.keys.first -%>
         <Valve <%= attrib %>="<%= att_value %>"<% if attrib == valve.keys.last %> /><% end %>
       <%- else -%>

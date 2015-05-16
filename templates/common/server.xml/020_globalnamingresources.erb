@@ -10,7 +10,7 @@
 <%- end -%>
 <%- if @globalnaming_resources and ! @globalnaming_resources.empty? -%>
   <%- [@globalnaming_resources].flatten.compact.each do |resource| %>
-    <%- resource.each_pair do |attrib, att_value| -%>
+    <%- resource.sort.map do |attrib, att_value| -%>
       <%- if attrib == resource.keys.first -%>
     <Resource <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.last %> /><% end %>
       <%- else -%>

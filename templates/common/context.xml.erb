@@ -21,7 +21,7 @@
     -->
 <%- if @context_resources and ! @context_resources.empty? -%>
   <%- [@context_resources].flatten.compact.each do |resource| %>
-  <%- resource.each_pair do |attrib, att_value| -%>
+  <%- resource.sort.map do |attrib, att_value| -%>
     <%- if attrib == resource.keys.first -%>
     <ResourceLink <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.last %> /><% end %>
     <%- else -%>
