@@ -12,9 +12,9 @@
   <%- [@globalnaming_resources].flatten.compact.each do |resource| %>
     <%- resource.sort.map do |attrib, att_value| -%>
       <%- if attrib == resource.keys.first -%>
-    <Resource <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.last %> /><% end %>
+    <Resource <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.sort.last %> /><% end %>
       <%- else -%>
-              <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.last %> /><% end %>
+              <%= attrib %>="<%= att_value %>"<% if attrib == resource.keys.sort.last %> /><% end %>
       <%- end -%>
     <%- end -%>
   <%- end -%>
