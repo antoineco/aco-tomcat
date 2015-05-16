@@ -2,10 +2,10 @@
   "name": "aco-tomcat",
   "summary": "Puppet module for Tomcat",
   "author": "Antoine Cotten",
-  "version": "0.9.3",
+  "version": "1.0.0",
   "license": "Apache-2.0",
-  "project_page": "https://github.com/tOnI0/aco-tomcat",
-  "source": "git://github.com/tOnI0/aco-tomcat.git",
+  "project_page": "https://github.com/antoineco/aco-tomcat",
+  "source": "git://github.com/antoineco/aco-tomcat.git",
   "tags": ["tomcat", "java", "apache"],
   "dependencies": [
     {
@@ -112,7 +112,8 @@
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
         "6",
-        "7"
+        "7",
+        "8"
       ]
     },
     {

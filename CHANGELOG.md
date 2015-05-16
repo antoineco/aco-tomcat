@@ -1,3 +1,21 @@
+###1.0.0
+
+* New Context parameters for configuring context.xml:
+ - `context_params`
+ - `context_loader`
+ - `context_manager`
+ - `context_realm`
+ - `context_resources`
+ - `context_parameters`
+ - `context_environments`
+ - `context_listeners`
+ - `context_valves`
+ - `context_resourcedefs`
+ - `context_resourcelinks`
+* Support Debian 8, Fedora 22 and RHEL 5
+* Do not create user/group if already defined
+* Minor bugfixes
+
 ###0.9.3
 
 * Allow several instances to use the same `log_path`
