@@ -869,6 +869,7 @@ define tomcat::instance (
   # - $jpda_opts_real
   # - $custom_variables
   file { "instance ${name} environment variables":
+    ensure  => 'file',
     path    => $config_path_real,
     content => template("${module_name}/common/setenv.erb"),
     owner   => $::tomcat::tomcat_user_real,
@@ -941,10 +942,12 @@ define tomcat::instance (
       } ->
       file {
         "instance ${name} manager.xml":
+          ensure  => 'file',
           path    => "${catalina_base_real}/conf/Catalina/${host_name}/manager.xml",
           content => template("${module_name}/instance/manager.xml.erb");
 
         "instance ${name} host-manager.xml":
+          ensure  => 'file',
           path    => "${catalina_base_real}/conf/Catalina/${host_name}/host-manager.xml",
           content => template("${module_name}/instance/host-manager.xml.erb")
       }

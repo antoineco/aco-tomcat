@@ -18,6 +18,7 @@ class tomcat::service::archive {
     # manage systemd unit on compatible systems
     if $::osfamily == 'Suse' { # SuSE
       file { "${::tomcat::service_name_real} service unit":
+        ensure  => 'file',
         path    => "/usr/lib/systemd/system/${::tomcat::service_name_real}.service",
         owner   => 'root',
         group   => 'root',
@@ -25,6 +26,7 @@ class tomcat::service::archive {
       }
     } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= '20' { # Fedora 20+
       file { "${::tomcat::service_name_real} service unit":
+        ensure  => 'file',
         path    => "/usr/lib/systemd/system/${::tomcat::service_name_real}.service",
         owner   => 'root',
         group   => 'root',
@@ -32,6 +34,7 @@ class tomcat::service::archive {
       }
     } else { # RHEL 7+ or Fedora 17-19
       file { "${::tomcat::service_name_real} service unit":
+        ensure  => 'file',
         path    => "/usr/lib/systemd/system/${::tomcat::service_name_real}.service",
         owner   => 'root',
         group   => 'root',
@@ -45,6 +48,7 @@ class tomcat::service::archive {
 
     # create init script
     file { "${::tomcat::service_name_real} service unit":
+      ensure  => 'file',
       path    => "/etc/init.d/${::tomcat::service_name_real}",
       owner   => 'root',
       group   => 'root',
@@ -52,7 +56,7 @@ class tomcat::service::archive {
       content => template("${module_name}/instance/tomcat_init_generic.erb")
     }
   }
-  
+
   service { $::tomcat::service_name_real:
     ensure  => $::tomcat::service_ensure,
     enable  => $::tomcat::service_enable,

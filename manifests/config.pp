@@ -277,6 +277,7 @@ class tomcat::config {
   # - $jpda_opts_real
   # - $custom_variables
   file { 'tomcat environment variables':
+    ensure  => 'file',
     path    => $::tomcat::config_path_real,
     content => template("${module_name}/common/setenv.erb"),
     owner   => $::tomcat::tomcat_user_real,
@@ -288,6 +289,7 @@ class tomcat::config {
   if $::osfamily == 'RedHat' {
     # make sure system variables are in the right place
     file { 'tomcat default variables':
+      ensure  => 'file',
       path    => "${::tomcat::catalina_base_real}/conf/${::tomcat::service_name_real}.conf",
       content => "# See ${::tomcat::config_path_real}"
     }
@@ -295,6 +297,7 @@ class tomcat::config {
 
   # generate and manage UserDatabase file
   concat { 'main UserDatabase':
+    ensure => 'file',
     path   => "${::tomcat::catalina_base_real}/conf/tomcat-users.xml",
     owner  => $::tomcat::tomcat_user_real,
     group  => $::tomcat::tomcat_group_real,
