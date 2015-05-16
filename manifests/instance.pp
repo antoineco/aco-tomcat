@@ -978,7 +978,7 @@ define tomcat::instance (
   concat::fragment { "instance ${name} context.xml footer":
     order   => 200,
     content => template("${module_name}/common/context.xml/200_footer.erb"),
-      target  => "instance ${name} context configuration"
+    target  => "instance ${name} context configuration"
   }
 
 

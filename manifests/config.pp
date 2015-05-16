@@ -384,7 +384,7 @@ class tomcat::config {
   concat::fragment { 'context.xml footer':
     order   => 200,
     content => template("${module_name}/common/context.xml/200_footer.erb"),
-      target  => 'tomcat context configuration'
+    target  => 'tomcat context configuration'
   }
 
   # generate and manage global parameters
