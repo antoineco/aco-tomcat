@@ -1,4 +1,4 @@
 
   <Service<%- if @svc_params_real and ! @svc_params_real.empty? -%>
-    <%- @svc_params_real.each_pair do |attrib, value| -%> <%= attrib %>="<%= value %>"<%- end -%>
+    <%- @svc_params_real.sort.each_pair do |attrib, value| -%> <%= attrib %>="<%= value %>"<%- end -%>
   <%- end -%>>

@@ -49,7 +49,7 @@ SHUTDOWN_VERBOSE="<%= @shutdown_verbose %>"
 
 # Custom variables
 <%- if @custom_variables and ! @custom_variables.empty? -%>
-  <%- @custom_variables.each_pair do |attrib, value| -%>
+  <%- @custom_variables.sort.each_pair do |attrib, value| -%>
 <%= attrib %>="<%= value %>"
   <%- end -%>
 <%- end -%>
