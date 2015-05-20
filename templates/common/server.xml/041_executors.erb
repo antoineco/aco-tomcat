@@ -1,9 +1,9 @@
 <%- [@executors].flatten.compact.each do |executor| %>
-  <%- executor.each_pair do |attrib, value| -%>
-    <%- if attrib == executor.keys.first -%>
-    <Executor <%= attrib %>="<%= value %>"<% if attrib == executor.keys.last %> /><% end %>
+  <%- executor.sort.each_pair do |attrib, value| -%>
+    <%- if attrib == executor.keys.sort.first -%>
+    <Executor <%= attrib %>="<%= value %>"<% if attrib == executor.keys.sort.last %> /><% end %>
     <%- else -%>
-              <%= attrib %>="<%= value %>"<% if attrib == executor.keys.last %> /><% end %>
+              <%= attrib %>="<%= value %>"<% if attrib == executor.keys.sort.last %> /><% end %>
     <%- end -%>
   <%- end -%>
 <%- end -%>

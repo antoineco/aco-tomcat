@@ -1,7 +1,7 @@
 
     <Executor name="<%= @threadpool_name %>"<% if @threadpool_params_real and ! @threadpool_params_real.empty? %>
-             <%- @threadpool_params_real.each_pair do |attrib, value| -%>
-              <%= attrib %>="<%= value %>"<% if attrib == @threadpool_params_real.keys.last %> /><% end %>
+             <%- @threadpool_params_real.sort.each_pair do |attrib, value| -%>
+              <%= attrib %>="<%= value %>"<% if attrib == @threadpool_params_real.keys.sort.last %> /><% end %>
              <%- end -%>
            <%- else -%>
  />
