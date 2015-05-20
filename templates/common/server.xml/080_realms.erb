@@ -8,11 +8,11 @@
 <% end -%>
 <%- if @realms and ! @realms.empty? -%>
   <%- [@realms].flatten.compact.each do |realm| %>
-    <%- realm.each_pair do |attrib, value| -%>
-      <%- if attrib == realm.keys.first -%>
-<% if @lockout_realm %>  <% end %>      <Realm <%= attrib %>="<%= value %>"<% if attrib == realm.keys.last %> /><% end %>
+    <%- realm.sort.map do |attrib, value| -%>
+      <%- if attrib == realm.keys.sort.first -%>
+<% if @lockout_realm %>  <% end %>      <Realm <%= attrib %>="<%= value %>"<% if attrib == realm.keys.sort.last %> /><% end %>
       <%- else -%>
-<% if @lockout_realm %>  <% end %>             <%= attrib %>="<%= value %>"<% if attrib == realm.keys.last %> /><% end %>
+<% if @lockout_realm %>  <% end %>             <%= attrib %>="<%= value %>"<% if attrib == realm.keys.sort.last %> /><% end %>
       <%- end -%>
     <%- end -%>
   <%- end -%>

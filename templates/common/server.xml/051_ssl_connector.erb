@@ -1,7 +1,7 @@
 
     <Connector port="<%= @ssl_port %>" SSLEnabled="true" scheme="https" secure="true"<% if @ssl_params_real and ! @ssl_params_real.empty? %>
-             <%- @ssl_params_real.each_pair do |attrib, value| -%>
-               <%= attrib %>="<%= value %>"<% if attrib == @ssl_params_real.keys.last %> /><% end %>
+             <%- @ssl_params_real.sort.map do |attrib, value| -%>
+               <%= attrib %>="<%= value %>"<% if attrib == @ssl_params_real.keys.sort.last %> /><% end %>
              <%- end -%>
            <%- else -%>
  />

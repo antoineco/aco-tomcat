@@ -1,9 +1,9 @@
 <%- [@connectors].flatten.compact.each do |connector| %>
-  <%- connector.each_pair do |attrib, value| -%>
-    <%- if attrib == connector.keys.first -%>
-    <Connector <%= attrib %>="<%= value %>"<% if attrib == connector.keys.last %> /><% end %>
+  <%- connector.sort.map do |attrib, value| -%>
+    <%- if attrib == connector.keys.sort.first -%>
+    <Connector <%= attrib %>="<%= value %>"<% if attrib == connector.keys.sort.last %> /><% end %>
     <%- else -%>
-               <%= attrib %>="<%= value %>"<% if attrib == connector.keys.last %> /><% end %>
+               <%= attrib %>="<%= value %>"<% if attrib == connector.keys.sort.last %> /><% end %>
     <%- end -%>
   <%- end -%>
 <%- end -%>

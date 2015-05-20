@@ -43,7 +43,7 @@ class tomcat::install::archive {
     group   => $::tomcat::tomcat_group_real,
     strip   => 1
   }
-  
+
   # ordering
   Staging::Extract <| title == "apache-tomcat-${::tomcat::version}.tar.gz" |> -> File <| tag == 'tomcat_tree' |>
 
@@ -66,7 +66,7 @@ class tomcat::install::archive {
     alias  => 'tomcat logs directory',
     tag    => 'tomcat_tree'
   }
-  
+
   # pid file management
   file { 'tomcat pid file':
     ensure => present,
