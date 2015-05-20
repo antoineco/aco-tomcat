@@ -8,11 +8,11 @@
 <% end -%>
 <%- if @valves and ! @valves.empty? -%>
   <%- [@valves].flatten.compact.each do |valve| %>
-    <%- valve.sort.map do |attrib, att_value| -%>
+    <%- valve.sort.map do |attrib, value| -%>
       <%- if attrib == valve.keys.sort.first -%>
-        <Valve <%= attrib %>="<%= att_value %>"<% if attrib == valve.keys.sort.last %> /><% end %>
+        <Valve <%= attrib %>="<%= value %>"<% if attrib == valve.keys.sort.last %> /><% end %>
       <%- else -%>
-               <%= attrib %>="<%= att_value %>"<% if attrib == valve.keys.sort.last %> /><% end %>
+               <%= attrib %>="<%= value %>"<% if attrib == valve.keys.sort.last %> /><% end %>
       <%- end -%>
     <%- end -%>
   <%- end -%>
