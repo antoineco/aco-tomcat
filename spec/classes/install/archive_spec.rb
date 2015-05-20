@@ -25,7 +25,7 @@ describe 'tomcat::install::archive' do
         'ensure' => 'present',
         'gid'    => 'tomcat',
         'system' => true
-      }).that_requires('Group[tomcat]')
+      })
     end
   end
   describe 'default params' do

@@ -159,10 +159,7 @@ class { '::tomcat':
   …
   ajp_connector => true,
   ajp_port      => 8090,
-  ajp_params    => {
-    address    => '127.0.0.1',
-    packetSize => 12288
-  }
+  ajp_params    => { address => '127.0.0.1', packetSize => 12288 }
 }
 ```
 
@@ -189,7 +186,7 @@ Configure custom listeners
 class { '::tomcat':
   …
   listeners => [
-    { className   => 'org.apache.catalina.storeconfig.StoreConfigLifecycleListener'
+    { className => 'org.apache.catalina.storeconfig.StoreConfigLifecycleListener'
     },
     { className     => 'org.apache.catalina.startup.UserConfig',
       directoryName => 'public_html'
@@ -218,7 +215,29 @@ class { '::tomcat':
   jmx_registry_port => '8050',
   jmx_server_port   => '8051',
   jmx_bind_address  => $ipaddress_eth0,
-  catalina_opts     => ['-Dcom.sun.management.jmxremote', '-Dcom.sun.management.jmxremote.ssl=false', '-Dcom.sun.management.jmxremote.authenticate=false']
+  catalina_opts     => [ '-Dcom.sun.management.jmxremote',
+                         '-Dcom.sun.management.jmxremote.ssl=false',
+                         '-Dcom.sun.management.jmxremote.authenticate=false' ]
+}
+```
+
+Configure main context.xml
+
+```puppet
+class { '::tomcat':
+  …
+  context_params  => { docBase => 'myapproot', useHttpOnly => false },
+  context_manager => { maxActiveSessions => 1000 },
+  context_resourcelinks => [
+    { name   => 'linkToGlobalResource',
+      global => 'simpleValue',
+      type   => 'java.lang.Integer'
+    },
+    { name   => 'appDataSource',
+      global => 'sharedDataSource',
+      type   => 'javax.sql.DataSource'
+    }
+  ]
 }
 ```
 
@@ -336,7 +355,7 @@ Admin user password. Defaults to `password`.
 Server control port. Defaults to `8005` (global) / `8006` (instance). The Server can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
  - `server_shutdown`: command string that must be received in order to shut down Tomcat. Defaults to `SHUTDOWN`.
  - `server_address`: address on which this server waits for a shutdown command
- - `server_params`: optional Hash of additional parameters to put in the Server element where the key is the XML attribute name and the value, the attribute's value
+ - `server_params`: optional hash of additional attributes/values to put in the Server element
 
 #####`apr_listener`
 Whether to enable the [APR Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/apr.html#APR_Lifecycle_Listener_Configuration). The Listener can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
@@ -349,11 +368,11 @@ Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/t
  - `jmx_bind_address`: JMX/RMI server interface address for the JMX Remote Lifecycle Listener. Defaults to `undef` (use tomcat default).
 
 #####`listeners`
-An array of custom `Listener` entries to be added to the `Server` block. Each entry is to be supplied as a Hash of attributes/values for the `Listener` XML node. See [Listeners](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html) for the list of possible attributes.
+An array of custom `Listener` entries to be added to the `Server` block. Each entry is to be supplied as a hash of attributes/values for the `Listener` XML node. See [Listeners](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html) for the list of possible attributes.
 
 #####`svc_name`
 Name of the default [Service](http://tomcat.apache.org/tomcat-8.0-doc/config/service.html). Defaults to `Catalina`. The Service can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
- - `svc_params`: optional Hash of additional parameters to put in the Service element where the key is the XML attribute name and the value, the attribute's value
+ - `svc_params`: optional hash of additional attributes/values to put in the Service element
 
 #####`threadpool_executor`
 Whether to enable the default [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`. The Executor can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
@@ -361,10 +380,10 @@ Whether to enable the default [Executor (thread pool)](http://tomcat.apache.org/
  - `threadpool_nameprefix`: name prefix for each thread created by the executor
  - `threadpool_maxthreads`: max number of active threads in this pool
  - `threadpool_minsparethreads`: minimum number of threads always kept alive
- - `threadpool_params`: optional Hash of additional parameters to put in the Executor where the key is the XML attribute name and the value, the attribute's value
+ - `threadpool_params`: optional hash of additional attributes/values to put in the Executor
 
 #####`executors`
-An array of custom `Executor` entries to be added to the `Service` block. Each entry is to be supplied as a Hash of attributes/values for the `Executor` XML node. See [Executor](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html) for the list of possible attributes.
+An array of custom `Executor` entries to be added to the `Service` block. Each entry is to be supplied as a hash of attributes/values for the `Executor` XML node. See [Executor](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html) for the list of possible attributes.
 
 #####`http_connector`
 Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
@@ -375,7 +394,7 @@ Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/c
  - `http_uriencoding`: encoding to use for URI
  - `http_compression`: whether to use compression. Boolean value. Defaults to `false`.
  - `http_maxthreads`: maximum number of executor threads
- - `http_params`: optional Hash of additional parameters to put in the HTTP Connector where the key is the XML attribute name and the value, the attribute's value
+ - `http_params`: optional hash of additional attributes/values to put in the HTTP connector
  
 #####`ssl_connector`
 Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#SSL_Support). Boolean value. Defaults to `false`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
@@ -389,7 +408,7 @@ Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomc
  - `ssl_clientauth`: whether to require a valid certificate chain from the client
  - `ssl_sslprotocol`: SSL protocol(s) to use
  - `ssl_keystorefile`: path to keystore file
- - `ssl_params`: optional Hash of additional parameters to put in the HTTPS Connector where the key is the XML attribute name and the value, the attribute's value
+ - `ssl_params`: optional hash of additional attributes/values to put in the HTTPS connector
 
 #####`ajp_connector`
 Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp). Boolean value. Defaults to `true`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
@@ -399,16 +418,16 @@ Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/co
  - `ajp_connectiontimeout`: timeout for a connection
  - `ajp_uriencoding`: encoding to use for URI
  - `ajp_maxthreads`: maximum number of executor threads
- - `ajp_params`: optional Hash of additional parameters to put in the AJP Connector where the key is the XML attribute name and the value, the attribute's value
+ - `ajp_params`: optional hash of additional attributes/values to put in the AJP connector
 
 #####`connectors`
-An array of custom `Connector` entries to be added to the `Service` block. Each entry is to be supplied as a Hash of attributes/values for the `Connector` XML node. See [HTTP](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html)/[AJP](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp.html) for the list of possible attributes.
+An array of custom `Connector` entries to be added to the `Service` block. Each entry is to be supplied as a hash of attributes/values for the `Connector` XML node. See [HTTP](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html)/[AJP](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp.html) for the list of possible attributes.
 
 #####`engine_name`
 Name of the default [Engine](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html). Defaults to `Catalina`. The Engine can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
  - `engine_defaulthost`: default host name. Defaults to `${host_name}`
  - `engine_jvmroute`: identifier which must be used in load balancing scenarios to enable session affinity
- - `engine_params`: optional Hash of additional parameters to put in the Engine container where the key is the XML attribute name and the value, the attribute's value
+ - `engine_params`: optional hash of additional attributes/values to put in the Engine container
 
 #####`lockout_realm`
 Whether to enable the [LockOut Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#LockOut_Realm_-_org.apache.catalina.realm.LockOutRealm). Boolean value. Defaults to `true`.
@@ -418,7 +437,7 @@ Whether to enable the [UserDatabase Realm](http://tomcat.apache.org/tomcat-8.0-d
 Boolean value. Defaults to `true`. The User Database Realm is inserted within the Lock Out Realm if it is enabled.
 
 #####`realms`
-An array of custom `Realm` entries to be added to the `Engine` container. Each entry is to be supplied as a Hash of attributes/values for the `Realm` XML node. See [Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html) for the list of possible attributes.
+An array of custom `Realm` entries to be added to the `Engine` container. Each entry is to be supplied as a hash of attributes/values for the `Realm` XML node. See [Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html) for the list of possible attributes.
 
 #####`host_name`
 Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html). Defaults to `localhost`. The Host can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
@@ -427,7 +446,7 @@ Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.h
  - `host_deployOnStartup`: whether web applications from this host should be automatically deployed when Tomcat starts
  - `host_undeployoldversions`: whether to clean unused versions of web applications deployed using parallel deployment
  - `host_unpackwars`: whether to unpack web application archive (WAR) files 
- - `host_params`: optional Hash of additional parameters to put in the Host container where the key is the XML attribute name and the value, the attribute's value
+ - `host_params`: optional hash of additional attributes/values to put in the Host container
 
 #####`singlesignon_valve`
 Whether to enable the [Single Sign On Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Single_Sign_On_Valve). Boolean value. Defaults to `false`.
@@ -436,13 +455,45 @@ Whether to enable the [Single Sign On Valve](http://tomcat.apache.org/tomcat-8.0
 Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Access_Log_Valve). Boolean value. Defaults to `true`.
 
 #####`valves`
-An array of custom `Valve` entries to be added to the `Host` container. Each entry is to be supplied as a Hash of attributes/values for the `Valve` XML node. See [Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html) for the list of possible attributes.
+An array of custom `Valve` entries to be added to the `Host` container. Each entry is to be supplied as a hash of attributes/values for the `Valve` XML node. See [Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html) for the list of possible attributes.
 
 #####`globalnaming_resources`
-An array of `Resource` entries to be added to the `GlobalNamingResources` component. Each entry is to be supplied as a Hash of attributes/values for the `Resource` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html) for the list of possible attributes.
+An array of `Resource` entries to be added to the `GlobalNamingResources` component. Each entry is to be supplied as a hash of attributes/values for the `Resource` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html) for the list of possible attributes.
+
+**Context configuration**
+
+#####`context_params`
+A hash of attributes/values for the `Context` container. See [Context](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Attributes) for the list of possible attributes.
+
+#####`context_loader`
+A hash of attributes/values for the `Loader` nested component. See [Loader](http://tomcat.apache.org/tomcat-8.0-doc/config/loader.html) for the list of possible attributes.
+
+#####`context_manager`
+A hash of attributes/values for the `Manager` nested component. See [Manager](http://tomcat.apache.org/tomcat-8.0-doc/config/manager.html) for the list of possible attributes.
+
+#####`context_realm`
+A hash of attributes/values for the `Realm` nested component. See [Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html) for the list of possible attributes.
 
 #####`context_resources`
-An array of `ResourceLink` entries to be added to the context.xml file. Each entry is to be supplied as a Hash of attributes/values for the `Resource` XML node. See [Resource Links](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Links) for the list of possible attributes.
+A hash of attributes/values for the `Resources` nested component. See [Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/resources.html) for the list of possible attributes.
+
+#####`context_parameters`
+An array of `Parameter` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Parameter` XML node. See [Context Parameters](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Context_Parameters) for the list of possible attributes.
+
+#####`context_environments`
+An array of `Environment` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Environment` XML node. See [Environment Entries](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Environment_Entries) for the list of possible attributes.
+
+#####`context_listeners`
+An array of `Listener` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Listener` XML node. See [Lifecycle Listeners](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Lifecycle_Listeners) for the list of possible attributes.
+
+#####`context_valves`
+An array of `Valve` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Valve` XML node. See [Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html) for the list of possible attributes.
+
+#####`context_resourcedefs`
+An array of `Resource` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Resource` XML node. See [Resource Definitions](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Definitions) for the list of possible attributes.
+
+#####`context_resourcelinks`
+An array of `ResourceLink` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `ResourceLink` XML node. See [Resource Links](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Links) for the list of possible attributes.
 
 **Global configuration file / environment variables**
 

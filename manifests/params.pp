@@ -131,6 +131,12 @@ class tomcat::params {
       case $::operatingsystem {
         'Debian' : {
           case $::operatingsystemmajrelease {
+            '8'     : {
+              $version = '8.0.14'
+              $package_name = 'tomcat8'
+              # $version = '7.0.56'
+              # $package_name = 'tomcat7'
+            }
             '7'     : {
               $version = '7.0.28'
               $package_name = 'tomcat7'
