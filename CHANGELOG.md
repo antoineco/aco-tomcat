@@ -1,3 +1,8 @@
+###1.0.2
+
+* Add missing `ensure` attributes ([hanej](https://github.com/hanej))
+* Don't force pid file creation (fixes startup issue with Tomcat 6)
+
 ###1.0.1
 
 Fix documentation format and add Context config example
@@ -86,14 +91,14 @@ Fix compatibility with future parser in Puppet 3.7.4 ([PUP-3615](https://tickets
 
 * Numerous new Connector parameters (see documentation, thanks [etlweather](https://github.com/etlweather) for the help)
 * Split bulky server.xml template into independant fragments
-* New `context_resources` parameter: add ResourceLink elements to context.xml (by [etlweather](https://github.com/etlweather))
-* Added basic support for SimpleTcpCluster (by [etlweather](https://github.com/etlweather), experimental and undocumented, need contributions)
+* New `context_resources` parameter: add ResourceLink elements to context.xml ([etlweather](https://github.com/etlweather))
+* Added basic support for SimpleTcpCluster ([etlweather](https://github.com/etlweather), experimental and undocumented, need contributions)
 * Updated documentation
 
 ###0.7.0
 
-* New realm parameters: `$lockout_realm`, `$userdatabase_realm` (by [etlweather](https://github.com/etlweather))
-* New `globalnaming_resources` and `realms` parameters: possibility to define custom GlobalNamingResources and Realm elements (by [etlweather](https://github.com/etlweather))
+* New realm parameters: `$lockout_realm`, `$userdatabase_realm` ([etlweather](https://github.com/etlweather))
+* New `globalnaming_resources` and `realms` parameters: possibility to define custom GlobalNamingResources and Realm elements ([etlweather](https://github.com/etlweather))
 * Changed `root_path` default value (instance context)
 * Proper startup script for distributions without systemd
 * Better support of SuSE OS family
