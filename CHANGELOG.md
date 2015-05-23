@@ -1,3 +1,7 @@
+###1.0.1
+
+Fix documentation format and add Context config example
+
 ###1.0.0
 
 * New Context parameters for configuring context.xml:
