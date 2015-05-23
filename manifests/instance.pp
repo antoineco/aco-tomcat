@@ -250,7 +250,7 @@ define tomcat::instance (
     } } else {
     $service_name_real = $service_name
   }
-  
+ 
   if $archive_source == undef {
     $archive_source_real = "http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version}/bin/apache-tomcat-${version}.tar.gz"
   } else {
@@ -368,7 +368,7 @@ define tomcat::instance (
     } } else {
     $security_manager_real = $security_manager
   }
-  
+ 
   $engine_defaulthost_real = $engine_defaulthost ? {
     undef   => $host_name,
     default => $engine_defaulthost
@@ -377,7 +377,7 @@ define tomcat::instance (
   $java_opts_real = join($java_opts, ' ')
   $catalina_opts_real = join($catalina_opts, ' ')
   $jpda_opts_real = join($jpda_opts, ' ')
-  
+ 
   # generate params hash
   $server_params_real = merge(delete_undef_values({
     'port'     => $server_control_port,
@@ -509,7 +509,7 @@ define tomcat::instance (
     # ordering
     Staging::Extract <| title == "apache-tomcat-${version}.tar.gz" |> -> File <| tag == "instance_${name}_tree" |>
   }
-  
+ 
   # create/ensure instance directory tree
   if $catalina_base_real != $catalina_home_real {
     file {
@@ -587,7 +587,7 @@ define tomcat::instance (
       path   => "${catalina_base_real}/conf/policy.d/catalina.policy"
     }
   }
-  
+ 
   # pid file management
   if $::tomcat::install_from == 'archive' {
     file { "instance ${name} pid file":
@@ -649,6 +649,7 @@ define tomcat::instance (
 
         # create init script
         file { "${service_name_real} service unit":
+          ensure  => present,
           path    => "/etc/init.d/${service_name_real}",
           owner   => 'root',
           group   => 'root',
@@ -658,7 +659,7 @@ define tomcat::instance (
       }
     }
   }
-  
+ 
   service { $service_name_real:
     ensure  => $service_ensure,
     enable  => $service_enable,
@@ -757,7 +758,7 @@ define tomcat::instance (
       target  => "instance ${name} server configuration"
     }
   }
-  
+ 
   # Template uses:
   # - $ssl_connector
   # - $ssl_port
@@ -769,7 +770,7 @@ define tomcat::instance (
       target  => "instance ${name} server configuration"
     }
   }
-  
+ 
   # Template uses:
   # - $ajp_connector
   # - $ajp_port
@@ -784,7 +785,7 @@ define tomcat::instance (
       target  => "instance ${name} server configuration"
     }
   }
-  
+ 
   # Template uses:
   # - $connectors
   if $connectors and $connectors != [] {
@@ -794,7 +795,7 @@ define tomcat::instance (
       target  => "instance ${name} server configuration"
     }
   }
-  
+ 
   # Template uses:
   # - $engine_params_real
   concat::fragment { "instance ${name} server.xml engine":
@@ -1007,6 +1008,7 @@ define tomcat::instance (
   # - $jpda_opts_real
   # - $custom_variables
   file { "instance ${name} environment variables":
+    ensure  => present,
     path    => $config_path_real,
     content => template("${module_name}/common/setenv.erb"),
     owner   => $::tomcat::tomcat_user_real,
@@ -1079,10 +1081,12 @@ define tomcat::instance (
       } ->
       file {
         "instance ${name} manager.xml":
+          ensure  => present,
           path    => "${catalina_base_real}/conf/Catalina/${host_name}/manager.xml",
           content => template("${module_name}/instance/manager.xml.erb");
 
         "instance ${name} host-manager.xml":
+          ensure  => present,
           path    => "${catalina_base_real}/conf/Catalina/${host_name}/host-manager.xml",
           content => template("${module_name}/instance/host-manager.xml.erb")
       }
