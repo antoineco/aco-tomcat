@@ -297,7 +297,7 @@ define tomcat::instance (
   }
 
   if $catalina_pid == undef {
-    $catalina_pid_real = "/var/run/${service_name_real}.pid"
+    $catalina_pid_real = "/var/run/${service_name_real}/${service_name_real}.pid"
   } else {
     $catalina_pid_real = $catalina_pid
   }
@@ -587,12 +587,14 @@ define tomcat::instance (
       path   => "${catalina_base_real}/conf/policy.d/catalina.policy"
     }
   }
- 
-  # pid file management
+
+  # default pid file directory
   if $::tomcat::install_from == 'archive' {
-    file { "instance ${name} pid file":
-      ensure => present,
-      path   => $catalina_pid_real
+    file { "instance ${name} pid directory":
+      ensure => directory,
+      path   => "/var/run/${service_name_real}",
+      owner  => $::tomcat::tomcat_user_real,
+      group  => $::tomcat::tomcat_group_real
     }
   }
 

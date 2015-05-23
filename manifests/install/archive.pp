@@ -67,10 +67,12 @@ class tomcat::install::archive {
     tag    => 'tomcat_tree'
   }
  
-  # pid file management
-  file { 'tomcat pid file':
-    ensure => present,
-    path   => $::tomcat::catalina_pid_real
+  # default pid file directory
+  file { 'tomcat pid directory':
+    ensure => directory,
+    path   => "/var/run/${::tomcat::service_name_real}",
+    owner  => $::tomcat::tomcat_user_real,
+    group  => $::tomcat::tomcat_group_real
   }
 
   # warn if admin webapps were selected for installation
