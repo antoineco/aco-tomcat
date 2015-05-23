@@ -56,7 +56,7 @@ class tomcat::service::archive {
       content => template("${module_name}/instance/tomcat_init_generic.erb")
     }
   }
- 
+
   service { $::tomcat::service_name_real:
     ensure  => $::tomcat::service_ensure,
     enable  => $::tomcat::service_enable,
