@@ -324,7 +324,14 @@ class tomcat (
   }
 
   if $catalina_pid == undef {
-    $catalina_pid_real = "/var/run/${service_name_real}/${service_name_real}.pid"
+    case $install_from {
+      'package' : {
+        $catalina_pid_real = "/var/run/${service_name_real}.pid"
+      }
+      default   : {
+        $catalina_pid_real = "/var/run/${service_name_real}/${service_name_real}.pid"
+      }
+    }
   } else {
     $catalina_pid_real = $catalina_pid
   }
