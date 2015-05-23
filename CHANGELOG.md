@@ -1,3 +1,7 @@
+###1.0.3
+
+Fix regression due to changes in pid file management
+
 ###1.0.2
 
 * Add missing `ensure` attributes ([hanej](https://github.com/hanej))
