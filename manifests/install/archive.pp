@@ -59,12 +59,14 @@ class tomcat::install::archive {
     }
   }
 
-  file { $::tomcat::log_path_real:
-    ensure => directory,
-    path   => $::tomcat::log_path_real,
-    mode   => '0660',
-    alias  => 'tomcat logs directory',
-    tag    => 'tomcat_tree'
+  if !defined(File[$::tomcat::log_path_real]) {
+    file { $::tomcat::log_path_real:
+      ensure => directory,
+      path   => $::tomcat::log_path_real,
+      mode   => '0660',
+      alias  => 'tomcat logs directory',
+      tag    => 'tomcat_tree'
+    }
   }
 
   # default pid file directory
