@@ -51,6 +51,7 @@ class tomcat::config {
   $context_manager = $::tomcat::context_manager
   $context_realm = $::tomcat::context_realm
   $context_resources = $::tomcat::context_resources
+  $context_watchedresource = $::tomcat::context_watchedresource
   $context_parameters = $::tomcat::context_parameters
   $context_environments = $::tomcat::context_environments
   $context_listeners = $::tomcat::context_listeners
@@ -317,6 +318,16 @@ class tomcat::config {
     concat::fragment { 'context.xml resources':
       order   => 013,
       content => template("${module_name}/common/context.xml/013_resources.erb"),
+      target  => 'tomcat context configuration'
+    }
+  }
+
+  # Template uses:
+  # - $context_watchedresource
+  if $context_watchedresource and $context_watchedresource != [] {
+    concat::fragment { 'context.xml watchedresource':
+      order   => 014,
+      content => template("${module_name}/common/context.xml/014_watchedresource.erb"),
       target  => 'tomcat context configuration'
     }
   }

@@ -186,6 +186,7 @@ define tomcat::instance (
   $context_manager            = {},
   $context_realm              = {},
   $context_resources          = {},
+  $context_watchedresource    = ['WEB-INF/web.xml','${catalina.base}/conf/web.xml'],
   $context_parameters         = [],
   $context_environments       = [],
   $context_listeners          = [],
@@ -227,7 +228,7 @@ define tomcat::instance (
   # parameters validation
   validate_re($version, '^[0-9]|[0-9]u[0-9]{1,2}$', 'incorrect tomcat version number')
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
-  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
+  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_watchedresource, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
   validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
 
   # multi-version installation only supported with archive installation
@@ -921,6 +922,16 @@ define tomcat::instance (
     concat::fragment { "instance ${name} context.xml resources":
       order   => 013,
       content => template("${module_name}/common/context.xml/013_resources.erb"),
+      target  => "instance ${name} context configuration"
+    }
+  }
+
+  # Template uses:
+  # - $context_watchedresource
+  if $context_watchedresource and $context_watchedresource != [] {
+    concat::fragment { "instance ${name} context.xml watchedresource":
+      order   => 014,
+      content => template("${module_name}/common/context.xml/014_watchedresource.erb"),
       target  => "instance ${name} context configuration"
     }
   }

@@ -159,7 +159,7 @@ class { '::tomcat':
   …
   ajp_connector => true,
   ajp_port      => 8090,
-  ajp_params    => { address => '127.0.0.1', packetSize => 12288 }
+  ajp_params    => { 'address' => '127.0.0.1', 'packetSize' => 12288 }
 }
 ```
 
@@ -169,12 +169,12 @@ Configure custom connectors
 class { '::tomcat':
   …
   connectors => [
-    { port        => 9080,
-      protocol    => 'org.apache.coyote.http11.Http11Nio2Protocol',
-      maxPostSize => 2500000
+    { 'port'        => 9080,
+      'protocol'    => 'org.apache.coyote.http11.Http11Nio2Protocol',
+      'maxPostSize' => 2500000
     },
-    { port => 9081,
-      allowTrace => true
+    { 'port' => 9081,
+      'allowTrace' => true
     }
   ]
 }
@@ -186,10 +186,10 @@ Configure custom listeners
 class { '::tomcat':
   …
   listeners => [
-    { className => 'org.apache.catalina.storeconfig.StoreConfigLifecycleListener'
+    { 'className' => 'org.apache.catalina.storeconfig.StoreConfigLifecycleListener'
     },
-    { className     => 'org.apache.catalina.startup.UserConfig',
-      directoryName => 'public_html'
+    { 'className'     => 'org.apache.catalina.startup.UserConfig',
+      'directoryName' => 'public_html'
     }
 }
 ```
@@ -226,16 +226,16 @@ Configure main context.xml
 ```puppet
 class { '::tomcat':
   …
-  context_params  => { docBase => 'myapproot', useHttpOnly => false },
-  context_manager => { maxActiveSessions => 1000 },
+  context_params  => { 'docBase' => 'myapproot', 'useHttpOnly' => false },
+  context_manager => { 'maxActiveSessions' => 1000 },
   context_resourcelinks => [
-    { name   => 'linkToGlobalResource',
-      global => 'simpleValue',
-      type   => 'java.lang.Integer'
+    { 'name'   => 'linkToGlobalResource',
+      'global' => 'simpleValue',
+      'type'   => 'java.lang.Integer'
     },
-    { name   => 'appDataSource',
-      global => 'sharedDataSource',
-      type   => 'javax.sql.DataSource'
+    { 'name'   => 'appDataSource',
+      'global' => 'sharedDataSource',
+      'type'   => 'javax.sql.DataSource'
     }
   ]
 }
@@ -476,6 +476,9 @@ A hash of attributes/values for the `Realm` nested component. See [Realm](http:/
 
 #####`context_resources`
 A hash of attributes/values for the `Resources` nested component. See [Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/resources.html) for the list of possible attributes.
+
+#####`context_watchedresource`
+An array of `WatchedResource` entries to be added to the `Context` container. Each entry is to be supplied as a string. Defaults to `['WEB-INF/web.xml','${catalina.base}/conf/web.xml']`
 
 #####`context_parameters`
 An array of `Parameter` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Parameter` XML node. See [Context Parameters](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Context_Parameters) for the list of possible attributes.
