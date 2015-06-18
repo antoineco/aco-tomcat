@@ -59,7 +59,7 @@ class tomcat::install::archive {
     }
   }
 
-  if !defined($::tomcat::log_path_real) {
+  if !defined(File[$::tomcat::log_path_real]) {
     file { $::tomcat::log_path_real:
       ensure => directory,
       path   => $::tomcat::log_path_real,
