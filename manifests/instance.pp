@@ -965,32 +965,30 @@ define tomcat::instance (
         'package' : {
           $admin_webapps_path = $::osfamily ? {
             'Debian' => "/usr/share/${::tomcat::admin_webapps_package_name_real}",
-            default  => "\${catalina.home}/webapps"
+            default  => '${catalina.home}/webapps'
           } }
         default   : {
-          $admin_webapps_path = "\${catalina.home}/webapps"
+          $admin_webapps_path = '${catalina.home}/webapps'
         }
       }
 
-      file { "instance ${name} Catalina dir":
-        ensure  => directory,
-        path    => "${catalina_base_real}/conf/Catalina",
-        require => File["${catalina_base_real}/conf"]
+      file { ["${catalina_base_real}/conf/Catalina","${catalina_base_real}/conf/Catalina/${host_name}"]:
+        ensure  => directory
       } ->
-      file { "instance ${name} Catalina/${host_name} dir":
-        ensure => directory,
-        path   => "${catalina_base_real}/conf/Catalina/${host_name}"
-      } ->
-      file {
+      ::tomcat::context {
         "instance ${name} manager.xml":
-          ensure  => present,
-          path    => "${catalina_base_real}/conf/Catalina/${host_name}/manager.xml",
-          content => template("${module_name}/instance/manager.xml.erb");
+          path   => "${catalina_base_real}/conf/Catalina/${host_name}/manager.xml",
+          params => { 'path'    => '/manager',
+                      'docBase' => "${admin_webapps_path}/manager",
+                      'antiResourceLocking' => false,
+                      'privileged' => 'true' };
 
         "instance ${name} host-manager.xml":
-          ensure  => present,
-          path    => "${catalina_base_real}/conf/Catalina/${host_name}/host-manager.xml",
-          content => template("${module_name}/instance/host-manager.xml.erb")
+          path   => "${catalina_base_real}/conf/Catalina/${host_name}/host-manager.xml",
+          params => { 'path'    => '/host-manager',
+                      'docBase' => "${admin_webapps_path}/host-manager",
+                      'antiResourceLocking' => false,
+                      'privileged' => 'true' }
       }
     } else {
       # warn if admin webapps were selected for installation
