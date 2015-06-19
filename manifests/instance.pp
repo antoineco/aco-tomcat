@@ -871,17 +871,17 @@ define tomcat::instance (
   # generate and manage context configuration
   ::tomcat::context { "instance ${name} default":
     path             => "${catalina_base_real}/conf/context.xml",
-    params           => $context_params
-    loader           => $context_loader
-    manager          => $context_manager
-    realm            => $context_realm
-    resources        => $context_resources
-    watchedresources => $context_watchedresources
-    parameters       => $context_parameters
-    environments     => $context_environments
-    listeners        => $context_listeners
-    valves           => $context_valves
-    resourcedefs     => $context_resourcedefs
+    params           => $context_params,
+    loader           => $context_loader,
+    manager          => $context_manager,
+    realm            => $context_realm,
+    resources        => $context_resources,
+    watchedresources => $context_watchedresources,
+    parameters       => $context_parameters,
+    environments     => $context_environments,
+    listeners        => $context_listeners,
+    valves           => $context_valves,
+    resourcedefs     => $context_resourcedefs,
     resourcelinks    => $context_resourcelinks
   }
 
