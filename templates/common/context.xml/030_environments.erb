@@ -1,4 +1,4 @@
-<%- [@context_environments].flatten.compact.each do |environment| %>
+<%- [@environments].flatten.compact.each do |environment| %>
   <%- environment.each_pair do |attrib, value| -%>
     <%- if attrib == environment.keys.first -%>
   <Environment <%= attrib %>="<%= value %>"<% if attrib == environment.keys.last %> /><% end %>

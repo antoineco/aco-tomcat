@@ -186,7 +186,7 @@ define tomcat::instance (
   $context_manager            = {},
   $context_realm              = {},
   $context_resources          = {},
-  $context_watchedresource    = ['WEB-INF/web.xml','${catalina.base}/conf/web.xml'],
+  $context_watchedresources   = ['WEB-INF/web.xml','${catalina.base}/conf/web.xml'],
   $context_parameters         = [],
   $context_environments       = [],
   $context_listeners          = [],
@@ -228,7 +228,7 @@ define tomcat::instance (
   # parameters validation
   validate_re($version, '^[0-9]|[0-9]u[0-9]{1,2}$', 'incorrect tomcat version number')
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
-  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_watchedresource, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
+  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
   validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
 
   # multi-version installation only supported with archive installation
@@ -869,139 +869,21 @@ define tomcat::instance (
   }
 
   # generate and manage context configuration
-  concat { "instance ${name} context configuration":
-    path   => "${catalina_base_real}/conf/context.xml",
-    owner  => $::tomcat::tomcat_user_real,
-    group  => $::tomcat::tomcat_group_real,
-    mode   => '0600',
-    order  => 'numeric',
-    notify => Service[$::tomcat::service_name_real]
+  ::tomcat::context { "instance ${name} default":
+    path             => "${catalina_base_real}/conf/context.xml",
+    params           => $context_params
+    loader           => $context_loader
+    manager          => $context_manager
+    realm            => $context_realm
+    resources        => $context_resources
+    watchedresources => $context_watchedresources
+    parameters       => $context_parameters
+    environments     => $context_environments
+    listeners        => $context_listeners
+    valves           => $context_valves
+    resourcedefs     => $context_resourcedefs
+    resourcelinks    => $context_resourcelinks
   }
-
-  # Template uses:
-  # - $context_params
-  concat::fragment { "instance ${name} context.xml header":
-    order   => 0,
-    content => template("${module_name}/common/context.xml/000_header.erb"),
-    target  => "instance ${name} context configuration"
-  }
-
-  # Template uses:
-  # - $context_loader
-  if $context_loader and $context_loader != {} {
-    concat::fragment { "instance ${name} context.xml loader":
-      order   => 010,
-      content => template("${module_name}/common/context.xml/010_loader.erb"),
-      target  => "instance ${name} context configuration"
-    }
-  }
-
-  # Template uses:
-  # - $context_manager
-  if $context_manager and $context_manager != {} {
-    concat::fragment { "instance ${name} context.xml manager":
-      order   => 011,
-      content => template("${module_name}/common/context.xml/011_manager.erb"),
-      target  => "instance ${name} context configuration"
-    }
-  }
-
-  # Template uses:
-  # - $context_realm
-  if $context_realm and $context_realm != {} {
-    concat::fragment { "instance ${name} context.xml realm":
-      order   => 012,
-      content => template("${module_name}/common/context.xml/012_realm.erb"),
-      target  => "instance ${name} context configuration"
-    }
-  }
-
-  # Template uses:
-  # - $context_resources
-  if $context_resources and $context_resources != {} {
-    concat::fragment { "instance ${name} context.xml resources":
-      order   => 013,
-      content => template("${module_name}/common/context.xml/013_resources.erb"),
-      target  => "instance ${name} context configuration"
-    }
-  }
-
-  # Template uses:
-  # - $context_watchedresource
-  if $context_watchedresource and $context_watchedresource != [] {
-    concat::fragment { "instance ${name} context.xml watchedresource":
-      order   => 014,
-      content => template("${module_name}/common/context.xml/014_watchedresource.erb"),
-      target  => "instance ${name} context configuration"
-    }
-  }
-
-  # Template uses:
-  # - $context_parameters
-  if $context_parameters and $context_parameters != [] {
-    concat::fragment { "instance ${name} context.xml parameters":
-      order   => 020,
-      content => template("${module_name}/common/context.xml/020_parameters.erb"),
-      target  => "instance ${name} context configuration"
-    }
-  }
-
-  # Template uses:
-  # - $context_environments
-  if $context_environments and $context_environments != [] {
-    concat::fragment { "instance ${name} context.xml environments":
-      order   => 030,
-      content => template("${module_name}/common/context.xml/030_environments.erb"),
-      target  => "instance ${name} context configuration"
-    }
-  }
-
-  # Template uses:
-  # - $context_listeners
-  if $context_listeners and $context_listeners != [] {
-    concat::fragment { "instance ${name} context.xml listeners":
-      order   => 040,
-      content => template("${module_name}/common/context.xml/040_listeners.erb"),
-      target  => "instance ${name} context configuration"
-    }
-  }
-
-  # Template uses:
-  # - $context_valves
-  if $context_valves and $context_valves != [] {
-    concat::fragment { "instance ${name} context.xml valves":
-      order   => 050,
-      content => template("${module_name}/common/context.xml/050_valves.erb"),
-      target  => "instance ${name} context configuration"
-    }
-  }
-
-  # Template uses:
-  # - $context_resourcedefs
-  if $context_resourcedefs and $context_resourcedefs != [] {
-    concat::fragment { "instance ${name} context.xml resourcedefs":
-      order   => 060,
-      content => template("${module_name}/common/context.xml/060_resourcedefs.erb"),
-      target  => "instance ${name} context configuration"
-    }
-  }
-
-  # Template uses:
-  # - $context_resourcelinks
-  if $context_resourcelinks and $context_resourcelinks != [] {
-    concat::fragment { "instance ${name} context.xml resourcelinks":
-      order   => 070,
-      content => template("${module_name}/common/context.xml/070_resourcelinks.erb"),
-      target  => "instance ${name} context configuration"
-    }
-  }
-
-  concat::fragment { "instance ${name} context.xml footer":
-    order   => 200,
-    content => template("${module_name}/common/context.xml/200_footer.erb"),
-    target  => "instance ${name} context configuration"
-  }
-
 
   # generate and manage global parameters
   # Template uses:

@@ -1,4 +1,4 @@
-<%- [@context_parameters].flatten.compact.each do |parameter| %>
+<%- [@parameters].flatten.compact.each do |parameter| %>
   <%- parameter.each_pair do |attrib, value| -%>
     <%- if attrib == parameter.keys.first -%>
   <Parameter <%= attrib %>="<%= value %>"<% if attrib == parameter.keys.last %> /><% end %>

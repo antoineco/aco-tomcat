@@ -1,4 +1,4 @@
-<%- [@context_resourcelinks].flatten.compact.each do |resourcelink| %>
+<%- [@resourcelinks].flatten.compact.each do |resourcelink| %>
   <%- resourcelink.each_pair do |attrib, value| -%>
     <%- if attrib == resourcelink.keys.first -%>
   <ResourceLink <%= attrib %>="<%= value %>"<% if attrib == resourcelink.keys.last %> /><% end %>

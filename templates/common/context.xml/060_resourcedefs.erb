@@ -1,4 +1,4 @@
-<%- [@context_resourcedefs].flatten.compact.each do |resourcedef| %>
+<%- [@resourcedefs].flatten.compact.each do |resourcedef| %>
   <%- resourcedef.each_pair do |attrib, value| -%>
     <%- if attrib == resourcedef.keys.first -%>
   <Resource <%= attrib %>="<%= value %>"<% if attrib == resourcedef.keys.last %> /><% end %>

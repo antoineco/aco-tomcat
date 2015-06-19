@@ -4,6 +4,6 @@
 # Managed by Puppet
 # ******************
 -->
-<Context<%- if @context_params and ! @context_params.empty? -%>
-  <%- @context_params.each_pair do |attrib, value| -%> <%= attrib %>="<%= value %>"<%- end -%>
+<Context<%- if @params and ! @params.empty? -%>
+  <%- @params.each_pair do |attrib, value| -%> <%= attrib %>="<%= value %>"<%- end -%>
 <%- end -%>>
