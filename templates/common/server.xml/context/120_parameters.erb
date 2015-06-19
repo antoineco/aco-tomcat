@@ -1,0 +1,9 @@
+<%- [@host_context_parameters].flatten.compact.each do |parameter| %>
+  <%- parameter.each_pair do |attrib, value| -%>
+    <%- if attrib == parameter.keys.first -%>
+        <Parameter <%= attrib %>="<%= value %>"<% if attrib == parameter.keys.last %> /><% end %>
+    <%- else -%>
+                   <%= attrib %>="<%= value %>"<% if attrib == parameter.keys.last %> /><% end %>
+    <%- end -%>
+  <%- end -%>
+<%- end -%>
