@@ -22,6 +22,8 @@ define tomcat::context (
 
   # parameters validation
   validate_absolute_path($path)
+  validate_array($watchedresources, $parameters, $environments, $listeners, $valves, $resourcedefs, $resourcelinks)
+  validate_hash($params, $loader, $manager, $realm, $resources)
 
   # generate and manage context configuration
   concat { "${name} tomcat context":
