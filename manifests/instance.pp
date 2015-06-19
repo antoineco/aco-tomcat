@@ -51,174 +51,188 @@
 #  }
 #
 define tomcat::instance (
-  $root_path                  = '/var/lib/tomcats',
-  $version                    = $::tomcat::version,
-  $archive_source             = undef,
-  $service_name               = undef,
-  $service_ensure             = 'running',
-  $service_enable             = true,
-  $service_start              = undef,
-  $service_stop               = undef,
-  $enable_extras              = false,
-  $manage_firewall            = false,
+  $root_path                    = '/var/lib/tomcats',
+  $version                      = $::tomcat::version,
+  $archive_source               = undef,
+  $service_name                 = undef,
+  $service_ensure               = 'running',
+  $service_enable               = true,
+  $service_start                = undef,
+  $service_stop                 = undef,
+  $enable_extras                = false,
+  $manage_firewall              = false,
   #..................................................................................
   # security and administration
   #..................................................................................
-  $admin_webapps              = true,
-  $create_default_admin       = false,
-  $admin_user                 = 'tomcatadmin',
-  $admin_password             = 'password',
+  $admin_webapps                = true,
+  $create_default_admin         = false,
+  $admin_user                   = 'tomcatadmin',
+  $admin_password               = 'password',
   #..................................................................................
   # logging
   #..................................................................................
-  $log_path                   = undef,
-  $log4j_enable               = false,
-  $log4j_conf_type            = 'ini',
-  $log4j_conf_source          = "puppet:///modules/${module_name}/log4j/log4j.properties",
+  $log_path                     = undef,
+  $log4j_enable                 = false,
+  $log4j_conf_type              = 'ini',
+  $log4j_conf_source            = "puppet:///modules/${module_name}/log4j/log4j.properties",
   #..................................................................................
   # server configuration
   #..................................................................................
   # server
-  $server_control_port        = 8006,
-  $server_shutdown            = 'SHUTDOWN',
-  $server_address             = undef,
-  $server_params              = {},
+  $server_control_port          = 8006,
+  $server_shutdown              = 'SHUTDOWN',
+  $server_address               = undef,
+  $server_params                = {},
   #..................................................................................
   # listeners
-  $apr_listener               = false,
-  $apr_sslengine              = undef,
+  $apr_listener                 = false,
+  $apr_sslengine                = undef,
   # jmx
-  $jmx_listener               = false,
-  $jmx_registry_port          = 8052,
-  $jmx_server_port            = 8053,
-  $jmx_bind_address           = '',
+  $jmx_listener                 = false,
+  $jmx_registry_port            = 8052,
+  $jmx_server_port              = 8053,
+  $jmx_bind_address             = '',
   # custom listeners
-  $listeners                  = [],
+  $listeners                    = [],
   #..................................................................................
   # service
-  $svc_name                   = 'Catalina',
-  $svc_params                 = {},
+  $svc_name                     = 'Catalina',
+  $svc_params                   = {},
   #..................................................................................
   # executors
-  $threadpool_executor        = false,
-  $threadpool_name            = 'tomcatThreadPool',
-  $threadpool_nameprefix      = 'catalina-exec-',
-  $threadpool_maxthreads      = undef,
-  $threadpool_minsparethreads = undef,
-  $threadpool_params          = {},
+  $threadpool_executor          = false,
+  $threadpool_name              = 'tomcatThreadPool',
+  $threadpool_nameprefix        = 'catalina-exec-',
+  $threadpool_maxthreads        = undef,
+  $threadpool_minsparethreads   = undef,
+  $threadpool_params            = {},
   # custom executors
-  $executors                  = [],
+  $executors                    = [],
   #..................................................................................
   # connectors
   # http connector
-  $http_connector             = true,
-  $http_port                  = 8081,
-  $http_protocol              = undef,
-  $http_use_threadpool        = false,
-  $http_connectiontimeout     = undef,
-  $http_uriencoding           = undef,
-  $http_compression           = undef,
-  $http_maxthreads            = undef,
-  $http_params                = {},
+  $http_connector               = true,
+  $http_port                    = 8081,
+  $http_protocol                = undef,
+  $http_use_threadpool          = false,
+  $http_connectiontimeout       = undef,
+  $http_uriencoding             = undef,
+  $http_compression             = undef,
+  $http_maxthreads              = undef,
+  $http_params                  = {},
   # ssl connector
-  $ssl_connector              = false,
-  $ssl_port                   = 8444,
-  $ssl_protocol               = undef,
-  $ssl_use_threadpool         = false,
-  $ssl_connectiontimeout      = undef,
-  $ssl_uriencoding            = undef,
-  $ssl_compression            = false,
-  $ssl_maxthreads             = undef,
-  $ssl_clientauth             = undef,
-  $ssl_sslprotocol            = undef,
-  $ssl_keystorefile           = undef,
-  $ssl_params                 = {},
+  $ssl_connector                = false,
+  $ssl_port                     = 8444,
+  $ssl_protocol                 = undef,
+  $ssl_use_threadpool           = false,
+  $ssl_connectiontimeout        = undef,
+  $ssl_uriencoding              = undef,
+  $ssl_compression              = false,
+  $ssl_maxthreads               = undef,
+  $ssl_clientauth               = undef,
+  $ssl_sslprotocol              = undef,
+  $ssl_keystorefile             = undef,
+  $ssl_params                   = {},
   # ajp connector
-  $ajp_connector              = true,
-  $ajp_port                   = 8010,
-  $ajp_protocol               = 'AJP/1.3',
-  $ajp_use_threadpool         = false,
-  $ajp_connectiontimeout      = undef,
-  $ajp_uriencoding            = undef,
-  $ajp_maxthreads             = undef,
-  $ajp_params                 = {},
+  $ajp_connector                = true,
+  $ajp_port                     = 8010,
+  $ajp_protocol                 = 'AJP/1.3',
+  $ajp_use_threadpool           = false,
+  $ajp_connectiontimeout        = undef,
+  $ajp_uriencoding              = undef,
+  $ajp_maxthreads               = undef,
+  $ajp_params                   = {},
   # custom connectors
-  $connectors                 = [],
+  $connectors                   = [],
   #..................................................................................
   # engine
-  $engine_name                = 'Catalina',
-  $engine_defaulthost         = undef,
-  $engine_jvmroute            = undef,
-  $engine_params              = {},
+  $engine_name                  = 'Catalina',
+  $engine_defaulthost           = undef,
+  $engine_jvmroute              = undef,
+  $engine_params                = {},
   #..................................................................................
   # cluster (experimental)
-  $use_simpletcpcluster       = false,
-  $cluster_membership_port    = '45565',
-  $cluster_membership_domain  = 'tccluster',
-  $cluster_receiver_address   = undef,
+  $use_simpletcpcluster         = false,
+  $cluster_membership_port      = '45565',
+  $cluster_membership_domain    = 'tccluster',
+  $cluster_receiver_address     = undef,
   #..................................................................................
   # realms
-  $lockout_realm              = true,
-  $userdatabase_realm         = true,
-  $realms                     = [],
+  $lockout_realm                = true,
+  $userdatabase_realm           = true,
+  $realms                       = [],
   #..................................................................................
   # host
-  $host_name                  = 'localhost',
-  $host_appbase               = undef,
-  $host_autodeploy            = undef,
-  $host_deployOnStartup       = undef,
-  $host_undeployoldversions   = undef,
-  $host_unpackwars            = undef,
-  $host_params                = {},
+  $host_name                    = 'localhost',
+  $host_appbase                 = undef,
+  $host_autodeploy              = undef,
+  $host_deployOnStartup         = undef,
+  $host_undeployoldversions     = undef,
+  $host_unpackwars              = undef,
+  $host_params                  = {},
   #..................................................................................
   # valves
-  $singlesignon_valve         = false,
-  $accesslog_valve            = true,
-  $valves                     = [],
+  $singlesignon_valve           = false,
+  $accesslog_valve              = true,
+  $valves                       = [],
   #..................................................................................
   # misc
-  $globalnaming_resources     = [],
+  $globalnaming_resources       = [],
+  #..................................................................................
+  # host context configuration
+  $host_context_params          = {},
+  $host_context_loader          = {},
+  $host_context_manager         = {},
+  $host_context_realm           = {},
+  $host_context_resources       = {},
+  $host_context_watchedresource = [],
+  $host_context_parameters      = [],
+  $host_context_environments    = [],
+  $host_context_listeners       = [],
+  $host_context_valves          = [],
+  $host_context_resourcedefs    = [],
+  $host_context_resourcelinks   = [],
   #..................................................................................
   # context configuration
   #..................................................................................
-  $context_params             = {},
-  $context_loader             = {},
-  $context_manager            = {},
-  $context_realm              = {},
-  $context_resources          = {},
-  $context_watchedresource    = ['WEB-INF/web.xml','${catalina.base}/conf/web.xml'],
-  $context_parameters         = [],
-  $context_environments       = [],
-  $context_listeners          = [],
-  $context_valves             = [],
-  $context_resourcedefs       = [],
-  $context_resourcelinks      = [],
+  $context_params               = {},
+  $context_loader               = {},
+  $context_manager              = {},
+  $context_realm                = {},
+  $context_resources            = {},
+  $context_watchedresource      = ['WEB-INF/web.xml','${catalina.base}/conf/web.xml'],
+  $context_parameters           = [],
+  $context_environments         = [],
+  $context_listeners            = [],
+  $context_valves               = [],
+  $context_resourcedefs         = [],
+  $context_resourcelinks        = [],
   #..................................................................................
   # environment variables
   #..................................................................................
-  $config_path                = undef,
+  $config_path                  = undef,
   # catalina
-  $catalina_home              = undef,
-  $catalina_base              = undef,
-  $jasper_home                = undef,
-  $catalina_tmpdir            = undef,
-  $catalina_pid               = undef,
-  $catalina_opts              = [],
+  $catalina_home                = undef,
+  $catalina_base                = undef,
+  $jasper_home                  = undef,
+  $catalina_tmpdir              = undef,
+  $catalina_pid                 = undef,
+  $catalina_opts                = [],
   # java
-  $java_home                  = undef,
-  $java_opts                  = ['-server'],
+  $java_home                    = undef,
+  $java_opts                    = ['-server'],
   # debug
-  $jpda_enable                = false,
-  $jpda_transport             = undef,
-  $jpda_address               = undef,
-  $jpda_suspend               = undef,
-  $jpda_opts                  = [],
+  $jpda_enable                  = false,
+  $jpda_transport               = undef,
+  $jpda_address                 = undef,
+  $jpda_suspend                 = undef,
+  $jpda_opts                    = [],
   # other
-  $security_manager           = false,
-  $lang                       = undef,
-  $shutdown_wait              = 30,
-  $shutdown_verbose           = false,
-  $custom_variables           = {}) {
+  $security_manager             = false,
+  $lang                         = undef,
+  $shutdown_wait                = 30,
+  $shutdown_verbose             = false,
+  $custom_variables             = {}) {
   # The base class must be included first
   if !defined(Class['tomcat']) {
     fail('You must include the tomcat base class before using any tomcat defined resources')
@@ -228,8 +242,8 @@ define tomcat::instance (
   # parameters validation
   validate_re($version, '^[0-9]|[0-9]u[0-9]{1,2}$', 'incorrect tomcat version number')
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
-  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_watchedresource, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
-  validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
+  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $host_context_watchedresource, $host_context_parameters, $host_context_environments, $host_context_listeners, $host_context_valves, $host_context_resourcedefs, $host_context_resourcelinks, $context_watchedresource, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
+  validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $host_context_params, $host_context_loader, $host_context_manager, $host_context_realm, $host_context_resources, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
 
   # multi-version installation only supported with archive installation
   if $version != $::tomcat::version and $tomcat::install_from == 'package' {
@@ -686,14 +700,14 @@ define tomcat::instance (
     owner  => $::tomcat::tomcat_user_real,
     group  => $::tomcat::tomcat_group_real,
     mode   => '0600',
-    order  => 'numeric',
+    order  => 'alpha',
     notify => Service[$service_name_real]
   }
 
   # Template uses:
   # - $server_params_real
   concat::fragment { "instance ${name} server.xml header":
-    order   => 0,
+    order   => '000',
     content => template("${module_name}/common/server.xml/000_header.erb"),
     target  => "instance ${name} server configuration"
   }
@@ -709,7 +723,7 @@ define tomcat::instance (
   # - $version
   # - $maj_version
   concat::fragment { "instance ${name} server.xml listeners":
-    order   => 10,
+    order   => '010',
     content => template("${module_name}/common/server.xml/010_listeners.erb"),
     target  => "instance ${name} server configuration"
   }
@@ -719,7 +733,7 @@ define tomcat::instance (
   # - $globalnaming_resources
   if $userdatabase_realm or ($globalnaming_resources and $globalnaming_resources != []) {
     concat::fragment { "instance ${name} server.xml globalnamingresources":
-      order   => 20,
+      order   => '020',
       content => template("${module_name}/common/server.xml/020_globalnamingresources.erb"),
       target  => "instance ${name} server configuration"
     }
@@ -728,7 +742,7 @@ define tomcat::instance (
   # Template uses:
   # - $svc_params_real
   concat::fragment { "instance ${name} server.xml service":
-    order   => 30,
+    order   => '030',
     content => template("${module_name}/common/server.xml/030_service.erb"),
     target  => "instance ${name} server configuration"
   }
@@ -739,7 +753,7 @@ define tomcat::instance (
   # - $threadpool_params_real
   if $threadpool_executor {
     concat::fragment { "instance ${name} server.xml threadpool executor":
-      order   => 40,
+      order   => '040',
       content => template("${module_name}/common/server.xml/040_threadpool_executor.erb"),
       target  => "instance ${name} server configuration"
     }
@@ -749,7 +763,7 @@ define tomcat::instance (
   # - $executors
   if $executors and $executors != [] {
     concat::fragment { "instance ${name} server.xml executors":
-      order   => 41,
+      order   => '041',
       content => template("${module_name}/common/server.xml/041_executors.erb"),
       target  => "instance ${name} server configuration"
     }
@@ -763,7 +777,7 @@ define tomcat::instance (
   # - $ssl_port
   if $http_connector {
     concat::fragment { "instance ${name} server.xml http connector":
-      order   => 50,
+      order   => '050',
       content => template("${module_name}/common/server.xml/050_http_connector.erb"),
       target  => "instance ${name} server configuration"
     }
@@ -775,7 +789,7 @@ define tomcat::instance (
   # - $ssl_params_real
   if $ssl_connector {
     concat::fragment { "instance ${name} server.xml ssl connector":
-      order   => 51,
+      order   => '051',
       content => template("${module_name}/common/server.xml/051_ssl_connector.erb"),
       target  => "instance ${name} server configuration"
     }
@@ -790,7 +804,7 @@ define tomcat::instance (
   # - $ssl_port
   if $ajp_connector {
     concat::fragment { "instance ${name} server.xml ajp connector":
-      order   => 52,
+      order   => '052',
       content => template("${module_name}/common/server.xml/052_ajp_connector.erb"),
       target  => "instance ${name} server configuration"
     }
@@ -800,7 +814,7 @@ define tomcat::instance (
   # - $connectors
   if $connectors and $connectors != [] {
     concat::fragment { "instance ${name} server.xml connectors":
-      order   => 53,
+      order   => '053',
       content => template("${module_name}/common/server.xml/053_connectors.erb"),
       target  => "instance ${name} server configuration"
     }
@@ -809,7 +823,7 @@ define tomcat::instance (
   # Template uses:
   # - $engine_params_real
   concat::fragment { "instance ${name} server.xml engine":
-    order   => 60,
+    order   => '060',
     content => template("${module_name}/common/server.xml/060_engine.erb"),
     target  => "instance ${name} server configuration"
   }
@@ -821,7 +835,7 @@ define tomcat::instance (
   # - $cluster_receiver_address
   if $use_simpletcpcluster {
     concat::fragment { "instance ${name} server.xml cluster":
-      order   => 70,
+      order   => '070',
       content => template("${module_name}/common/server.xml/070_cluster.erb"),
       target  => "instance ${name} server configuration"
     }
@@ -833,7 +847,7 @@ define tomcat::instance (
   # - $realms
   if $lockout_realm or $userdatabase_realm or ($realms and $realms != []) {
     concat::fragment { "instance ${name} server.xml realms":
-      order   => 80,
+      order   => '080',
       content => template("${module_name}/common/server.xml/080_realms.erb"),
       target  => "instance ${name} server configuration"
     }
@@ -843,7 +857,7 @@ define tomcat::instance (
   # - $host_name
   # - $host_params_real
   concat::fragment { "instance ${name} server.xml host":
-    order   => 90,
+    order   => '090',
     content => template("${module_name}/common/server.xml/090_host.erb"),
     target  => "instance ${name} server configuration"
   }
@@ -856,14 +870,142 @@ define tomcat::instance (
   # - $maj_version
   if $singlesignon_valve or $accesslog_valve or ($valves and $valves != []) {
     concat::fragment { "instance ${name} server.xml valves":
-      order   => 100,
+      order   => '100',
       content => template("${module_name}/common/server.xml/100_valves.erb"),
       target  => "instance ${name} server configuration"
     }
   }
 
+  # Template uses:
+  # - $host_context_params
+  if $host_context_params and $host_context_params != {} {
+    concat::fragment { "instance ${name} server.xml context":
+      order   => '101',
+      content => template("${module_name}/common/server.xml/context/101_context.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  # Template uses:
+  # - $host_context_loader
+  if $host_context_loader and $host_context_loader != {} {
+    concat::fragment { "instance ${name} server.xml context loader":
+      order   => '110',
+      content => template("${module_name}/common/server.xml/context/110_loader.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  # Template uses:
+  # - $host_context_manager
+  if $host_context_manager and $host_context_manager != {} {
+    concat::fragment { "instance ${name} server.xml context manager":
+      order   => '111',
+      content => template("${module_name}/common/server.xml/context/111_manager.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  # Template uses:
+  # - $host_context_realm
+  if $host_context_realm and $host_context_realm != {} {
+    concat::fragment { "instance ${name} server.xml context realm":
+      order   => '112',
+      content => template("${module_name}/common/server.xml/context/112_realm.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  # Template uses:
+  # - $host_context_resources
+  if $host_context_resources and $host_context_resources != {} {
+    concat::fragment { "instance ${name} server.xml context resources":
+      order   => '113',
+      content => template("${module_name}/common/server.xml/context/113_resources.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  # Template uses:
+  # - $host_context_watchedresource
+  if $host_context_watchedresource and $host_context_watchedresource != [] {
+    concat::fragment { "instance ${name} server.xml context watchedresource":
+      order   => '114',
+      content => template("${module_name}/common/server.xml/context/114_watchedresource.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  # Template uses:
+  # - $host_context_parameters
+  if $host_context_parameters and $host_context_parameters != [] {
+    concat::fragment { "instance ${name} server.xml context parameters":
+      order   => '120',
+      content => template("${module_name}/common/server.xml/context/120_parameters.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  # Template uses:
+  # - $host_context_environments
+  if $host_context_environments and $host_context_environments != [] {
+    concat::fragment { "instance ${name} server.xml context environments":
+      order   => '130',
+      content => template("${module_name}/common/server.xml/context/130_environments.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  # Template uses:
+  # - $host_context_listeners
+  if $host_context_listeners and $host_context_listeners != [] {
+    concat::fragment { "instance ${name} server.xml context listeners":
+      order   => '140',
+      content => template("${module_name}/common/server.xml/context/140_listeners.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  # Template uses:
+  # - $host_context_valves
+  if $host_context_valves and $host_context_valves != [] {
+    concat::fragment { "instance ${name} server.xml context valves":
+      order   => '150',
+      content => template("${module_name}/common/server.xml/context/150_valves.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  # Template uses:
+  # - $host_context_resourcedefs
+  if $host_context_resourcedefs and $host_context_resourcedefs != [] {
+    concat::fragment { "instance ${name} server.xml context resourcedefs":
+      order   => '160',
+      content => template("${module_name}/common/server.xml/context/160_resourcedefs.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  # Template uses:
+  # - $host_context_resourcelinks
+  if $host_context_resourcelinks and $host_context_resourcelinks != [] {
+    concat::fragment { "instance ${name} server.xml context resourcelinks":
+      order   => '170',
+      content => template("${module_name}/common/server.xml/context/170_resourcelinks.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
+  if $host_context_params and $host_context_params != {} {
+    concat::fragment { "instance ${name} server.xml context footer":
+      order   => '199',
+      content => template("${module_name}/common/server.xml/context/199_footer.erb"),
+      target  => "instance ${name} server configuration"
+    }
+  }
+
   concat::fragment { "instance ${name} server.xml footer":
-    order   => 200,
+    order   => '200',
     content => template("${module_name}/common/server.xml/200_footer.erb"),
     target  => "instance ${name} server configuration"
   }

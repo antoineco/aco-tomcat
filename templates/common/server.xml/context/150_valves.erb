@@ -1,0 +1,9 @@
+<%- [@host_context_valves].flatten.compact.each do |valve| %>
+  <%- valve.each_pair do |attrib, value| -%>
+    <%- if attrib == valve.keys.first -%>
+        <Valve <%= attrib %>="<%= value %>"<% if attrib == valve.keys.last %> /><% end %>
+    <%- else -%>
+               <%= attrib %>="<%= value %>"<% if attrib == valve.keys.last %> /><% end %>
+    <%- end -%>
+  <%- end -%>
+<%- end -%>

@@ -72,188 +72,202 @@ class tomcat (
   #..................................................................................
   # packages and service
   #..................................................................................
-  $install_from               = 'package',
-  $version                    = $::tomcat::params::version,
-  $archive_source             = undef,
-  $package_name               = $::tomcat::params::package_name,
-  $service_name               = undef,
-  $service_ensure             = 'running',
-  $service_enable             = true,
-  $service_start              = undef,
-  $service_stop               = undef,
-  $tomcat_user                = undef,
-  $tomcat_group               = undef,
-  $tomcat_native              = false,
-  $tomcat_native_package_name = $::tomcat::params::tomcat_native_package_name,
-  $log4j                      = false,
-  $log4j_package_name         = $::tomcat::params::log4j_package_name,
-  $enable_extras              = false,
-  $manage_firewall            = false,
+  $install_from                 = 'package',
+  $version                      = $::tomcat::params::version,
+  $archive_source               = undef,
+  $package_name                 = $::tomcat::params::package_name,
+  $service_name                 = undef,
+  $service_ensure               = 'running',
+  $service_enable               = true,
+  $service_start                = undef,
+  $service_stop                 = undef,
+  $tomcat_user                  = undef,
+  $tomcat_group                 = undef,
+  $tomcat_native                = false,
+  $tomcat_native_package_name   = $::tomcat::params::tomcat_native_package_name,
+  $log4j                        = false,
+  $log4j_package_name           = $::tomcat::params::log4j_package_name,
+  $enable_extras                = false,
+  $manage_firewall              = false,
   #..................................................................................
   # security and administration
   #..................................................................................
-  $admin_webapps              = true,
-  $admin_webapps_package_name = undef,
-  $create_default_admin       = false,
-  $admin_user                 = 'tomcatadmin',
-  $admin_password             = 'password',
+  $admin_webapps                = true,
+  $admin_webapps_package_name   = undef,
+  $create_default_admin         = false,
+  $admin_user                   = 'tomcatadmin',
+  $admin_password               = 'password',
   #..................................................................................
   # logging
   #..................................................................................
-  $log_path                   = undef,
-  $log4j_enable               = false,
-  $log4j_conf_type            = 'ini',
-  $log4j_conf_source          = "puppet:///modules/${module_name}/log4j/log4j.properties",
+  $log_path                     = undef,
+  $log4j_enable                 = false,
+  $log4j_conf_type              = 'ini',
+  $log4j_conf_source            = "puppet:///modules/${module_name}/log4j/log4j.properties",
   #..................................................................................
   # server configuration
   #..................................................................................
   # server
-  $server_control_port        = 8005,
-  $server_shutdown            = 'SHUTDOWN',
-  $server_address             = undef,
-  $server_params              = {},
+  $server_control_port          = 8005,
+  $server_shutdown              = 'SHUTDOWN',
+  $server_address               = undef,
+  $server_params                = {},
   #..................................................................................
   # listeners
-  $apr_listener               = false,
-  $apr_sslengine              = undef,
+  $apr_listener                 = false,
+  $apr_sslengine                = undef,
   # jmx
-  $jmx_listener               = false,
-  $jmx_registry_port          = 8050,
-  $jmx_server_port            = 8051,
-  $jmx_bind_address           = '',
+  $jmx_listener                 = false,
+  $jmx_registry_port            = 8050,
+  $jmx_server_port              = 8051,
+  $jmx_bind_address             = '',
   # custom listeners
-  $listeners                  = [],
+  $listeners                    = [],
   #..................................................................................
   # service
-  $svc_name                   = 'Catalina',
-  $svc_params                 = {},
+  $svc_name                     = 'Catalina',
+  $svc_params                   = {},
   #..................................................................................
   # executors
-  $threadpool_executor        = false,
-  $threadpool_name            = 'tomcatThreadPool',
-  $threadpool_nameprefix      = 'catalina-exec-',
-  $threadpool_maxthreads      = undef,
-  $threadpool_minsparethreads = undef,
-  $threadpool_params          = {},
+  $threadpool_executor          = false,
+  $threadpool_name              = 'tomcatThreadPool',
+  $threadpool_nameprefix        = 'catalina-exec-',
+  $threadpool_maxthreads        = undef,
+  $threadpool_minsparethreads   = undef,
+  $threadpool_params            = {},
   # custom executors
-  $executors                  = [],
+  $executors                    = [],
   #..................................................................................
   # connectors
   # http connector
-  $http_connector             = true,
-  $http_port                  = 8080,
-  $http_protocol              = undef,
-  $http_use_threadpool        = false,
-  $http_connectiontimeout     = undef,
-  $http_uriencoding           = undef,
-  $http_compression           = undef,
-  $http_maxthreads            = undef,
-  $http_params                = {},
+  $http_connector               = true,
+  $http_port                    = 8080,
+  $http_protocol                = undef,
+  $http_use_threadpool          = false,
+  $http_connectiontimeout       = undef,
+  $http_uriencoding             = undef,
+  $http_compression             = undef,
+  $http_maxthreads              = undef,
+  $http_params                  = {},
   # ssl connector
-  $ssl_connector              = false,
-  $ssl_port                   = 8443,
-  $ssl_protocol               = undef,
-  $ssl_use_threadpool         = false,
-  $ssl_connectiontimeout      = undef,
-  $ssl_uriencoding            = undef,
-  $ssl_compression            = false,
-  $ssl_maxthreads             = undef,
-  $ssl_clientauth             = undef,
-  $ssl_sslprotocol            = undef,
-  $ssl_keystorefile           = undef,
-  $ssl_params                 = {},
+  $ssl_connector                = false,
+  $ssl_port                     = 8443,
+  $ssl_protocol                 = undef,
+  $ssl_use_threadpool           = false,
+  $ssl_connectiontimeout        = undef,
+  $ssl_uriencoding              = undef,
+  $ssl_compression              = false,
+  $ssl_maxthreads               = undef,
+  $ssl_clientauth               = undef,
+  $ssl_sslprotocol              = undef,
+  $ssl_keystorefile             = undef,
+  $ssl_params                   = {},
   # ajp connector
-  $ajp_connector              = true,
-  $ajp_port                   = 8009,
-  $ajp_protocol               = 'AJP/1.3',
-  $ajp_use_threadpool         = false,
-  $ajp_connectiontimeout      = undef,
-  $ajp_uriencoding            = undef,
-  $ajp_maxthreads             = undef,
-  $ajp_params                 = {},
+  $ajp_connector                = true,
+  $ajp_port                     = 8009,
+  $ajp_protocol                 = 'AJP/1.3',
+  $ajp_use_threadpool           = false,
+  $ajp_connectiontimeout        = undef,
+  $ajp_uriencoding              = undef,
+  $ajp_maxthreads               = undef,
+  $ajp_params                   = {},
   # custom connectors
-  $connectors                 = [],
+  $connectors                   = [],
   #..................................................................................
   # engine
-  $engine_name                = 'Catalina',
-  $engine_defaulthost         = undef,
-  $engine_jvmroute            = undef,
-  $engine_params              = {},
+  $engine_name                  = 'Catalina',
+  $engine_defaulthost           = undef,
+  $engine_jvmroute              = undef,
+  $engine_params                = {},
   #..................................................................................
   # cluster (experimental)
-  $use_simpletcpcluster       = false,
-  $cluster_membership_port    = '45565',
-  $cluster_membership_domain  = 'tccluster',
-  $cluster_receiver_address   = undef,
+  $use_simpletcpcluster         = false,
+  $cluster_membership_port      = '45565',
+  $cluster_membership_domain    = 'tccluster',
+  $cluster_receiver_address     = undef,
   #..................................................................................
   # realms
-  $lockout_realm              = true,
-  $userdatabase_realm         = true,
-  $realms                     = [],
+  $lockout_realm                = true,
+  $userdatabase_realm           = true,
+  $realms                       = [],
   #..................................................................................
   # host
-  $host_name                  = 'localhost',
-  $host_appbase               = undef,
-  $host_autodeploy            = undef,
-  $host_deployOnStartup       = undef,
-  $host_undeployoldversions   = undef,
-  $host_unpackwars            = undef,
-  $host_params                = {},
+  $host_name                    = 'localhost',
+  $host_appbase                 = undef,
+  $host_autodeploy              = undef,
+  $host_deployOnStartup         = undef,
+  $host_undeployoldversions     = undef,
+  $host_unpackwars              = undef,
+  $host_params                  = {},
   #..................................................................................
   # valves
-  $singlesignon_valve         = false,
-  $accesslog_valve            = true,
-  $valves                     = [],
+  $singlesignon_valve           = false,
+  $accesslog_valve              = true,
+  $valves                       = [],
   #..................................................................................
   # misc
-  $globalnaming_resources     = [],
+  $globalnaming_resources       = [],
+  #..................................................................................
+  # host context configuration
+  $host_context_params          = {},
+  $host_context_loader          = {},
+  $host_context_manager         = {},
+  $host_context_realm           = {},
+  $host_context_resources       = {},
+  $host_context_watchedresource = [],
+  $host_context_parameters      = [],
+  $host_context_environments    = [],
+  $host_context_listeners       = [],
+  $host_context_valves          = [],
+  $host_context_resourcedefs    = [],
+  $host_context_resourcelinks   = [],
   #..................................................................................
   # context configuration
   #..................................................................................
-  $context_params             = {},
-  $context_loader             = {},
-  $context_manager            = {},
-  $context_realm              = {},
-  $context_resources          = {},
-  $context_watchedresource    = ['WEB-INF/web.xml','${catalina.base}/conf/web.xml'],
-  $context_parameters         = [],
-  $context_environments       = [],
-  $context_listeners          = [],
-  $context_valves             = [],
-  $context_resourcedefs       = [],
-  $context_resourcelinks      = [],
+  $context_params               = {},
+  $context_loader               = {},
+  $context_manager              = {},
+  $context_realm                = {},
+  $context_resources            = {},
+  $context_watchedresource      = ['WEB-INF/web.xml','${catalina.base}/conf/web.xml'],
+  $context_parameters           = [],
+  $context_environments         = [],
+  $context_listeners            = [],
+  $context_valves               = [],
+  $context_resourcedefs         = [],
+  $context_resourcelinks        = [],
   #..................................................................................
   # environment variables
   #..................................................................................
-  $config_path                = undef,
+  $config_path                  = undef,
   # catalina
-  $catalina_home              = undef,
-  $catalina_base              = undef,
-  $jasper_home                = undef,
-  $catalina_tmpdir            = undef,
-  $catalina_pid               = undef,
-  $catalina_opts              = [],
+  $catalina_home                = undef,
+  $catalina_base                = undef,
+  $jasper_home                  = undef,
+  $catalina_tmpdir              = undef,
+  $catalina_pid                 = undef,
+  $catalina_opts                = [],
   # java
-  $java_home                  = undef,
-  $java_opts                  = ['-server'],
+  $java_home                    = undef,
+  $java_opts                    = ['-server'],
   # debug
-  $jpda_enable                = false,
-  $jpda_transport             = undef,
-  $jpda_address               = undef,
-  $jpda_suspend               = undef,
-  $jpda_opts                  = [],
+  $jpda_enable                  = false,
+  $jpda_transport               = undef,
+  $jpda_address                 = undef,
+  $jpda_suspend                 = undef,
+  $jpda_opts                    = [],
   # other
-  $security_manager           = false,
-  $lang                       = undef,
-  $shutdown_wait              = 30,
-  $shutdown_verbose           = false,
-  $custom_variables           = {}) inherits tomcat::params {
+  $security_manager             = false,
+  $lang                         = undef,
+  $shutdown_wait                = 30,
+  $shutdown_verbose             = false,
+  $custom_variables             = {}) inherits tomcat::params {
   # parameters validation
   validate_re($install_from, '^(package|archive)$', '$install_from must be either \'package\' or \'archive\'')
   validate_re($version, '^[0-9]|[0-9]u[0-9]{1,2}$', 'incorrect tomcat version number')
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
-  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_watchedresource, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
-  validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
+  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $host_context_watchedresource, $host_context_parameters, $host_context_environments, $host_context_listeners, $host_context_valves, $host_context_resourcedefs, $host_context_resourcelinks, $context_watchedresource, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
+  validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $host_context_params, $host_context_loader, $host_context_manager, $host_context_realm, $host_context_resources, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
 
   # get major version
   $array_version = split($version, '[.]')
@@ -411,7 +425,7 @@ class tomcat (
     } } else {
     $security_manager_real = $security_manager
   }
-  
+
   $engine_defaulthost_real = $engine_defaulthost ? {
     undef   => $host_name,
     default => $engine_defaulthost
@@ -420,7 +434,7 @@ class tomcat (
   $java_opts_real = join($java_opts, ' ')
   $catalina_opts_real = join($catalina_opts, ' ')
   $jpda_opts_real = join($jpda_opts, ' ')
-  
+
   # generate params hash
   $server_params_real = merge(delete_undef_values({
     'port'     => $server_control_port,
