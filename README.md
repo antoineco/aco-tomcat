@@ -14,6 +14,7 @@
     * [Define: tomcat::instance](#define-tomcatinstance)
     * [Common parameters](#common-parameters)
     * [Define: tomcat::userdb_entry](#define-tomcatuserdb_entry)
+    * [Define: tomcat::context](#define-tomcatcontext)
 5. [Testing - How to run the included spec tests](#testing)
 6. [Contributors](#contributors)
 
@@ -462,41 +463,8 @@ An array of `Resource` entries to be added to the `GlobalNamingResources` compon
 
 **Context configuration**
 
-#####`context_params`
-A hash of attributes/values for the `Context` container. See [Context](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Attributes) for the list of possible attributes.
-
-#####`context_loader`
-A hash of attributes/values for the `Loader` nested component. See [Loader](http://tomcat.apache.org/tomcat-8.0-doc/config/loader.html) for the list of possible attributes.
-
-#####`context_manager`
-A hash of attributes/values for the `Manager` nested component. See [Manager](http://tomcat.apache.org/tomcat-8.0-doc/config/manager.html) for the list of possible attributes.
-
-#####`context_realm`
-A hash of attributes/values for the `Realm` nested component. See [Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html) for the list of possible attributes.
-
-#####`context_resources`
-A hash of attributes/values for the `Resources` nested component. See [Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/resources.html) for the list of possible attributes.
-
-#####`context_watchedresource`
-An array of `WatchedResource` entries to be added to the `Context` container. Each entry is to be supplied as a string. Defaults to `['WEB-INF/web.xml','${catalina.base}/conf/web.xml']`
-
-#####`context_parameters`
-An array of `Parameter` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Parameter` XML node. See [Context Parameters](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Context_Parameters) for the list of possible attributes.
-
-#####`context_environments`
-An array of `Environment` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Environment` XML node. See [Environment Entries](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Environment_Entries) for the list of possible attributes.
-
-#####`context_listeners`
-An array of `Listener` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Listener` XML node. See [Lifecycle Listeners](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Lifecycle_Listeners) for the list of possible attributes.
-
-#####`context_valves`
-An array of `Valve` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Valve` XML node. See [Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html) for the list of possible attributes.
-
-#####`context_resourcedefs`
-An array of `Resource` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Resource` XML node. See [Resource Definitions](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Definitions) for the list of possible attributes.
-
-#####`context_resourcelinks`
-An array of `ResourceLink` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `ResourceLink` XML node. See [Resource Links](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Links) for the list of possible attributes.
+#####`context_params`, `context_loader`, `context_manager`, `context_realm`, `context_resources`, `context_watchedresource`, `context_parameters`, `context_environments`, `context_listeners`, `context_valves`, `context_resourcedefs`, `context_resourcelinks`
+See [tomcat::context](#define-tomcatcontext) defined type.
 
 **Global configuration file / environment variables**
 
@@ -593,6 +561,51 @@ User password (string)
 
 #####`roles`
 User roles (array)
+
+####Define: `tomcat::context`
+
+Create tomcat context files
+
+**Parameters within `tomcat::context`:**
+
+#####`path`
+Absolute path indicating where the context file should be created. Mandatory. Does not create parent folders.
+
+#####`params`
+A hash of attributes/values for the `Context` container. See [Context](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Attributes) for the list of possible attributes.
+
+#####`loader`
+A hash of attributes/values for the `Loader` nested component. See [Loader](http://tomcat.apache.org/tomcat-8.0-doc/config/loader.html) for the list of possible attributes.
+
+#####`manager`
+A hash of attributes/values for the `Manager` nested component. See [Manager](http://tomcat.apache.org/tomcat-8.0-doc/config/manager.html) for the list of possible attributes.
+
+#####`realm`
+A hash of attributes/values for the `Realm` nested component. See [Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html) for the list of possible attributes.
+
+#####`resources`
+A hash of attributes/values for the `Resources` nested component. See [Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/resources.html) for the list of possible attributes.
+
+#####`watchedresource`
+An array of `WatchedResource` entries to be added to the `Context` container. Each entry is to be supplied as a string. Defaults to `['WEB-INF/web.xml','${catalina.base}/conf/web.xml']`
+
+#####`parameters`
+An array of `Parameter` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Parameter` XML node. See [Context Parameters](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Context_Parameters) for the list of possible attributes.
+
+#####`environments`
+An array of `Environment` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Environment` XML node. See [Environment Entries](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Environment_Entries) for the list of possible attributes.
+
+#####`listeners`
+An array of `Listener` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Listener` XML node. See [Lifecycle Listeners](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Lifecycle_Listeners) for the list of possible attributes.
+
+#####`valves`
+An array of `Valve` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Valve` XML node. See [Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html) for the list of possible attributes.
+
+#####`resourcedefs`
+An array of `Resource` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Resource` XML node. See [Resource Definitions](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Definitions) for the list of possible attributes.
+
+#####`resourcelinks`
+An array of `ResourceLink` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `ResourceLink` XML node. See [Resource Links](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Links) for the list of possible attributes.
 
 ##Testing
 

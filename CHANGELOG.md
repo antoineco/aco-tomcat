@@ -1,3 +1,7 @@
+###1.1.0
+
+New `tomcat::context` defined type to manage additional contexts
+
 ###1.0.3
 
 Fix regression due to changes in pid file management
@@ -5,7 +9,7 @@ Fix regression due to changes in pid file management
 ###1.0.2
 
 * Add missing `ensure` attributes ([hanej](https://github.com/hanej))
-* Don't force pid file creation (fixes startup issue with Tomcat 6)
+* Do not force pid file creation (fixes startup issue with Tomcat 6)
 
 ###1.0.1
 

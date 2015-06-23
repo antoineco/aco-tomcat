@@ -978,17 +978,17 @@ define tomcat::instance (
       ::tomcat::context {
         "instance ${name} manager.xml":
           path   => "${catalina_base_real}/conf/Catalina/${host_name}/manager.xml",
-          params => { 'path'    => '/manager',
-                      'docBase' => "${admin_webapps_path}/manager",
+          params => { 'path'                => '/manager',
+                      'docBase'             => "${admin_webapps_path}/manager",
                       'antiResourceLocking' => false,
-                      'privileged' => 'true' };
+                      'privileged'          => true };
 
         "instance ${name} host-manager.xml":
           path   => "${catalina_base_real}/conf/Catalina/${host_name}/host-manager.xml",
-          params => { 'path'    => '/host-manager',
-                      'docBase' => "${admin_webapps_path}/host-manager",
+          params => { 'path'                => '/host-manager',
+                      'docBase'             => "${admin_webapps_path}/host-manager",
                       'antiResourceLocking' => false,
-                      'privileged' => 'true' }
+                      'privileged'          => true }
       }
     } else {
       # warn if admin webapps were selected for installation
