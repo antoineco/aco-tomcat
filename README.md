@@ -303,7 +303,7 @@ Tomcat full version number. The valid format is 'x.y.z'. If you install tomcat f
 *Note:* multi-version only supported if installed from archive
 
 #####`archive_source`
-Source of the tomcat server archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version}/bin/apache-tomcat-${version}.tar.gz`
+Source of the tomcat server archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin/apache-tomcat-<version>.tar.gz`
 
 #####`service_name`
 Tomcat service name. Defaults to `${package_name}` (global) / `${package_name}_${title}` (instance).
