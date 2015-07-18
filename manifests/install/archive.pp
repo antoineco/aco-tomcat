@@ -35,8 +35,8 @@ class tomcat::install::archive {
   file { $::tomcat::catalina_home_real:
     ensure => directory
   } ->
-  staging::file { "apache-tomcat-${::tomcat::version}.tar.gz": source => $::tomcat::archive_source_real } ->
-  staging::extract { "apache-tomcat-${::tomcat::version}.tar.gz":
+  staging::file { "apache-tomcat-${::tomcat::version_real}.tar.gz": source => $::tomcat::archive_source_real } ->
+  staging::extract { "apache-tomcat-${::tomcat::version_real}.tar.gz":
     target  => $::tomcat::catalina_home_real,
     creates => "${::tomcat::catalina_home_real}/bin",
     user    => $::tomcat::tomcat_user_real,
@@ -45,7 +45,7 @@ class tomcat::install::archive {
   }
 
   # ordering
-  Staging::Extract <| title == "apache-tomcat-${::tomcat::version}.tar.gz" |> -> File <| tag == 'tomcat_tree' |>
+  Staging::Extract <| title == "apache-tomcat-${::tomcat::version_real}.tar.gz" |> -> File <| tag == 'tomcat_tree' |>
 
   if $::tomcat::log_path_real != "${::tomcat::catalina_base_real}/logs" {
     file {
