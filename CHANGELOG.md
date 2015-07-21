@@ -1,8 +1,6 @@
 ###1.2.0
 
-* Enforce tomcat package version
-
-`version` now takes a full package version when tomcat is installed from a package repository, the package version will be enforced to this value
+Enforce tomcat package version. `version` now takes a full package version when tomcat is installed from a package repository.
 
 ###1.1.0
 
