@@ -61,7 +61,7 @@
 # === Sample Usage:
 #
 #  class { '::tomcat':
-#    version      => '7.0.54',
+#    version      => '7.0.56-2ubuntu0.1',
 #    service_name => 'tomcat7'
 #  }
 #

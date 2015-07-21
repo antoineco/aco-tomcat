@@ -41,7 +41,7 @@ tomcat will affect the following parts of your system:
 Including the main class is enough to install the default version of tomcat provided by your distribution, and run it with default settings.
 
 ```puppet
-include ::tomcat
+include tomcat
 ```
 
 ####Installation scenarios
@@ -49,7 +49,7 @@ include ::tomcat
 Install from archive instead of distribution package
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   install_from => 'archive',
   version      => '8.0.15'
 }
@@ -58,7 +58,7 @@ class { '::tomcat':
 Disable main instance and setup 2 individual instances
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   service_ensure => 'stopped',
   service_enable => false
 }
@@ -79,7 +79,7 @@ tomcat::instance { 'instance2':
 Start a second instance with a different tomcat version
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   install_from => 'archive',
   version      => '7.0.55'
   …
@@ -93,7 +93,7 @@ tomcat::instance { 'my_app':
 Use a non-default JVM and run it with custom options
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   java_home => '/usr/java/jre1.7.0_65',
   java_opts => ['-server', '-Xmx2048m', '-Xms256m', '-XX:+UseConcMarkSweepGC']
 }
@@ -102,7 +102,7 @@ class { '::tomcat':
 Enable the manager/host-manager webapps and configure default admin
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   …
   admin_webapps        => true,
   create_default_admin => true,
@@ -114,7 +114,7 @@ class { '::tomcat':
 Add an additional admin for the manager
 
 ```puppet
-::tomcat::userdb_entry { 'foo':
+tomcat::userdb_entry { 'foo':
   database => 'main UserDatabase',
   username => 'foo',
   password => 'bar',
@@ -125,7 +125,7 @@ Add an additional admin for the manager
 Use log4j for Tomcat internal logging and provide a custom XML configuration file
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   …
   log4j             => true,
   log4j_enable      => true,
@@ -137,7 +137,7 @@ class { '::tomcat':
 Use with custom packages/custom installation layouts (eg. with [Ulyaoth](https://forge.puppetlabs.com/aco/ulyaoth))
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   package_name               => 'ulyaoth-tomcat8',
   version                    => '8.0.15'
   service_name               => 'tomcat',
@@ -156,7 +156,7 @@ class { '::tomcat':
 Enable the standard AJP connector on non-default port with custom parameters
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   …
   ajp_connector => true,
   ajp_port      => 8090,
@@ -167,7 +167,7 @@ class { '::tomcat':
 Configure custom connectors
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   …
   connectors => [
     { 'port'        => 9080,
@@ -184,7 +184,7 @@ class { '::tomcat':
 Configure custom listeners
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   …
   listeners => [
     { 'className' => 'org.apache.catalina.storeconfig.StoreConfigLifecycleListener'
@@ -198,7 +198,7 @@ class { '::tomcat':
 Customize Host
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   …
   host_autodeploy      => false,
   host_deployOnStartup => false,
@@ -210,7 +210,7 @@ class { '::tomcat':
 Enable the remote [JMX listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener) and remote JVM monitoring
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   …
   jmx_listener      => true,
   jmx_registry_port => '8050',
@@ -225,7 +225,7 @@ class { '::tomcat':
 Configure main context.xml
 
 ```puppet
-class { '::tomcat':
+class { 'tomcat':
   …
   context_params  => { 'docBase' => 'myapproot', 'useHttpOnly' => false },
   context_manager => { 'maxActiveSessions' => 1000 },
@@ -299,7 +299,8 @@ Parameters common to both `tomcat` and `tomcat::instance`
 **Packages and service**
 
 #####`version`
-Tomcat full version number. The valid format is 'x.y.z'. If you install tomcat from package and define this value manually, make **sure** this version of tomcat if available in your system's repositories, since several sub-parameters depend on it. Default depends on the distribution.
+Tomcat full version number. The valid format is 'x.y.z[-package_suffix]'  
+Must include the full package suffix if tomcat is installed from a package repository, the package `ensure` attribute will be enforced to this value.
 *Note:* multi-version only supported if installed from archive
 
 #####`archive_source`
