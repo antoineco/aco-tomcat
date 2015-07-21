@@ -7,7 +7,7 @@ class tomcat::config {
   }
 
   # forward variables used in templates
-  $version = $::tomcat::version
+  $version_real = $::tomcat::version_real
   $maj_version = $::tomcat::maj_version
   $server_params_real = $::tomcat::server_params_real
   $jmx_listener = $::tomcat::jmx_listener
@@ -102,7 +102,7 @@ class tomcat::config {
   # - $apr_listener
   # - $apr_sslengine
   # - $listeners
-  # - $version
+  # - $version_real
   # - $maj_version
   concat::fragment { 'server.xml listeners':
     order   => 10,
