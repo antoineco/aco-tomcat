@@ -1,3 +1,9 @@
+###1.2.0
+
+* Enforce tomcat package version
+
+`version` now takes a full package version when tomcat is installed from a package repository, the package version will be enforced to this value
+
 ###1.1.0
 
 New `tomcat::context` defined type to manage additional contexts
