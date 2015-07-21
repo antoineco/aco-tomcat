@@ -63,15 +63,15 @@ class { '::tomcat':
   service_enable => false
 }
 tomcat::instance { 'instance1':
-  control_port  => 8005,
-  http_port     => 8080,
-  ajp_connector => false,
+  server_control_port => 8005,
+  http_port           => 8080,
+  ajp_connector       => false,
   …
 }
 tomcat::instance { 'instance2':
-  control_port    => 8006,
-  http_port       => 8081,
-  manage_firewall => true,
+  server_control_port => 8006,
+  http_port           => 8081,
+  manage_firewall     => true,
   …
 }
 ```

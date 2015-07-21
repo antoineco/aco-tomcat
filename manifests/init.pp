@@ -60,7 +60,7 @@
 #
 # === Sample Usage:
 #
-#  class { '::tomcat':
+#  class { 'tomcat':
 #    version      => '7.0.54',
 #    service_name => 'tomcat7'
 #  }
