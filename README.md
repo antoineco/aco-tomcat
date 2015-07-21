@@ -300,7 +300,7 @@ Parameters common to both `tomcat` and `tomcat::instance`
 
 #####`version`
 Tomcat full version number. The valid format is 'x.y.z[-package_suffix]'  
-Must include the full package suffix if tomcat is installed from a package repository, the package `ensure` attribute will be enforced to this value.
+Must include the full package suffix if tomcat is installed from a package repository, the package `ensure` attribute will be enforced to this value.  
 *Note:* multi-version only supported if installed from archive
 
 #####`archive_source`
