@@ -1,5 +1,5 @@
 
-<%- if scope.function_versioncmp([@version, '8.0.14']) >= 0 -%>
+<%- if scope.function_versioncmp([@version_real, '8.0.14']) >= 0 -%>
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
 <%- end -%>
 <%- if scope.function_versioncmp([@maj_version, '7']) >= 0 -%>
