@@ -46,7 +46,7 @@ class tomcat::params {
               $systemd = true
             }
             '6'     : {
-              $version = '6.0.24-83.el6_6'
+              $version = '6.0.24-90.el6'
               $package_name = 'tomcat6'
               # = epel repo =
               # $version = '7.0.33-4.el6'
