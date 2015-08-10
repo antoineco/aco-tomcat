@@ -335,12 +335,13 @@ define tomcat::instance (
 
   if $service_start == undef {
     case $::tomcat::install_from {
+      # only used on systemd distros
       'package' : {
-        if $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= '20' {
-          $service_start_real = '/usr/libexec/tomcat/server start'
+        if ($::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20') or $::osfamily == 'Suse' {
+          $service_start_real = '/usr/sbin/tomcat-sysd start'
         }
         else {
-          $service_start_real = '/usr/sbin/tomcat-sysd start'
+          $service_start_real = '/usr/libexec/tomcat/server start'
         }
       }
       default   : {
@@ -357,12 +358,13 @@ define tomcat::instance (
 
   if $service_stop == undef {
     case $::tomcat::install_from {
+      # only used on systemd distros
       'package' : {
-        if $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= '20' {
-          $service_stop_real = '/usr/libexec/tomcat/server stop'
+        if ($::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20') or $::osfamily == 'Suse' {
+          $service_stop_real = '/usr/sbin/tomcat-sysd stop'
         }
         else {
-          $service_stop_real = '/usr/sbin/tomcat-sysd stop'
+          $service_stop_real = '/usr/libexec/tomcat/server stop'
         }
       }
       default   : { $service_stop_real = "${catalina_home_real}/bin/catalina.sh stop" }
@@ -627,14 +629,14 @@ define tomcat::instance (
         group   => 'root',
         content => template("${module_name}/instance/systemd_unit_suse.erb")
       }
-    } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= '20' { # Fedora 20+
+    } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20' { # Fedora 17-19
       file { "${service_name_real} service unit":
         path    => "/usr/lib/systemd/system/${service_name_real}.service",
         owner   => 'root',
         group   => 'root',
         content => template("${module_name}/instance/systemd_unit_fedora.erb")
       }
-    } else { # RHEL 7+ or Fedora 17-19
+    } else { # Fedora 20+ or RHEL 7+
       file { "${service_name_real} service unit":
         path    => "/usr/lib/systemd/system/${service_name_real}.service",
         owner   => 'root',
