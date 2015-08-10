@@ -3,13 +3,14 @@ Description=Apache Tomcat Web Application Container
 After=syslog.target network.target
 
 [Service]
-Type=simple
-EnvironmentFile=-<%= @config_path_real %>
+Type=forking
 ExecStart=<%= @service_start_real %>
 ExecStop=<%= @service_stop_real %>
 SuccessExitStatus=143
 User=<%= scope['::tomcat::tomcat_user_real'] %>
 Group=<%= scope['::tomcat::tomcat_group_real'] %>
+Environment=SERVICE_NAME="<%= @service_name_real %>"
+EnvironmentFile=-<%= @config_path_real %>
 
 
 [Install]
