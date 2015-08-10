@@ -1,3 +1,10 @@
+###1.2.1
+
+* Fix obsolete start/stop commands and systemd unit on RHEL7
+* Support Epoch tag in package version
+* Move information about tomcat user/group to the right place in the documentation
+* Update default package versions (RHEL6)
+
 ###1.2.0
 
 Enforce tomcat package version. `version` now takes a full package version when tomcat is installed from a package repository.
