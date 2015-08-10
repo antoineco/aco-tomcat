@@ -266,6 +266,12 @@ What type of source to install from. The module will download the necessary file
 #####`package_name`
 Tomcat package name. Ignored if installed from archive. Default depends on the distribution.
 
+#####`tomcat_user`
+Tomcat user. Defaults to `${service_name}` (Debian) / `tomcat` (all other distributions).
+
+#####`tomcat_group`
+Tomcat group. Defaults to `${tomcat_user}`.
+
 #####`tomcat_native`
 Whether to install the Tomcat Native library. Boolean value. Defaults to `false`.
 
@@ -320,12 +326,6 @@ Optional override command for starting the service. Default depends on the platf
 
 #####`service_stop`
 Optional override command for stopping the service. Default depends on the platform.
-
-#####`tomcat_user`
-Tomcat user. Defaults to `${service_name}` (Debian) / `tomcat` (all other distributions).
-
-#####`tomcat_group`
-Tomcat group. Defaults to `${tomcat_user}`.
 
 #####`enable_extras`
 Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.  
