@@ -362,16 +362,12 @@ class tomcat (
   }
 
   if $service_start == undef {
-    case $install_from {
-      'package' : { $service_start_real = '/usr/sbin/tomcat-sysd start' }
-      default   : {
-        $start_cmd = $jpda_enable ? {
-          true    => 'jpda start',
-          default => 'start'
-        }
-        $service_start_real = "${catalina_home_real}/bin/catalina.sh ${start_cmd}"
-      }
+    # unused with $install_from == 'package'
+    $start_cmd = $jpda_enable ? {
+      true    => 'jpda start',
+      default => 'start'
     }
+    $service_start_real = "${catalina_home_real}/bin/catalina.sh ${start_cmd}"
   } else {
     $service_start_real = $service_start
   }
