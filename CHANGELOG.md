@@ -3,7 +3,7 @@
 * Fix obsolete start/stop commands and systemd unit on RHEL7
 * Support Epoch tag in package version
 * Move information about tomcat user/group to the right place in the documentation
-* Update default package versions (RHEL6)
+* Update default package versions (RHEL6/7)
 
 ###1.2.0
 

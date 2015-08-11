@@ -20,6 +20,10 @@
 #   override service startup command
 # [*service_stop*]
 #   override service shutdown command
+# [*tomcat_user*]
+#   service user
+# [*tomcat_group*]
+#   service group
 # [*enable_extras*]
 #   install extra libraries (boolean)
 # [*manage_firewall*]
@@ -59,6 +63,8 @@ define tomcat::instance (
   $service_enable             = true,
   $service_start              = undef,
   $service_stop               = undef,
+  $tomcat_user                = $::tomcat::tomcat_user_real,
+  $tomcat_group               = $::tomcat::tomcat_group_real,
   $enable_extras              = false,
   $manage_firewall            = false,
   #..................................................................................
@@ -483,9 +489,26 @@ define tomcat::instance (
   # installation / instance directories #
   # ------------------------------------#
 
+  # create user if not present
+  if !defined(Group[$tomcat_group]) {
+    group { $tomcat_group:
+      ensure => present,
+      system => true
+    }
+  }
+
+  if !defined(User[$tomcat_user]) {
+    user { $tomcat_user:
+      ensure => present,
+      gid    => $tomcat_group,
+      home   => $catalina_home_real,
+      system => true
+    }
+  }
+
   File {
-    owner   => $::tomcat::tomcat_user_real,
-    group   => $::tomcat::tomcat_group_real,
+    owner   => $tomcat_user,
+    group   => $tomcat_group,
     mode    => '0644'
   }
 
@@ -513,8 +536,8 @@ define tomcat::instance (
     staging::extract { "apache-tomcat-${version_real}.tar.gz":
       target  => $catalina_home_real,
       creates => "${catalina_home_real}/bin",
-      user    => $::tomcat::tomcat_user_real,
-      group   => $::tomcat::tomcat_group_real,
+      user    => $tomcat_user,
+      group   => $tomcat_group,
       strip   => 1
     }
 
@@ -605,8 +628,8 @@ define tomcat::instance (
     file { "instance ${name} pid directory":
       ensure => directory,
       path   => "/var/run/${service_name_real}",
-      owner  => $::tomcat::tomcat_user_real,
-      group  => $::tomcat::tomcat_group_real
+      owner  => $tomcat_user,
+      group  => $tomcat_group
     }
   }
 
@@ -657,9 +680,9 @@ define tomcat::instance (
         }
       }
       default   : {
-        $start_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_start_real}'"
-        $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_stop_real}'"
-        $status_command = "/usr/bin/pgrep -d , -u ${::tomcat::tomcat_user_real} -G ${::tomcat::tomcat_group_real} -f Dcatalina.base=${catalina_base_real}"
+        $start_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${tomcat_user} -s /bin/bash -c '${service_start_real}'"
+        $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${tomcat_user} -s /bin/bash -c '${service_stop_real}'"
+        $status_command = "/usr/bin/pgrep -d , -u ${tomcat_user} -G ${tomcat_group} -f Dcatalina.base=${catalina_base_real}"
 
         # create init script
         file { "${service_name_real} service unit":
@@ -687,8 +710,8 @@ define tomcat::instance (
   # generate and manage server configuration
   concat { "instance ${name} server configuration":
     path   => "${catalina_base_real}/conf/server.xml",
-    owner  => $::tomcat::tomcat_user_real,
-    group  => $::tomcat::tomcat_group_real,
+    owner  => $tomcat_user,
+    group  => $tomcat_group,
     mode   => '0600',
     order  => 'numeric',
     notify => Service[$service_name_real]
@@ -917,8 +940,8 @@ define tomcat::instance (
     ensure  => present,
     path    => $config_path_real,
     content => template("${module_name}/common/setenv.erb"),
-    owner   => $::tomcat::tomcat_user_real,
-    group   => $::tomcat::tomcat_group_real,
+    owner   => $tomcat_user,
+    group   => $tomcat_group,
     notify  => Service[$service_name_real]
   }
 
@@ -929,8 +952,8 @@ define tomcat::instance (
   # generate and manage UserDatabase file
   concat { "instance ${name} UserDatabase":
     path   => "${catalina_base_real}/conf/tomcat-users.xml",
-    owner  => $::tomcat::tomcat_user_real,
-    group  => $::tomcat::tomcat_group_real,
+    owner  => $tomcat_user,
+    group  => $tomcat_group,
     mode   => '0600',
     order  => 'numeric',
     notify => Service[$service_name_real]
