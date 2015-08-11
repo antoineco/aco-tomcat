@@ -7,8 +7,8 @@ Type=forking
 ExecStart=<%= @service_start_real %>
 ExecStop=<%= @service_stop_real %>
 SuccessExitStatus=143
-User=<%= scope['::tomcat::tomcat_user_real'] %>
-Group=<%= scope['::tomcat::tomcat_group_real'] %>
+User=<%= @tomcat_user %>
+Group=<%= @tomcat_group %>
 Environment=SERVICE_NAME="<%= @service_name_real %>"
 EnvironmentFile=-<%= @config_path_real %>
 
