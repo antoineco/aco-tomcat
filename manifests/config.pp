@@ -9,6 +9,8 @@ class tomcat::config {
   # forward variables used in templates
   $version_real = $::tomcat::version_real
   $maj_version = $::tomcat::maj_version
+  $tomcat_user = $::tomcat::tomcat_user_real
+  $tomcat_group = $::tomcat::tomcat_group_real
   $server_params_real = $::tomcat::server_params_real
   $jmx_listener = $::tomcat::jmx_listener
   $jmx_registry_port = $::tomcat::jmx_registry_port
@@ -75,15 +77,12 @@ class tomcat::config {
   $jpda_suspend = $::tomcat::jpda_suspend
   $jpda_opts_real = $::tomcat::jpda_opts_real
   $custom_variables = $::tomcat::custom_variables
-  $tomcat_user = $::tomcat::tomcat_user
-  $tomcat_group = $::tomcat::tomcat_group
-
 
   # generate and manage server configuration
   concat { 'tomcat server configuration':
     path   => "${::tomcat::catalina_base_real}/conf/server.xml",
-    owner  => $::tomcat::tomcat_user_real,
-    group  => $::tomcat::tomcat_group_real,
+    owner  => $tomcat_user,
+    group  => $tomcat_group,
     mode   => '0600',
     order  => 'numeric',
     notify => Service[$::tomcat::service_name_real]
@@ -312,8 +311,8 @@ class tomcat::config {
     ensure  => present,
     path    => $::tomcat::config_path_real,
     content => template("${module_name}/common/setenv.erb"),
-    owner   => $::tomcat::tomcat_user_real,
-    group   => $::tomcat::tomcat_group_real,
+    owner   => $tomcat_user,
+    group   => $tomcat_group,
     mode    => '0644',
     notify  => Service[$::tomcat::service_name_real]
   }
@@ -330,8 +329,8 @@ class tomcat::config {
   # generate and manage UserDatabase file
   concat { 'main UserDatabase':
     path   => "${::tomcat::catalina_base_real}/conf/tomcat-users.xml",
-    owner  => $::tomcat::tomcat_user_real,
-    group  => $::tomcat::tomcat_group_real,
+    owner  => $tomcat_user,
+    group  => $tomcat_group,
     mode   => '0600',
     order  => 'numeric',
     notify => Service[$::tomcat::service_name_real]
