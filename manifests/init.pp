@@ -22,6 +22,10 @@
 #   override service startup command
 # [*service_stop*]
 #   override service shutdown command
+# [*tomcat_user*]
+#   service user
+# [*tomcat_group*]
+#   service group
 # [*tomcat_native*]
 #   install tomcat native library (boolean)
 # [*tomcat_native_package_name*]
