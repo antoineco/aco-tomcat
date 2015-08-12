@@ -75,6 +75,9 @@ class tomcat::config {
   $jpda_suspend = $::tomcat::jpda_suspend
   $jpda_opts_real = $::tomcat::jpda_opts_real
   $custom_variables = $::tomcat::custom_variables
+  $tomcat_user = $::tomcat::tomcat_user
+  $tomcat_group = $::tomcat::tomcat_group
+
 
   # generate and manage server configuration
   concat { 'tomcat server configuration':

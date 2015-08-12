@@ -5,8 +5,8 @@ After=network.target
 [Service]
 Type=simple
 EnvironmentFile=-<%= @config_path_real %>
-User=<%= scope['::tomcat::tomcat_user_real'] %>
-Group=<%= scope['::tomcat::tomcat_group_real'] %>
+User=<%= @tomcat_user %>
+Group=<%= @tomcat_group %>
 ExecStart=<%= @service_start_real %>
 ExecStop=<%= @service_stop_real %>
 StandardOutput=syslog
