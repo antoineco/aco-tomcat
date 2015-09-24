@@ -2,6 +2,8 @@
 #
 define tomcat::context (
   $path,
+  $owner            = $::tomcat::tomcat_user_real,
+  $group            = $::tomcat::tomcat_group_real,
   $params           = {},
   $loader           = {},
   $manager          = {},
@@ -28,8 +30,8 @@ define tomcat::context (
   # generate and manage context configuration
   concat { "${name} tomcat context":
     path   => $path,
-    owner  => $::tomcat::tomcat_user_real,
-    group  => $::tomcat::tomcat_group_real,
+    owner  => $owner,
+    group  => $group,
     mode   => '0600',
     order  => 'numeric',
     notify => Service[$::tomcat::service_name_real]
