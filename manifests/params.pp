@@ -145,13 +145,13 @@ class tomcat::params {
               # $package_name = 'tomcat7'
             }
             '7'     : {
-              $version = '7.0.28-4+deb7u1'
+              $version = '7.0.28-4+deb7u2'
               $package_name = 'tomcat7'
               # $version = '6.0.35-6+deb7u1'
               # $package_name = 'tomcat6'
             }
             '6'     : {
-              $version = '6.0.35-1+squeeze4'
+              $version = '6.0.41-2+squeeze7'
               $package_name = 'tomcat6'
             }
             default : {
@@ -161,6 +161,12 @@ class tomcat::params {
         }
         'Ubuntu' : {
           case $::operatingsystemrelease {
+            '15.10' : {
+              $version = '8.0.26-1'
+              $package_name = 'tomcat8'
+              # $version = '7.0.64-1'
+              # $package_name = 'tomcat7'
+            }
             '15.04' : {
               $version = '8.0.14-1'
               $package_name = 'tomcat8'
