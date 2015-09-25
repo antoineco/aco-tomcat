@@ -898,6 +898,8 @@ define tomcat::instance (
   # generate and manage context configuration
   ::tomcat::context { "instance ${name} default":
     path             => "${catalina_base_real}/conf/context.xml",
+    owner            => $tomcat_user,
+    group            => $tomcat_group,
     params           => $context_params,
     loader           => $context_loader,
     manager          => $context_manager,
