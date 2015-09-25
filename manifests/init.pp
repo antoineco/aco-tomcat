@@ -505,7 +505,7 @@ class tomcat (
   }
   ), $host_params)
 
-  # should we force download extras libs?
+  # should we download extras libs?
   if $log4j_enable or $jmx_listener {
     $enable_extras_real = true
   } else {
@@ -513,26 +513,24 @@ class tomcat (
   }
 
   # start the real action
-  class { 'tomcat::install': } ->
-  class { 'tomcat::service': }
+  contain ::tomcat::install
+  contain ::tomcat::service
+  Class['::tomcat::install'] -> Class['::tomcat::service']
 
-  class { 'tomcat::config':
-    require => Class['::tomcat::install']
-  }
+  contain ::tomcat::config
+  Class['::tomcat::install'] -> Class['::tomcat::config']
 
   if $log4j_enable {
-    class { 'tomcat::log4j':
-      require => Class['::tomcat::install']
-    }
+    contain ::tomcat::log4j
+    Class['::tomcat::install'] -> Class['::tomcat::log4j']
   }
 
   if $enable_extras_real {
-    class { 'tomcat::extras':
-      require => Class['::tomcat::install']
-    }
+    contain ::tomcat::extras
+    Class['::tomcat::install'] -> Class['::tomcat::extras']
   }
 
   if $manage_firewall {
-    include ::tomcat::firewall
+    contain ::tomcat::firewall
   }
 }
