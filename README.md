@@ -290,6 +290,9 @@ Create a tomcat instance
 Absolute path to the root of all tomcat instances. Defaults to `/var/lib/tomcats`.  
 *Note:* instances will be installed in `${root_path}/${title}` and $CATALINA_BASE will be set to that folder
 
+#####`default_servlet`
+Whether a [Default Servlet](https://tomcat.apache.org/tomcat-8.0-doc/default-servlet.html) (conf/web.xml) should be created for the instance.
+
 See also [Common parameters](#common-parameters)
 
 ####Common parameters
