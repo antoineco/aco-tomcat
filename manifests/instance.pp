@@ -200,6 +200,10 @@ define tomcat::instance (
   $context_resourcedefs       = [],
   $context_resourcelinks      = [],
   #..................................................................................
+  # servlet
+  #..................................................................................
+  $default_servlet            = false,
+  #..................................................................................
   # environment variables
   #..................................................................................
   $config_path                = undef,
@@ -709,12 +713,13 @@ define tomcat::instance (
 
   # generate and manage server configuration
   concat { "instance ${name} server configuration":
-    path   => "${catalina_base_real}/conf/server.xml",
-    owner  => $tomcat_user,
-    group  => $tomcat_group,
-    mode   => '0600',
-    order  => 'numeric',
-    notify => Service[$service_name_real]
+    path    => "${catalina_base_real}/conf/server.xml",
+    owner   => $tomcat_user,
+    group   => $tomcat_group,
+    mode    => '0600',
+    order   => 'numeric',
+    notify  => Service[$service_name_real],
+    require => File["${catalina_base_real}/conf"]
   }
 
   # Template uses:
@@ -911,7 +916,24 @@ define tomcat::instance (
     listeners        => $context_listeners,
     valves           => $context_valves,
     resourcedefs     => $context_resourcedefs,
-    resourcelinks    => $context_resourcelinks
+    resourcelinks    => $context_resourcelinks,
+    require          => File["${catalina_base_real}/conf"]
+  }
+
+  # default servlet
+  if $default_servlet {
+    if $version_real == $::tomcat::version_real {
+      file { "instance ${name} default servlet":
+        ensure  => present,
+        owner   => $tomcat_user,
+        group   => $tomcat_group,
+        path    => "${catalina_base_real}/conf/web.xml",
+        source  => "puppet:///modules/${module_name}/conf/web.xml",
+        require => File["${catalina_base_real}/conf"]
+      }
+    } else {
+      warning("tomcat archives always contain a default servlet, ignoring parameter 'default_servlet'")
+    }
   }
 
   # generate and manage global parameters
