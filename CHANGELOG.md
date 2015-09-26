@@ -1,3 +1,12 @@
+###1.3.0
+
+* Support per-instance user
+* New `tomcat::instance` parameter: `default_servlet`
+* Fix default owner/group on context.xml
+* Contain sub-classes
+* Update default package versions (Debian 6/7)
+* Support Ubuntu 15.10
+
 ###1.2.1
 
 * Fix obsolete start/stop commands and systemd unit on RHEL7
