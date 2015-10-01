@@ -650,26 +650,25 @@ define tomcat::instance (
   if $::tomcat::params::systemd {
     # manage systemd unit on compatible systems
     if $::osfamily == 'Suse' { # SuSE
-      file { "${service_name_real} service unit":
-        path    => "/usr/lib/systemd/system/${service_name_real}.service",
-        owner   => 'root',
-        group   => 'root',
-        content => template("${module_name}/instance/systemd_unit_suse.erb")
-      }
+      $systemd_template = "${module_name}/instance/systemd_unit_suse.erb"
     } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20' { # Fedora 17-19
-      file { "${service_name_real} service unit":
-        path    => "/usr/lib/systemd/system/${service_name_real}.service",
-        owner   => 'root',
-        group   => 'root',
-        content => template("${module_name}/instance/systemd_unit_fedora.erb")
-      }
+      $systemd_template = "${module_name}/instance/systemd_unit_fedora.erb"
     } else { # Fedora 20+ or RHEL 7+
-      file { "${service_name_real} service unit":
-        path    => "/usr/lib/systemd/system/${service_name_real}.service",
-        owner   => 'root',
-        group   => 'root',
-        content => template("${module_name}/instance/systemd_unit_rhel.erb")
-      }
+      $systemd_template = "${module_name}/instance/systemd_unit_rhel.erb"
+    }
+    # write service file
+    file { "${service_name_real} service unit":
+      path    => "/usr/lib/systemd/system/${service_name_real}.service",
+      owner   => 'root',
+      group   => 'root',
+      content => template($systemd_template)
+    }
+    # Refresh systemd configuration
+    exec { "refresh_${service_name_real}":
+      command     => '/usr/bin/systemctl daemon-reload',
+      refreshonly => true,
+      subscribe   => File["${service_name_real} service unit"],
+      notify      => Service[$service_name_real]
     }
   } else { # Debian/Ubuntu, RHEL 6, SLES 11, ...
     case $::tomcat::install_from {
