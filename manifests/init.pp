@@ -18,6 +18,8 @@
 #   whether the service should be running (valid: 'stopped'|'running')
 # [*service_enable*]
 #   enable service (boolean)
+# [*systemd_service_type*]
+#   value for systemd service type
 # [*service_start*]
 #   override service startup command
 # [*service_stop*]
@@ -83,6 +85,7 @@ class tomcat (
   $service_name               = undef,
   $service_ensure             = 'running',
   $service_enable             = true,
+  $systemd_service_type       = undef,
   $service_start              = undef,
   $service_stop               = undef,
   $tomcat_user                = undef,
@@ -363,6 +366,23 @@ class tomcat (
     }
   } else {
     $config_path_real = $config_path
+  }
+
+  if $systemd_service_type == undef {
+    case $::tomcat::install_from {
+      'package' : {
+        if ($::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20') {
+          $systemd_service_type_real = 'forking'
+        } else {
+          $systemd_service_type_real = 'simple'
+        }
+      }
+      default : {
+        $systemd_service_type_real = 'simple'
+      }
+    }
+  } else {
+    $systemd_service_type_real = $systemd_service_type
   }
 
   if $service_start == undef {

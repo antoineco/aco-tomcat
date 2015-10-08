@@ -3,7 +3,7 @@ Description=Apache Tomcat Web Application Container
 After=network.target
 
 [Service]
-Type=simple
+Type=<%= @systemd_service_type_real %>
 EnvironmentFile=-<%= @config_path_real %>
 User=<%= @tomcat_user %>
 Group=<%= @tomcat_group %>
