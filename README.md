@@ -318,6 +318,9 @@ Whether the service should be running. Valid values are `stopped` and `running`.
 #####`service_enable`
 Whether to enable the tomcat service. Boolean value. Defaults to `true`.
 
+#####`systemd_service_type`
+The value for the systemd service type if applicable.
+
 #####`service_start`
 Optional override command for starting the service. Default depends on the platform.
 
