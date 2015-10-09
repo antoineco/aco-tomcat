@@ -3,7 +3,7 @@ Description=Apache Tomcat Web Application Container
 After=syslog.target network.target
 
 [Service]
-Type=forking
+Type=<%= @systemd_service_type_real %>
 ExecStart=<%= @service_start_real %>
 ExecStop=<%= @service_stop_real %>
 SuccessExitStatus=143
