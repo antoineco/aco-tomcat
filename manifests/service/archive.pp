@@ -17,29 +17,25 @@ class tomcat::service::archive {
   if $::tomcat::params::systemd {
     # manage systemd unit on compatible systems
     if $::osfamily == 'Suse' { # SuSE
-      file { "${::tomcat::service_name_real} service unit":
-        ensure  => present,
-        path    => "/usr/lib/systemd/system/${::tomcat::service_name_real}.service",
-        owner   => 'root',
-        group   => 'root',
-        content => template("${module_name}/instance/systemd_unit_suse.erb")
-      }
-    } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease >= '20' { # Fedora 20+
-      file { "${::tomcat::service_name_real} service unit":
-        ensure  => present,
-        path    => "/usr/lib/systemd/system/${::tomcat::service_name_real}.service",
-        owner   => 'root',
-        group   => 'root',
-        content => template("${module_name}/instance/systemd_unit_fedora.erb")
-      }
-    } else { # RHEL 7+ or Fedora 17-19
-      file { "${::tomcat::service_name_real} service unit":
-        ensure  => present,
-        path    => "/usr/lib/systemd/system/${::tomcat::service_name_real}.service",
-        owner   => 'root',
-        group   => 'root',
-        content => template("${module_name}/instance/systemd_unit_rhel.erb")
-      }
+      $systemd_template = "${module_name}/instance/systemd_unit_suse.erb"
+    } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20' { # Fedora 17-19
+      $systemd_template = "${module_name}/instance/systemd_unit_fedora.erb"
+    } else { # Fedora 20+ or RHEL 7+
+      $systemd_template = "${module_name}/instance/systemd_unit_rhel.erb"
+    }
+    # write service file
+    file { "${service_name_real} service unit":
+      path    => "/usr/lib/systemd/system/${service_name_real}.service",
+      owner   => 'root',
+      group   => 'root',
+      content => template($systemd_template)
+    }
+    # Refresh systemd configuration
+    exec { "refresh_${service_name_real}":
+      command     => '/usr/bin/systemctl daemon-reload',
+      refreshonly => true,
+      subscribe   => File["${::tomcat::service_name_real} service unit"],
+      notify      => Service[$::tomcat::service_name_real]
     }
   } else { # Debian/Ubuntu, RHEL 6, SLES 11, ...
     $start_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${::tomcat::service_start_real}'"
