@@ -42,6 +42,18 @@ class tomcat::params {
           }
           $systemd = true
         }
+        'Amazon' : {
+          case $::operatingsystemrelease {
+            '2015.09'    : {
+              $package_name = 'tomcat7'
+              $version = '7.0.62-1.10.amzn1'
+              $systemd = false
+            }
+            default : {
+              fail("Unsupported OS version ${::operatingsystemmajrelease}")
+            }
+          }
+        }
         default  : {
           case $::operatingsystemmajrelease {
             '7'     : {
