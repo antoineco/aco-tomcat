@@ -640,5 +640,7 @@ Check the [puppetlabs_spec_helper](https://github.com/puppetlabs/puppetlabs_spec
 
 * [ETL](https://github.com/etlweather)
 * [Jason Hane](https://github.com/hanej)
+* [Josh Baird](https://github.com/joshuabaird)
+* [Frank Holtz](https://github.com/scitechfh)
 
 Features request and contributions are always welcome!
