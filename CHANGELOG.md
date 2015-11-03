@@ -1,3 +1,10 @@
+###1.3.1
+
+* New `systemd_service_type` parameter ([joshuabaird](https://github.com/joshuabaird))
+* Reload systemd daemon after unit update ([scitechfh](https://github.com/scitechfh))
+* Update deprecated `port` firewall parameter ([scitechfh](https://github.com/scitechfh))
+* Support Fedora 23
+
 ###1.3.0
 
 * Support per-instance user
