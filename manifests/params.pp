@@ -6,6 +6,10 @@ class tomcat::params {
       case $::operatingsystem {
         'Fedora' : {
           case $::operatingsystemmajrelease {
+            '23'    : {
+              $version = '1:8.0.26-1.fc23'
+              $package_name = 'tomcat'
+            }
             '22'    : {
               $version = '1:7.0.59-4.fc22'
               $package_name = 'tomcat'
