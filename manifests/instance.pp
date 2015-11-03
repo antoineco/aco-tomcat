@@ -1213,7 +1213,7 @@ define tomcat::instance (
     # http connector
     if $http_connector {
       firewall { "${http_port} accept - tomcat (${name})":
-        port   => $http_port,
+        dport  => $http_port,
         proto  => 'tcp',
         action => 'accept'
       }
@@ -1222,7 +1222,7 @@ define tomcat::instance (
     # ajp connector
     if $ajp_connector {
       firewall { "${ajp_port} accept - tomcat (${name})":
-        port   => $ajp_port,
+        dport  => $ajp_port,
         proto  => 'tcp',
         action => 'accept'
       }
@@ -1231,7 +1231,7 @@ define tomcat::instance (
     # ssl connector
     if $ssl_connector {
       firewall { "${ssl_port} accept - tomcat (${name})":
-        port   => $ssl_port,
+        dport  => $ssl_port,
         proto  => 'tcp',
         action => 'accept'
       }
@@ -1240,7 +1240,7 @@ define tomcat::instance (
     # jmx
     if $jmx_listener {
       firewall { "${jmx_registry_port}/${jmx_server_port} accept - tomcat (${name})":
-        port   => [$jmx_registry_port, $jmx_server_port],
+        dport  => [$jmx_registry_port, $jmx_server_port],
         proto  => 'tcp',
         action => 'accept'
       }
