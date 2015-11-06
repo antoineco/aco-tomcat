@@ -61,9 +61,8 @@
     {
       "operatingsystem": "Amazon",
       "operatingsystemrelease": [
-        "5",
-        "6",
-        "7"
+        "2015.03",
+        "2015.09"
       ]
     },
     {
