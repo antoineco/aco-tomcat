@@ -47,6 +47,7 @@ class tomcat::config {
   $singlesignon_valve = $::tomcat::singlesignon_valve
   $accesslog_valve = $::tomcat::accesslog_valve
   $valves = $::tomcat::valves
+  $globalnaming_environments = $::tomcat::globalnaming_environments
   $globalnaming_resources = $::tomcat::globalnaming_resources
   $context_params = $::tomcat::context_params
   $context_loader = $::tomcat::context_loader
@@ -114,8 +115,9 @@ class tomcat::config {
 
   # Template uses:
   # - $userdatabase_realm
+  # - $globalnaming_environments
   # - $globalnaming_resources
-  if $userdatabase_realm or ($globalnaming_resources and $globalnaming_resources != []) {
+  if $userdatabase_realm or ($globalnaming_environments and $globalnaming_environments != []) or ($globalnaming_resources and $globalnaming_resources != []) {
     concat::fragment { 'server.xml globalnamingresources':
       order   => 20,
       content => template("${module_name}/common/server.xml/020_globalnamingresources.erb"),
