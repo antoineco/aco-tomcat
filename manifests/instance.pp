@@ -139,6 +139,7 @@ define tomcat::instance (
   $ssl_compression            = false,
   $ssl_maxthreads             = undef,
   $ssl_clientauth             = undef,
+  $ssl_sslenabledprotocols    = undef,
   $ssl_sslprotocol            = undef,
   $ssl_keystorefile           = undef,
   $ssl_params                 = {},
@@ -457,21 +458,22 @@ define tomcat::instance (
   ), $http_params)
 
   $ssl_params_real = merge(delete_undef_values({
-    'protocol'          => $ssl_protocol,
-    'executor'          => $ssl_use_threadpool ? {
+    'protocol'            => $ssl_protocol,
+    'executor'            => $ssl_use_threadpool ? {
       true    => 'tomcatThreadPool',
       default => undef
     },
-    'connectionTimeout' => $ssl_connectiontimeout,
-    'URIEncoding'       => $ssl_uriencoding,
-    'compression'       => $ssl_compression ? {
+    'connectionTimeout'   => $ssl_connectiontimeout,
+    'URIEncoding'         => $ssl_uriencoding,
+    'compression'         => $ssl_compression ? {
       true    => 'on',
       default => undef
     },
-    'maxThreads'        => $ssl_maxthreads,
-    'clientAuth'        => $ssl_clientauth,
-    'sslProtocol'       => $ssl_sslprotocol,
-    'keystoreFile'      => $ssl_keystorefile
+    'maxThreads'          => $ssl_maxthreads,
+    'clientAuth'          => $ssl_clientauth,
+    'sslEnabledProtocols' => $ssl_sslenabledprotocols,
+    'sslProtocol'         => $ssl_sslprotocol,
+    'keystoreFile'        => $ssl_keystorefile
   }
   ), $ssl_params)
 
