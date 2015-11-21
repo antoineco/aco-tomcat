@@ -414,7 +414,8 @@ Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomc
  - `ssl_compression`: whether to use compression. Boolean value. Defaults to `false`.
  - `ssl_maxthreads`: maximum number of executor threads
  - `ssl_clientauth`: whether to require a valid certificate chain from the client
- - `ssl_sslprotocol`: SSL protocol(s) to use
+ - `ssl_sslenabledprotocols`: SSL protocol(s) to use (explicitly by version)
+ - `ssl_sslprotocol`: SSL protocol(s) to use (a single value may enable multiple protocols and versions)
  - `ssl_keystorefile`: path to keystore file
  - `ssl_params`: optional hash of additional attributes/values to put in the HTTPS connector
 
