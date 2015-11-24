@@ -106,6 +106,7 @@ class tomcat (
   $log4j                      = false,
   $log4j_package_name         = $::tomcat::params::log4j_package_name,
   $enable_extras              = false,
+  $extras_package_name        = undef,
   $manage_firewall            = false,
   #..................................................................................
   # checksum for archive file
@@ -572,7 +573,8 @@ class tomcat (
     Class['::tomcat::install'] -> Class['::tomcat::log4j']
   }
 
-  if $enable_extras_real {
+  if $enable_extras_real and $extras_package_name == undef {
+    # install extras via download
     contain ::tomcat::extras
     Class['::tomcat::install'] -> Class['::tomcat::extras']
   }
