@@ -22,6 +22,14 @@ class tomcat::install::package {
     }
   }
 
+  # install extras
+  if $::tomcat::enable_extras and  $::tomcat::extras_package_name != undef {
+    package { 'tomcat extras':
+      ensure => $::tomcat::package_ensure_real,
+      name   => $::tomcat::extras_package_name
+    }
+  }
+
   # fix broken bits in some tomcat init scripts
   if $::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' and $::operatingsystemmajrelease < '7' { #fix 'status' command for instances
     file_line { 'fix broken tomcat init script':
