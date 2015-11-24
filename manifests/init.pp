@@ -352,7 +352,7 @@ class tomcat (
   }
   
   if ($package_ensure != undef) {
-    validate_re($package_ensure, "^(latest|present)$", '$package_ensure must be either \'latest\' or \'present\'')
+    validate_re($package_ensure, '^(latest|present)$', '$package_ensure must be either \'latest\' or \'present\'')
     $package_ensure_real = $package_ensure
   } else {
     $package_ensure_real = $version
