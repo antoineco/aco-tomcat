@@ -10,14 +10,14 @@ class tomcat::install::package {
 
   # install packages
   package { 'tomcat server':
-    ensure => $::tomcat::version,
+    ensure => $::tomcat::package_ensure_real,
     name   => $::tomcat::package_name
   }
 
   # install admin webapps
   if $::tomcat::admin_webapps {
     package { 'tomcat admin webapps':
-      ensure => $::tomcat::version,
+      ensure => $::tomcat::package_ensure_real,
       name   => $::tomcat::admin_webapps_package_name_real
     }
   }
