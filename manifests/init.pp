@@ -84,6 +84,7 @@ class tomcat (
   $version                    = $::tomcat::params::version,
   $archive_source             = undef,
   $package_name               = $::tomcat::params::package_name,
+  $package_ensure             = undef,
   $service_name               = undef,
   $service_ensure             = 'running',
   $service_enable             = true,
@@ -349,6 +350,13 @@ class tomcat (
     }
   } else {
     $catalina_pid_real = $catalina_pid
+  }
+  
+  if ($package_ensure != undef) {
+    validate_re($package_ensure, '^(latest|present)$', '$package_ensure must be either \'latest\' or \'present\'')
+    $package_ensure_real = $package_ensure
+  } else {
+    $package_ensure_real = $version
   }
 
   if $log_path == undef {
