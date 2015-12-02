@@ -479,7 +479,7 @@ An array of custom `Valve` entries to be added to the `Host` container. Each ent
 An array of `Environment` entries to be added to the `GlobalNamingResources` component. Each entry is to be supplied as a hash of attributes/values for the `Environment` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html#Environment_Entries) for the list of possible attributes.
 
 #####`globalnaming_resources`
-An array of `Resource` entries to be added to the `GlobalNamingResources` component. Each entry is to be supplied as a hash of attributes/values for the `Resource` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html) for the list of possible attributes.
+An array of `Resource` entries to be added to the `GlobalNamingResources` component. Each entry is to be supplied as a hash of attributes/values for the `Resource` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html#Resource_Definitions) for the list of possible attributes.
 
 **Context configuration**
 
