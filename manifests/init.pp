@@ -38,6 +38,10 @@
 #   log4j package name
 # [*enable_extras*]
 #   install extra libraries (boolean)
+# [*extra_source*]
+#   URL to download the extra libraries (string)
+# [*extras_package_name*]
+#   install extras from given package(s)
 # [*manage_firewall*]
 #   manage firewall rules (boolean)
 # [*admin_webapps*]
@@ -50,6 +54,12 @@
 #   admin user name
 # [*admin_password*]
 #   admin user password
+# [*checksum_verify*]
+#   verify the checksum if tomcat is installed from an archive (boolean)
+# [*checksum_type*]
+#   archive file checksum type (none|md5|sha1|sha2|sh256|sha384|sha512)
+# [*checksum*]
+#   The checksum of the archive file
 #
 # see README file for a description of all parameters related to server configuration
 #
@@ -81,6 +91,7 @@ class tomcat (
   $install_from               = 'package',
   $version                    = $::tomcat::params::version,
   $archive_source             = undef,
+  $extra_source               = undef,
   $package_name               = $::tomcat::params::package_name,
   $service_name               = undef,
   $service_ensure             = 'running',
@@ -96,6 +107,12 @@ class tomcat (
   $log4j_package_name         = $::tomcat::params::log4j_package_name,
   $enable_extras              = false,
   $manage_firewall            = false,
+  #..................................................................................
+  # checksum for archive file
+  #..................................................................................
+  $checksum_verify            = false,
+  $checksum                   = undef,
+  $checksum_type              = 'none',
   #..................................................................................
   # security and administration
   #..................................................................................
@@ -262,6 +279,12 @@ class tomcat (
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
   validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
   validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
+  validate_bool($checksum_verify)
+  validate_re($checksum_type, '(none|md5|sha1|sha2|sh256|sha384|sha512)', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
+
+  if $checksum_verify == true and $checksum == undef {
+    fail('Checksum Verify cannot be turned on without a set checksum variable')
+  }
 
   # split version string
   $array_version_full = split($version, '[-]')
@@ -283,6 +306,7 @@ class tomcat (
   } else {
     $archive_source_real = $archive_source
   }
+
 
   if $admin_webapps_package_name == undef {
     $admin_webapps_package_name_real = $::osfamily ? {

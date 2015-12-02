@@ -7,11 +7,11 @@ class tomcat::params {
         'Fedora' : {
           case $::operatingsystemmajrelease {
             '23'    : {
-              $version = '1:8.0.26-1.fc23'
+              $version = '1:8.0.32-5.fc23'
               $package_name = 'tomcat'
             }
             '22'    : {
-              $version = '1:7.0.59-4.fc22'
+              $version = '1:7.0.68-3.fc22'
               $package_name = 'tomcat'
             }
             '21'    : {
@@ -64,7 +64,7 @@ class tomcat::params {
               $systemd = true
             }
             '6'     : {
-              $version = '6.0.24-90.el6'
+              $version = '6.0.24-94.el6_7'
               $package_name = 'tomcat6'
               # = epel repo =
               # $version = '7.0.33-4.el6'
@@ -156,14 +156,16 @@ class tomcat::params {
       case $::operatingsystem {
         'Debian' : {
           case $::operatingsystemmajrelease {
+            # jessie
             '8'     : {
               $version = '8.0.14-1'
               $package_name = 'tomcat8'
-              # $version = '7.0.56-3'
+              # $version = '7.0.56-3+deb8u1'
               # $package_name = 'tomcat7'
             }
+            # wheezy
             '7'     : {
-              $version = '7.0.28-4+deb7u2'
+              $version = '7.0.28-4+deb7u3'
               $package_name = 'tomcat7'
               # $version = '6.0.35-6+deb7u1'
               # $package_name = 'tomcat6'
@@ -179,12 +181,24 @@ class tomcat::params {
         }
         'Ubuntu' : {
           case $::operatingsystemrelease {
+<<<<<<< HEAD
+=======
+            # xenial
+            '16.04' : {
+              $version = '8.0.32-1ubuntu1'
+              $package_name = 'tomcat8'
+              # $version = '7.0.68-1'
+              # $package_name = 'tomcat7'
+            }
+            # wily
+>>>>>>> 1f69ca4... Update repo package versions
             '15.10' : {
               $version = '8.0.26-1'
               $package_name = 'tomcat8'
               # $version = '7.0.64-1'
               # $package_name = 'tomcat7'
             }
+            # vivid
             '15.04' : {
               $version = '8.0.14-1'
               $package_name = 'tomcat8'
@@ -193,6 +207,7 @@ class tomcat::params {
               # $version = '6.0.41-1'
               # $package_name = 'tomcat6'
             }
+            # utopic
             '14.10' : {
               $version = '8.0.9-1'
               $package_name = 'tomcat8'
@@ -201,30 +216,35 @@ class tomcat::params {
               # $version = '6.0.41-1'
               # $package_name = 'tomcat6'
             }
+            # trusty
             '14.04' : {
               $version = '7.0.52-1ubuntu0.3'
               $package_name = 'tomcat7'
               # $version = '6.0.39-1'
               # $package_name = 'tomcat6'
             }
+            # saucy
             '13.10' : {
               $version = '7.0.42-1ubuntu0.1'
               $package_name = 'tomcat7'
               # $version = '6.0.37-1'
               # $package_name = 'tomcat6'
             }
+            # raring
             '13.04' : {
               $version = '7.0.35-1~exp2ubuntu1.1'
               $package_name = 'tomcat7'
               # $version = '6.0.35-6'
               # $package_name = 'tomcat6'
             }
+            # quantal
             '12.10' : {
               $version = '7.0.30-0ubuntu1.3'
               $package_name = 'tomcat7'
               # $version = '6.0.35-5ubuntu0.1'
               # $package_name = 'tomcat6'
             }
+            # precise
             '12.04' : {
               $version = '7.0.26-1ubuntu1.2'
               $package_name = 'tomcat7'
