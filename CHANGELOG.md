@@ -1,3 +1,9 @@
+###1.3.2
+
+* New parameters: `globalnaming_environments` and `ssl_sslenabledprotocols` ([roysjosh](https://github.com/roysjosh))
+* Support Amazon Linux 2015.x ([thkrmr](https://github.com/thkrmr))
+* Update default package versions (Fedora 23)
+
 ###1.3.1
 
 * New `systemd_service_type` parameter ([joshuabaird](https://github.com/joshuabaird))
