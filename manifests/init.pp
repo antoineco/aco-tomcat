@@ -374,7 +374,7 @@ class tomcat (
     $catalina_pid_real = $catalina_pid
   }
   
-  if ($package_ensure != undef) {
+  if $package_ensure {
     validate_re($package_ensure, '^(latest|present)$', '$package_ensure must be either \'latest\' or \'present\'')
     $package_ensure_real = $package_ensure
   } else {
@@ -581,7 +581,7 @@ class tomcat (
     Class['::tomcat::install'] -> Class['::tomcat::log4j']
   }
 
-  if $enable_extras_real and $extras_package_name == undef {
+  if $enable_extras_real and !$extras_package_name {
     # install extras via download
     contain ::tomcat::extras
     Class['::tomcat::install'] -> Class['::tomcat::extras']
