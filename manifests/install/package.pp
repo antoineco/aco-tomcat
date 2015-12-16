@@ -23,7 +23,7 @@ class tomcat::install::package {
   }
 
   # install extras
-  if $::tomcat::enable_extras and  $::tomcat::extras_package_name != undef {
+  if $::tomcat::enable_extras and $::tomcat::extras_package_name {
     package { 'tomcat extras':
       ensure => $::tomcat::package_ensure_real,
       name   => $::tomcat::extras_package_name
