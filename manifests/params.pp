@@ -14,28 +14,6 @@ class tomcat::params {
               $version = '1:7.0.68-3.fc22'
               $package_name = 'tomcat'
             }
-            '21'    : {
-              $version = '7.0.59-1.fc21'
-              $package_name = 'tomcat'
-            }
-            '20'    : {
-              $version = '7.0.52-2.fc20'
-              $package_name = 'tomcat'
-            }
-            '19'    : {
-              $version = '7.0.47-1.fc19'
-              $package_name = 'tomcat'
-            }
-            '18'    : {
-              $version = '7.0.42-1.fc18'
-              $package_name = 'tomcat'
-            }
-            '17'    : {
-              $version = '7.0.40-1.fc17'
-              $package_name = 'tomcat'
-              # $version = '6.0.35-1.fc17'
-              # $package_name = 'tomcat6'
-            }
             default : {
               fail("Unsupported OS version ${::operatingsystemmajrelease}")
             }
@@ -108,14 +86,6 @@ class tomcat::params {
               # $version = '8.0.23-86.16'
               # $package_name = 'tomcat'
             }
-            '13.1'  : {
-              $version = '7.0.42-4.4.6'
-              $package_name = 'tomcat'
-            }
-            '12.3'  : {
-              $version = '7.0.42-2.43.1'
-              $package_name = 'tomcat'
-            }
             default : {
               fail("Unsupported OS version ${::operatingsystemrelease}")
             }
@@ -158,7 +128,7 @@ class tomcat::params {
           case $::operatingsystemmajrelease {
             # jessie
             '8'     : {
-              $version = '8.0.14-1'
+              $version = '8.0.14-1+deb8u1'
               $package_name = 'tomcat8'
               # $version = '7.0.56-3+deb8u1'
               # $package_name = 'tomcat7'
@@ -170,10 +140,6 @@ class tomcat::params {
               # $version = '6.0.35-6+deb7u1'
               # $package_name = 'tomcat6'
             }
-            '6'     : {
-              $version = '6.0.41-2+squeeze7'
-              $package_name = 'tomcat6'
-            }
             default : {
               fail("Unsupported OS version ${::operatingsystemmajrelease}")
             }
@@ -181,8 +147,6 @@ class tomcat::params {
         }
         'Ubuntu' : {
           case $::operatingsystemrelease {
-<<<<<<< HEAD
-=======
             # xenial
             '16.04' : {
               $version = '8.0.32-1ubuntu1'
@@ -191,7 +155,6 @@ class tomcat::params {
               # $package_name = 'tomcat7'
             }
             # wily
->>>>>>> 1f69ca4... Update repo package versions
             '15.10' : {
               $version = '8.0.26-1'
               $package_name = 'tomcat8'
@@ -200,12 +163,10 @@ class tomcat::params {
             }
             # vivid
             '15.04' : {
-              $version = '8.0.14-1'
+              $version = '8.0.14-1+deb8u1build0.15.04.1'
               $package_name = 'tomcat8'
               # $version = '7.0.56-2ubuntu0.1'
               # $package_name = 'tomcat7'
-              # $version = '6.0.41-1'
-              # $package_name = 'tomcat6'
             }
             # utopic
             '14.10' : {
