@@ -38,13 +38,10 @@
 #   log4j package name
 # [*enable_extras*]
 #   install extra libraries (boolean)
-<<<<<<< HEAD
 # [*extra_source*]
 #   URL to download the extra libraries (string)
-=======
 # [*extras_package_name*]
 #   install extras from given package(s)
->>>>>>> 2ea6fdba2fe76e031f68b01ad5550e76e2052925
 # [*manage_firewall*]
 #   manage firewall rules (boolean)
 # [*admin_webapps*]
