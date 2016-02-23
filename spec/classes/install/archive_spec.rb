@@ -73,11 +73,11 @@ describe 'tomcat::install::archive' do
         let :facts do
           super().merge({
             :operatingsystem           => 'Fedora',
-            :operatingsystemmajrelease => '21'
+            :operatingsystemmajrelease => '23'
           })
         end
         it do
-          is_expected.to contain_user('tomcat').with({ 'home' => '/usr/share/tomcat7' })
+          is_expected.to contain_user('tomcat').with({ 'home' => '/usr/share/tomcat8' })
         end
       end
     end
