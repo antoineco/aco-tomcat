@@ -38,8 +38,13 @@
 #   log4j package name
 # [*enable_extras*]
 #   install extra libraries (boolean)
+<<<<<<< HEAD
 # [*extra_source*]
 #   URL to download the extra libraries (string)
+=======
+# [*extras_package_name*]
+#   install extras from given package(s)
+>>>>>>> 2ea6fdba2fe76e031f68b01ad5550e76e2052925
 # [*manage_firewall*]
 #   manage firewall rules (boolean)
 # [*admin_webapps*]
@@ -91,6 +96,7 @@ class tomcat (
   $archive_source             = undef,
   $extra_source               = undef,
   $package_name               = $::tomcat::params::package_name,
+  $package_ensure             = undef,
   $service_name               = undef,
   $service_ensure             = 'running',
   $service_enable             = true,
@@ -104,6 +110,7 @@ class tomcat (
   $log4j                      = false,
   $log4j_package_name         = $::tomcat::params::log4j_package_name,
   $enable_extras              = false,
+  $extras_package_name        = undef,
   $manage_firewall            = false,
   #..................................................................................
   # checksum for archive file
@@ -229,6 +236,7 @@ class tomcat (
   $valves                     = [],
   #..................................................................................
   # misc
+  $globalnaming_environments  = [],
   $globalnaming_resources     = [],
   #..................................................................................
   # context configuration
@@ -275,7 +283,7 @@ class tomcat (
   validate_re($install_from, '^(package|archive)$', '$install_from must be either \'package\' or \'archive\'')
   validate_re($version, '^(?:[0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(?:-.*)?$', 'incorrect tomcat version number')
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
-  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
+  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_environments, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
   validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
   validate_bool($checksum_verify)
   validate_re($checksum_type, '(none|md5|sha1|sha2|sh256|sha384|sha512)', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
@@ -367,6 +375,13 @@ class tomcat (
     }
   } else {
     $catalina_pid_real = $catalina_pid
+  }
+  
+  if $package_ensure {
+    validate_re($package_ensure, '^(latest|present)$', '$package_ensure must be either \'latest\' or \'present\'')
+    $package_ensure_real = $package_ensure
+  } else {
+    $package_ensure_real = $version
   }
 
   if $log_path == undef {
@@ -569,7 +584,8 @@ class tomcat (
     Class['::tomcat::install'] -> Class['::tomcat::log4j']
   }
 
-  if $enable_extras_real {
+  if $enable_extras_real and !$extras_package_name {
+    # install extras via download
     contain ::tomcat::extras
     Class['::tomcat::install'] -> Class['::tomcat::extras']
   }

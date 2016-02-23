@@ -266,6 +266,9 @@ What type of source to install from. The module will download the necessary file
 #####`package_name`
 Tomcat package name. Ignored if installed from archive. Default depends on the distribution.
 
+#####`package_ensure`
+Tomcat package `ensure` attribute. Valid values are `undef`, `present` and `latest`. Defaults to `undef` (falls back to `${version}`).
+
 #####`tomcat_native`
 Whether to install the Tomcat Native library. Boolean value. Defaults to `false`.
 
@@ -345,6 +348,9 @@ Tomcat group. Defaults to `${tomcat_user}`.
 #####`enable_extras`
 Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.  
 *Warning:* extra libraries are enabled globally if defined within the global context
+
+#####`extras_package_name`
+Package name for tomcat extra libraries. If set, forces installation of Tomcat extra libraries from a package repository instead of Apache servers. The `ensure` attribute of the package resource will then default to the same value as `${package_ensure}`. Defaults to `undef`.
 
 #####`manage_firewall`
 Whether to automatically manage firewall rules. Boolean value. Defaults to `false`.
@@ -475,8 +481,11 @@ Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-8.0-doc
 #####`valves`
 An array of custom `Valve` entries to be added to the `Host` container. Each entry is to be supplied as a hash of attributes/values for the `Valve` XML node. See [Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html) for the list of possible attributes.
 
+#####`globalnaming_environments`
+An array of `Environment` entries to be added to the `GlobalNamingResources` component. Each entry is to be supplied as a hash of attributes/values for the `Environment` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html#Environment_Entries) for the list of possible attributes.
+
 #####`globalnaming_resources`
-An array of `Resource` entries to be added to the `GlobalNamingResources` component. Each entry is to be supplied as a hash of attributes/values for the `Resource` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html) for the list of possible attributes.
+An array of `Resource` entries to be added to the `GlobalNamingResources` component. Each entry is to be supplied as a hash of attributes/values for the `Resource` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html#Resource_Definitions) for the list of possible attributes.
 
 **Context configuration**
 
@@ -488,7 +497,7 @@ See [tomcat::context](#define-tomcatcontext) defined type.
 #####`config_path`
 Absolute path to the environment configuration (*setenv*). Default depends on the platform.
 
-Please see [catalina.sh](http://svn.apache.org/repos/asf/tomcat/tc8.0.x/trunk/bin/catalina.sh) for a description of the following environment variables.
+See [catalina.sh](http://svn.apache.org/repos/asf/tomcat/tc8.0.x/trunk/bin/catalina.sh) for a description of the following environment variables.
 
 #####`catalina_home`
 $CATALINA_HOME. Default depends on the platform.
@@ -500,10 +509,10 @@ $CATALINA_BASE. Default depends on the platform.
 $JASPER_HOME. Defaults to `catalina_home`.
 
 #####`catalina_tmpdir`
-$CATALINA_TMPDIR. Defaults to `${catalina_base}/temp`
+$CATALINA_TMPDIR. Defaults to `${catalina_base}/temp`.
 
 #####`catalina_pid`
-$CATALINA_PID. Defaults to: `/var/run/${service_name}.pid`
+$CATALINA_PID. Defaults to: `/var/run/${service_name}.pid`.
 
 #####`catalina_opts`
 $CATALINA_OPTS. Array. Defaults to `[]`.
@@ -549,7 +558,7 @@ Hash of custom environment variables.
 Some extra documentation about [log4j](http://logging.apache.org/log4j/)'s usage with tomcat is available on [this page](http://tomcat.apache.org/tomcat-8.0-doc/logging.html#Using_Log4j).
 
 #####`log_path`
-Absolute path to the log directory. Defaults to `/var/log/$service_name`.
+Absolute path to the log directory. Defaults to `/var/log/${service_name}`.
 
 #####`log4j_enable`
 Whether to use log4j rather than *java.util.logging* for Tomcat internal logging. Boolean value. Defaults to `false`.  
@@ -652,5 +661,7 @@ Check the [puppetlabs_spec_helper](https://github.com/puppetlabs/puppetlabs_spec
 * [Jason Hane](https://github.com/hanej)
 * [Josh Baird](https://github.com/joshuabaird)
 * [Frank Holtz](https://github.com/scitechfh)
+* [Vincent Kramar](https://github.com/thkrmr)
+* [Joshua Roys](https://github.com/roysjosh)
 
 Features request and contributions are always welcome!

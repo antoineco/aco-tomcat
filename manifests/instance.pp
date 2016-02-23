@@ -202,6 +202,7 @@ define tomcat::instance (
   $valves                     = [],
   #..................................................................................
   # misc
+  $globalnaming_environments  = [],
   $globalnaming_resources     = [],
   #..................................................................................
   # context configuration
@@ -257,7 +258,7 @@ define tomcat::instance (
   # parameters validation
   validate_re($version, '^(?:[0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(?:-.*)?$', 'incorrect tomcat version number')
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
-  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
+  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_environments, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
   validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
   validate_bool($checksum_verify)
   validate_re($checksum_type, '(none|md5|sha1|sha2|sh256|sha384|sha512)', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
@@ -792,8 +793,9 @@ define tomcat::instance (
 
   # Template uses:
   # - $userdatabase_realm
+  # - $globalnaming_environments
   # - $globalnaming_resources
-  if $userdatabase_realm or ($globalnaming_resources and $globalnaming_resources != []) {
+  if $userdatabase_realm or ($globalnaming_environments and $globalnaming_environments != []) or ($globalnaming_resources and $globalnaming_resources != []) {
     concat::fragment { "instance ${name} server.xml globalnamingresources":
       order   => 20,
       content => template("${module_name}/common/server.xml/020_globalnamingresources.erb"),

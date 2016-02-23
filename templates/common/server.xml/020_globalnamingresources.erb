@@ -1,5 +1,16 @@
 
   <GlobalNamingResources>
+<%- if @globalnaming_environments and ! @globalnaming_environments.empty? -%>
+  <%- [@globalnaming_environments].flatten.compact.each do |environment| %>
+    <%- environment.each_pair do |attrib, value| -%>
+      <%- if attrib == environment.keys.first -%>
+    <Environment <%= attrib %>="<%= value %>"<% if attrib == environment.keys.last %> /><% end %>
+      <%- else -%>
+                 <%= attrib %>="<%= value %>"<% if attrib == environment.keys.last %> /><% end %>
+      <%- end -%>
+    <%- end -%>
+  <%- end -%>
+<%- end -%>
 <%- if @userdatabase_realm -%>
 
     <Resource name="UserDatabase" auth="Container"
