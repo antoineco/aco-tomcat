@@ -115,6 +115,7 @@ class tomcat (
   $log4j_enable               = false,
   $log4j_conf_type            = 'ini',
   $log4j_conf_source          = "puppet:///modules/${module_name}/log4j/log4j.properties",
+  $log4j_conf_content         = undef,
   #..................................................................................
   # server configuration
   #..................................................................................
