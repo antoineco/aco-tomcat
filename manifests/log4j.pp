@@ -26,15 +26,24 @@ class tomcat::log4j {
     notify => Service[$::tomcat::service_name_real]
   }
 
+  if $::tomcat::log4j_conf_content {
+    $log4j_conf_source_real = undef
+    $log4j_conf_content_real = $::tomcat::log4j_conf_content
+  } else {
+    $log4j_conf_content_real = undef
+    $log4j_conf_source_real = $::tomcat::log4j_conf_source
+  }
+
   if $::tomcat::log4j_conf_type == 'xml' {
     file {
       'global log4j xml configuration':
-        ensure => present,
-        owner  => 'root',
-        group  => 'root',
-        path   => "${::tomcat::catalina_home_real}/lib/log4j.xml",
-        source => $::tomcat::log4j_conf_source,
-        notify => Service[$::tomcat::service_name_real];
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        path    => "${::tomcat::catalina_home_real}/lib/log4j.xml",
+        source  => $log4j_conf_source_real,
+        content => $log4j_conf_content_real,
+        notify  => Service[$::tomcat::service_name_real];
 
       'global log4j ini configuration':
         ensure => absent,
@@ -54,7 +63,8 @@ class tomcat::log4j {
         owner  => 'root',
         group  => 'root',
         path   => "${::tomcat::catalina_home_real}/lib/log4j.properties",
-        source => $::tomcat::log4j_conf_source,
+        source  => $log4j_conf_source_real,
+        content => $log4j_conf_content_real,
         notify => Service[$::tomcat::service_name_real];
 
       'global log4j xml configuration':
