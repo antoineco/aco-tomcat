@@ -312,6 +312,15 @@ Must include the full package suffix if tomcat is installed from a package repos
 #####`archive_source`
 Source of the tomcat server archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin/apache-tomcat-<version>.tar.gz`
 
+#####`checksum_verify`
+Enable or disables the checksum verification of the tar.gz tomcat archive. Defaults to `false` (boolean).
+
+#####`checksum_type`
+Sets the checksum type to check agains (none|md5|sha1|sha2|sh256|sha384|sha512). Defaults to `none`.
+
+#####`checksum`
+The checksum to test against. Defaults to `undef` (string).
+
 #####`service_name`
 Tomcat service name. Defaults to `${package_name}` (global) / `${package_name}_${title}` (instance).
 
