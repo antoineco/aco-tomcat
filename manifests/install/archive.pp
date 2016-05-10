@@ -8,6 +8,13 @@ class tomcat::install::archive {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
+
+  # dependency
+  if !defined(Class['archive']) {
+    include archive
+  }
+
+
   # create user if not present
   if !defined(Group[$::tomcat::tomcat_group_real]) {
     group { $::tomcat::tomcat_group_real:
@@ -31,21 +38,23 @@ class tomcat::install::archive {
     mode  => '0644'
   }
 
-  # install from archive
   file { $::tomcat::catalina_home_real:
-    ensure => directory
+    ensure => directory,
   } ->
-  staging::file { "apache-tomcat-${::tomcat::version_real}.tar.gz": source => $::tomcat::archive_source_real } ->
-  staging::extract { "apache-tomcat-${::tomcat::version_real}.tar.gz":
-    target  => $::tomcat::catalina_home_real,
-    creates => "${::tomcat::catalina_home_real}/bin",
-    user    => $::tomcat::tomcat_user_real,
-    group   => $::tomcat::tomcat_group_real,
-    strip   => 1
+  archive { "${::tomcat::catalina_home_real}/apache-tomcat-${::tomcat::version_real}.tar.gz":
+    source          => $::tomcat::archive_source_real,
+    cleanup         => true,
+    extract         => true,
+    checksum        => $::tomcat::checksum,
+    checksum_verify => $::tomcat::checksum_verify,
+    checksum_type   => $::tomcat::checksum_type,
+    extract_path    => dirname($::tomcat::catalina_home_real),
+    creates         => "${::tomcat::catalina_home_real}/bin"
   }
 
+
   # ordering
-  Staging::Extract <| title == "apache-tomcat-${::tomcat::version_real}.tar.gz" |> -> File <| tag == 'tomcat_tree' |>
+  Archive <| title == $::tomcat::catalina_base_real |> -> File <| tag == 'tomcat_tree' |>
 
   if $::tomcat::log_path_real != "${::tomcat::catalina_base_real}/logs" {
     file {
