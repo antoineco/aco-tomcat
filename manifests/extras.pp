@@ -6,30 +6,38 @@ class tomcat::extras {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
-  Staging::File {
+  if $::tomcat::extra_source == undef {
+    $extra_source="http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version_real}/bin/extras"
+  } else {
+    $extra_source=$::tomcat::extra_source
+  }
+
+  Archive {
+    extract => false,
     require => File['global extras directory'],
+    cleanup => false,
     notify  => Service[$::tomcat::service_name_real]
   }
 
-  staging::file {
-    'catalina-jmx-remote.jar':
-      target => "${::tomcat::catalina_home_real}/lib/extras/catalina-jmx-remote-${::tomcat::version_real}.jar",
-      source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version_real}/bin/extras/catalina-jmx-remote.jar"
+  archive {
+    "${::tomcat::catalina_home_real}/lib/extras/catalina-jmx-remote-${::tomcat::version_real}.jar":
+      creates =>  "${::tomcat::catalina_home_real}/lib/extras/catalina-jmx-remote-${::tomcat::version_real}.jar",
+      source  => "${extra_source}/catalina-jmx-remote.jar"
     ;
 
-    'catalina-ws.jar':
-      target => "${::tomcat::catalina_home_real}/lib/extras/catalina-ws-${::tomcat::version_real}.jar",
-      source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version_real}/bin/extras/catalina-ws.jar"
+    "${::tomcat::catalina_home_real}/lib/extras/catalina-ws-${::tomcat::version_real}.jar":
+      creates => "${::tomcat::catalina_home_real}/lib/extras/catalina-ws-${::tomcat::version_real}.jar",
+      source  => "${extra_source}/catalina-ws.jar"
     ;
 
-    'tomcat-juli-adapters.jar':
-      target => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version_real}.jar",
-      source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version_real}/bin/extras/tomcat-juli-adapters.jar"
+    "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version_real}.jar":
+      creates => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version_real}.jar",
+      source  => "${extra_source}/tomcat-juli-adapters.jar"
     ;
 
-    'tomcat-juli-extras.jar':
-      target => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-extras-${::tomcat::version_real}.jar",
-      source => "http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version_real}/bin/extras/tomcat-juli.jar"
+    "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-extras-${::tomcat::version_real}.jar":
+      creates => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-extras-${::tomcat::version_real}.jar",
+      source  => "${extra_source}/tomcat-juli.jar"
   }
 
   file {
