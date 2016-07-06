@@ -45,9 +45,9 @@
 #
 # === Sample Usage:
 #
-#  ::tomcat::instance { 'myapp':
-#    root_path    => '/home/tomcat/apps',
-#    control_port => 9005
+#  tomcat::instance { 'myapp':
+#    root_path           => '/home/tomcat/apps',
+#    server_control_port => 9005
 #  }
 #
 define tomcat::instance (
