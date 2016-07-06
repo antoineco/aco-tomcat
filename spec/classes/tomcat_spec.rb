@@ -18,7 +18,7 @@ describe 'tomcat' do
   end
   describe 'optional features' do
     context 'extras libraries' do
-      let(:params) { { :enable_extras => true } }
+      let(:params) { { :extras_enable => true } }
       it { is_expected.to contain_class('tomcat::extras').that_requires('Class[tomcat::install]') }
     end
     context 'log4j logging' do

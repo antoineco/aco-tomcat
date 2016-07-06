@@ -26,7 +26,7 @@
 #   service user
 # [*tomcat_group*]
 #   service group
-# [*enable_extras*]
+# [*extras_enable*]
 #   install extra libraries (boolean)
 # [*extras_source*]
 #   where to download extra libraries from
@@ -76,7 +76,7 @@ define tomcat::instance (
   $service_stop               = undef,
   $tomcat_user                = $::tomcat::tomcat_user_real,
   $tomcat_group               = $::tomcat::tomcat_group_real,
-  $enable_extras              = false,
+  $extras_enable              = false,
   $extras_source              = undef,
   $manage_firewall            = false,
   #..................................................................................
@@ -533,10 +533,10 @@ define tomcat::instance (
   ), $host_params)
 
   # should we force download extras libs?
-  if ($log4j_enable or $jmx_listener) and !$::tomcat::enable_extras_real {
-    $enable_extras_real = true
+  if ($log4j_enable or $jmx_listener) and !$::tomcat::extras_enable_real {
+    $extras_enable_real = true
   } else {
-    $enable_extras_real = $enable_extras
+    $extras_enable_real = $extras_enable
   }
 
   # ------------------------------------#
@@ -1177,9 +1177,9 @@ define tomcat::instance (
   # extras #
   # -------#
 
-  if $enable_extras_real {
-    if $::tomcat::enable_extras_real { # no need to duplicate libraries if enabled globally
-      warning('extra libraries already enabled globally, ignoring parameter \'enable_extras\'')
+  if $extras_enable_real {
+    if $::tomcat::extras_enable_real { # no need to duplicate libraries if enabled globally
+      warning('extra libraries already enabled globally, ignoring parameter \'extras_enable\'')
     } else {
       Archive {
         extract => false,

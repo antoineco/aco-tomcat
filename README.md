@@ -345,7 +345,7 @@ Tomcat user. Defaults to `${service_name}` (Debian) / `tomcat` (all other distri
 #####`tomcat_group`
 Tomcat group. Defaults to `${tomcat_user}`.
 
-#####`enable_extras`
+#####`extras_enable`
 Whether to install Tomcat extra libraries. Boolean value. Defaults to `false`.  
 *Warning:* extra libraries are enabled globally if defined within the global context
 

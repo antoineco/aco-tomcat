@@ -36,7 +36,7 @@
 #   install log4j libraries (boolean)
 # [*log4j_package_name*]
 #   log4j package name
-# [*enable_extras*]
+# [*extras_enable*]
 #   install extra libraries (boolean)
 # [*extras_source*]
 #   where to download extra libraries from
@@ -105,7 +105,7 @@ class tomcat (
   $tomcat_native_package_name = $::tomcat::params::tomcat_native_package_name,
   $log4j                      = false,
   $log4j_package_name         = $::tomcat::params::log4j_package_name,
-  $enable_extras              = false,
+  $extras_enable              = false,
   $extras_source              = undef,
   $extras_package_name        = undef,
   $manage_firewall            = false,
@@ -568,9 +568,9 @@ class tomcat (
 
   # should we download extras libs?
   if $log4j_enable or $jmx_listener {
-    $enable_extras_real = true
+    $extras_enable_real = true
   } else {
-    $enable_extras_real = $enable_extras
+    $extras_enable_real = $extras_enable
   }
 
   # start the real action
@@ -586,7 +586,7 @@ class tomcat (
     Class['::tomcat::install'] -> Class['::tomcat::log4j']
   }
 
-  if $enable_extras_real and !$extras_package_name {
+  if $extras_enable_real and !$extras_package_name {
     # install extras via download
     contain ::tomcat::extras
     Class['::tomcat::install'] -> Class['::tomcat::extras']
