@@ -38,8 +38,8 @@
 #   log4j package name
 # [*enable_extras*]
 #   install extra libraries (boolean)
-# [*extra_source*]
-#   URL to download the extra libraries (string)
+# [*extras_source*]
+#   where to download extra libraries from
 # [*extras_package_name*]
 #   install extras from given package(s)
 # [*manage_firewall*]
@@ -57,7 +57,7 @@
 # [*checksum_verify*]
 #   verify the checksum if tomcat is installed from an archive (boolean)
 # [*checksum_type*]
-#   archive file checksum type (none|md5|sha1|sha2|sh256|sha384|sha512)
+#   archive file checksum type (valid: 'none'|'md5'|'sha1'|'sha2'|'sh256'|'sha384'|'sha512')
 # [*checksum*]
 #   The checksum of the archive file
 #
@@ -91,7 +91,6 @@ class tomcat (
   $install_from               = 'package',
   $version                    = $::tomcat::params::version,
   $archive_source             = undef,
-  $extra_source               = undef,
   $package_name               = $::tomcat::params::package_name,
   $package_ensure             = undef,
   $service_name               = undef,
@@ -107,14 +106,15 @@ class tomcat (
   $log4j                      = false,
   $log4j_package_name         = $::tomcat::params::log4j_package_name,
   $enable_extras              = false,
+  $extras_source              = undef,
   $extras_package_name        = undef,
   $manage_firewall            = false,
   #..................................................................................
   # checksum for archive file
   #..................................................................................
   $checksum_verify            = false,
-  $checksum                   = undef,
   $checksum_type              = 'none',
+  $checksum                   = undef,
   #..................................................................................
   # security and administration
   #..................................................................................
@@ -283,10 +283,10 @@ class tomcat (
   validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_environments, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
   validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
   validate_bool($checksum_verify)
-  validate_re($checksum_type, '(none|md5|sha1|sha2|sh256|sha384|sha512)', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
+  validate_re($checksum_type, '^(none|md5|sha1|sha2|sh256|sha384|sha512)$', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
 
-  if $checksum_verify == true and $checksum == undef {
-    fail('Checksum Verify cannot be turned on without a set checksum variable')
+  if $checksum_verify and !$checksum {
+    fail('Checksum verification requires \'checksum\' variable to be set')
   }
 
   # split version string
@@ -310,6 +310,11 @@ class tomcat (
     $archive_source_real = $archive_source
   }
 
+  if $extras_source == undef {
+    $extras_source_real = "http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version_real}/bin/extras"
+  } else {
+    $extras_source_real = $extras_source
+  }
 
   if $admin_webapps_package_name == undef {
     $admin_webapps_package_name_real = $::osfamily ? {
@@ -373,7 +378,7 @@ class tomcat (
   } else {
     $catalina_pid_real = $catalina_pid
   }
-  
+
   if $package_ensure {
     validate_re($package_ensure, '^(latest|present)$', '$package_ensure must be either \'latest\' or \'present\'')
     $package_ensure_real = $package_ensure
@@ -468,7 +473,7 @@ class tomcat (
     } } else {
     $security_manager_real = $security_manager
   }
-  
+
   $engine_defaulthost_real = $engine_defaulthost ? {
     undef   => $host_name,
     default => $engine_defaulthost
@@ -477,7 +482,7 @@ class tomcat (
   $java_opts_real = join($java_opts, ' ')
   $catalina_opts_real = join($catalina_opts, ' ')
   $jpda_opts_real = join($jpda_opts, ' ')
-  
+
   # generate params hash
   $server_params_real = merge(delete_undef_values({
     'port'     => $server_control_port,

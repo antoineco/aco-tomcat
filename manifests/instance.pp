@@ -28,8 +28,8 @@
 #   service group
 # [*enable_extras*]
 #   install extra libraries (boolean)
-# [*extra_source*]
-#   URL to download the extra libraries (string)
+# [*extras_source*]
+#   where to download extra libraries from
 # [*manage_firewall*]
 #   manage firewall rules (boolean)
 # [*admin_webapps*]
@@ -43,7 +43,7 @@
 # [*checksum_verify*]
 #   verify the checksum if tomcat is installed from an archive (boolean)
 # [*checksum_type*]
-#   archive file checksum type (none|md5|sha1|sha2|sh256|sha384|sha512)
+#   archive file checksum type (valid: 'none'|'md5'|'sha1'|'sha2'|'sh256'|'sha384'|'sha512')
 # [*checksum*]
 #   The checksum of the archive file
 #
@@ -68,7 +68,6 @@ define tomcat::instance (
   $root_path                  = '/var/lib/tomcats',
   $version                    = $::tomcat::version_real,
   $archive_source             = undef,
-  $extra_source               = undef,
   $service_name               = undef,
   $service_ensure             = 'running',
   $service_enable             = true,
@@ -78,13 +77,14 @@ define tomcat::instance (
   $tomcat_user                = $::tomcat::tomcat_user_real,
   $tomcat_group               = $::tomcat::tomcat_group_real,
   $enable_extras              = false,
+  $extras_source              = undef,
   $manage_firewall            = false,
   #..................................................................................
   # checksum for archive file
   #..................................................................................
   $checksum_verify            = false,
-  $checksum                   = undef,
   $checksum_type              = 'none',
+  $checksum                   = undef,
   #..................................................................................
   # security and administration
   #..................................................................................
@@ -261,10 +261,10 @@ define tomcat::instance (
   validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_environments, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
   validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
   validate_bool($checksum_verify)
-  validate_re($checksum_type, '(none|md5|sha1|sha2|sh256|sha384|sha512)', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
+  validate_re($checksum_type, '^(none|md5|sha1|sha2|sh256|sha384|sha512)$', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
 
-  if $checksum_verify == true and $checksum == undef {
-    fail('Checksum Verify cannot be turned on without a set checksum variable')
+  if $checksum_verify and !$checksum {
+    fail('Checksum verification requires \'checksum\' variable to be set')
   }
 
   # multi-version installation only supported with archive installation
@@ -294,6 +294,12 @@ define tomcat::instance (
     $archive_source_real = "http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version_real}/bin/apache-tomcat-${version_real}.tar.gz"
   } else {
     $archive_source_real = $archive_source
+  }
+
+  if $extras_source == undef {
+    $extras_source_real = "http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version_real}/bin/extras"
+  } else {
+    $extras_source_real = $extras_source
   }
 
   if $catalina_home == undef {
@@ -580,19 +586,21 @@ define tomcat::instance (
       require => File['tomcat instances root'],
       alias   => $catalina_home_alias
     } ->
-    archive { "${catalina_home_real}/apache-tomcat-${version_real}.tar.gz":
+    archive { "apache-tomcat-${version_real}.tar.gz":
+      path            => "${catalina_home_real}/apache-tomcat-${version_real}.tar.gz",
       source          => $archive_source_real,
       cleanup         => true,
       extract         => true,
-      checksum        => $checksum,
       checksum_verify => $checksum_verify,
       checksum_type   => $checksum_type,
-      extract_path    => dirname($catalina_home_real),
-      creates         => "${catalina_home_real}/bin"
+      checksum        => $checksum,
+      extract_path    => $catalina_home_real,
+      extract_command => 'tar xf %s --strip-components=1',
+      creates         => "${catalina_home_real}/LICENSE"
     }
 
     # ordering
-    Archive <| title == "${catalina_home_real}/apache-tomcat-${version_real}.tar.gz" |> -> File <| tag == "instance_${name}_tree" |>
+    Archive <| title == "apache-tomcat-${version_real}.tar.gz" |> -> File <| tag == "instance_${name}_tree" |>
   }
 
   # create/ensure instance directory tree
@@ -1173,9 +1181,6 @@ define tomcat::instance (
     if $::tomcat::enable_extras_real { # no need to duplicate libraries if enabled globally
       warning('extra libraries already enabled globally, ignoring parameter \'enable_extras\'')
     } else {
-      if $extra_source == undef {
-        $extra_source="http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version_real}/bin/extras"
-      }
       Archive {
         extract => false,
         require => File["instance ${name} extras directory"],
@@ -1183,24 +1188,24 @@ define tomcat::instance (
         notify  => Service[$service_name_real]
       }
       archive {
-        "${catalina_base_real}/lib/extras/catalina-jmx-remote-${::tomcat::version_real}.jar":
-          creates =>  "${catalina_base_real}/lib/extras/catalina-jmx-remote-${::tomcat::version_real}.jar",
-          source  => "${extra_source}/catalina-jmx-remote.jar"
+        "instance ${name} catalina-jmx-remote.jar":
+          path   => "${catalina_base_real}/lib/extras/catalina-jmx-remote-${::tomcat::version_real}.jar",
+          source => "${extras_source_real}/catalina-jmx-remote.jar"
         ;
 
-        "${catalina_base_real}/lib/extras/catalina-ws-${::tomcat::version_real}.jar":
-          creates => "${catalina_base_real}/lib/extras/catalina-ws-${::tomcat::version_real}.jar",
-          source  => "${extra_source}/catalina-ws.jar"
+        "instance ${name} catalina-ws.jar":
+          path   => "${catalina_base_real}/lib/extras/catalina-ws-${::tomcat::version_real}.jar",
+          source => "${extras_source_real}/catalina-ws.jar"
         ;
 
-        "${catalina_base_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version_real}.jar":
-          creates => "${catalina_base_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version_real}.jar",
-          source  => "${extra_source}/tomcat-juli-adapters.jar"
+        "instance ${name} tomcat-juli-adapters.jar":
+          path   => "${catalina_base_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version_real}.jar",
+          source => "${extras_source_real}/tomcat-juli-adapters.jar"
         ;
 
-        "${catalina_base_real}/lib/extras/tomcat-juli-extras-${::tomcat::version_real}.jar":
-          creates => "${catalina_base_real}/lib/extras/tomcat-juli-extras-${::tomcat::version_real}.jar",
-          source  => "${extra_source}/tomcat-juli.jar"
+        "instance ${name} tomcat-juli-extras.jar":
+          path   => "${catalina_base_real}/lib/extras/tomcat-juli-extras-${::tomcat::version_real}.jar",
+          source => "${extras_source_real}/tomcat-juli.jar"
       }
 
       file {

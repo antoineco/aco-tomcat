@@ -8,12 +8,10 @@ class tomcat::install::archive {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
-
   # dependency
   if !defined(Class['archive']) {
     include archive
   }
-
 
   # create user if not present
   if !defined(Group[$::tomcat::tomcat_group_real]) {
@@ -39,22 +37,24 @@ class tomcat::install::archive {
   }
 
   file { $::tomcat::catalina_home_real:
-    ensure => directory,
+    ensure => directory
   } ->
-  archive { "${::tomcat::catalina_home_real}/apache-tomcat-${::tomcat::version_real}.tar.gz":
+  archive { "apache-tomcat-${::tomcat::version_real}.tar.gz":
+    path            => "${::tomcat::catalina_home_real}/apache-tomcat-${::tomcat::version_real}.tar.gz",
     source          => $::tomcat::archive_source_real,
     cleanup         => true,
     extract         => true,
-    checksum        => $::tomcat::checksum,
     checksum_verify => $::tomcat::checksum_verify,
     checksum_type   => $::tomcat::checksum_type,
-    extract_path    => dirname($::tomcat::catalina_home_real),
-    creates         => "${::tomcat::catalina_home_real}/bin"
+    checksum        => $::tomcat::checksum,
+    extract_path    => $::tomcat::catalina_home_real,
+    extract_command => 'tar xf %s --strip-components=1',
+    creates         => "${::tomcat::catalina_home_real}/LICENSE"
   }
 
 
   # ordering
-  Archive <| title == $::tomcat::catalina_base_real |> -> File <| tag == 'tomcat_tree' |>
+  Archive <| title == "apache-tomcat-${::tomcat::version_real}.tar.gz" |> -> File <| tag == 'tomcat_tree' |>
 
   if $::tomcat::log_path_real != "${::tomcat::catalina_base_real}/logs" {
     file {

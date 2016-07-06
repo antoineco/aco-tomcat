@@ -38,7 +38,7 @@ tomcat will affect the following parts of your system:
 * instances configuration
 * tomcat user database(s) and authorized users (defined type)
 
-Including the main class is enough to install the default version of tomcat provided by your distribution, and run it with default settings.
+Including the main class is enough to install the default version of Tomcat provided by your distribution, and run it with default settings.
 
 ```puppet
 include tomcat
@@ -285,12 +285,12 @@ See also [Common parameters](#common-parameters)
 
 ####Define: `tomcat::instance`
 
-Create a tomcat instance
+Create a Tomcat instance
 
 **Parameters within `tomcat::instance`:**
 
 #####`root_path`
-Absolute path to the root of all tomcat instances. Defaults to `/var/lib/tomcats`.  
+Absolute path to the root of all Tomcat instances. Defaults to `/var/lib/tomcats`.  
 *Note:* instances will be installed in `${root_path}/${title}` and $CATALINA_BASE will be set to that folder
 
 #####`default_servlet`
@@ -306,20 +306,20 @@ Parameters common to both `tomcat` and `tomcat::instance`
 
 #####`version`
 Tomcat full version number. The valid format is 'x.y.z[-package_suffix]'  
-Must include the full package suffix if tomcat is installed from a package repository, the package `ensure` attribute will be enforced to this value.  
+Must include the full package suffix if Tomcat is installed from a package repository, the package `ensure` attribute will be enforced to this value.  
 *Note:* multi-version only supported if installed from archive
 
 #####`archive_source`
-Source of the tomcat server archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin/apache-tomcat-<version>.tar.gz`
+Source of the Tomcat server archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin/apache-tomcat-<version>.tar.gz`
 
 #####`checksum_verify`
-Enable or disables the checksum verification of the tar.gz tomcat archive. Defaults to `false` (boolean).
+Whether to enable the checksum verification of Tomcat installation archive. Boolean value. Defaults to `false`.
 
 #####`checksum_type`
-Sets the checksum type to check agains (none|md5|sha1|sha2|sh256|sha384|sha512). Defaults to `none`.
+Checksum type. Valid values are `none`, `md5`, `sha1`, `sha2`, `sh256`, `sha384` and `sha512`. Defaults to `none`.
 
 #####`checksum`
-The checksum to test against. Defaults to `undef` (string).
+Checksum to test against. Defaults to `undef`.
 
 #####`service_name`
 Tomcat service name. Defaults to `${package_name}` (global) / `${package_name}_${title}` (instance).
@@ -328,7 +328,7 @@ Tomcat service name. Defaults to `${package_name}` (global) / `${package_name}_$
 Whether the service should be running. Valid values are `stopped` and `running`. Defaults to `running`.
 
 #####`service_enable`
-Whether to enable the tomcat service. Boolean value. Defaults to `true`.
+Whether to enable the Tomcat service. Boolean value. Defaults to `true`.
 
 #####`systemd_service_type`
 The value for the systemd service type if applicable.
@@ -346,11 +346,14 @@ Tomcat user. Defaults to `${service_name}` (Debian) / `tomcat` (all other distri
 Tomcat group. Defaults to `${tomcat_user}`.
 
 #####`enable_extras`
-Whether to install tomcat extra libraries. Boolean value. Defaults to `false`.  
+Whether to install Tomcat extra libraries. Boolean value. Defaults to `false`.  
 *Warning:* extra libraries are enabled globally if defined within the global context
 
+#####`extras_source`
+Source of the Tomcat extra libraries. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin/extras`
+
 #####`extras_package_name`
-Package name for tomcat extra libraries. If set, forces installation of Tomcat extra libraries from a package repository instead of Apache servers. The `ensure` attribute of the package resource will then default to the same value as `${package_ensure}`. Defaults to `undef`.
+Package name for Tomcat extra libraries. If set, forces installation of Tomcat extra libraries from a package repository instead of Apache servers. The `ensure` attribute of the package resource will then default to the same value as `${package_ensure}`. Defaults to `undef`.
 
 #####`manage_firewall`
 Whether to automatically manage firewall rules. Boolean value. Defaults to `false`.
@@ -358,7 +361,7 @@ Whether to automatically manage firewall rules. Boolean value. Defaults to `fals
 **Security and administration**
 
 #####`admin_webapps`
-Whether to enable admin webapps (manager/host-manager). This will also install the required packages if tomcat was installed from package. This parameter is ignored if tomcat was installed from archive, since tomcat archives always contain these apps. Boolean value. Defaults to `true`.
+Whether to enable admin webapps (manager/host-manager). This will also install the required packages if Tomcat was installed from package. This parameter is ignored if Tomcat was installed from archive, since Tomcat archives always contain these apps. Boolean value. Defaults to `true`.
 
 #####`admin_webapps_package_name`
 Admin webapps package name. Default depends on the distribution.
@@ -388,7 +391,7 @@ Whether to enable the [APR Lifecycle Listener](http://tomcat.apache.org/tomcat-8
 Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener). The listener can be further configured via a series of parameters:
  - `jmx_registry_port`: JMX/RMI registry port for the JMX Remote Lifecycle Listener. Defaults to `8050` (global) / `8052` (instance).
  - `jmx_server_port`: JMX/RMI server port for the JMX Remote Lifecycle Listener. Defaults to `8051` (global) / `8053` (instance).
- - `jmx_bind_address`: JMX/RMI server interface address for the JMX Remote Lifecycle Listener. Defaults to `undef` (use tomcat default).
+ - `jmx_bind_address`: JMX/RMI server interface address for the JMX Remote Lifecycle Listener. Defaults to `undef` (use Tomcat default).
 
 #####`listeners`
 An array of custom `Listener` entries to be added to the `Server` block. Each entry is to be supplied as a hash of attributes/values for the `Listener` XML node. See [Listeners](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html) for the list of possible attributes.
@@ -518,7 +521,7 @@ $CATALINA_PID. Defaults to: `/var/run/${service_name}.pid`.
 $CATALINA_OPTS. Array. Defaults to `[]`.
 
 #####`java_home`
-$JAVA_HOME. Defaults to `undef` (use tomcat default).
+$JAVA_HOME. Defaults to `undef` (use Tomcat default).
 
 #####`java_opts`
 $JAVA_OPTS. Array. Defaults to `['-server']`.
@@ -527,13 +530,13 @@ $JAVA_OPTS. Array. Defaults to `['-server']`.
 Enable JPDA debugger. Boolean value. Effective only if installed from archive. Defaults to `false`.
 
 #####`jpda_transport`
-$JPDA_TRANSPORT. Defaults to `undef` (use tomcat default).
+$JPDA_TRANSPORT. Defaults to `undef` (use Tomcat default).
 
 #####`jpda_address`
-$JPDA_ADDRESS. Defaults to `undef` (use tomcat default).
+$JPDA_ADDRESS. Defaults to `undef` (use Tomcat default).
 
 #####`jpda_suspend`
-$JPDA_SUSPEND. Defaults to `undef` (use tomcat default).
+$JPDA_SUSPEND. Defaults to `undef` (use Tomcat default).
 
 #####`jpda_opts`
 $JPDA_OPTS. Array. Defaults to `[]`.
@@ -542,7 +545,7 @@ $JPDA_OPTS. Array. Defaults to `[]`.
 Whether to enable the security manager. Boolean value. Defaults to `false`.
 
 #####`lang`
-Tomcat locale. Defaults to `undef` (use tomcat default).
+Tomcat locale. Defaults to `undef` (use Tomcat default).
 
 #####`shutdown_wait`
 How long to wait for a graceful shutdown before killing the process. Value in seconds. Only available on RedHat 6 systems if installed from package. Defaults to `30`.
@@ -555,7 +558,7 @@ Hash of custom environment variables.
 
 **Logging**
 
-Some extra documentation about [log4j](http://logging.apache.org/log4j/)'s usage with tomcat is available on [this page](http://tomcat.apache.org/tomcat-8.0-doc/logging.html#Using_Log4j).
+Some extra documentation about [log4j](http://logging.apache.org/log4j/)'s usage with Tomcat is available on [this page](http://tomcat.apache.org/tomcat-8.0-doc/logging.html#Using_Log4j).
 
 #####`log_path`
 Absolute path to the log directory. Defaults to `/var/log/${service_name}`.
@@ -568,11 +571,11 @@ Whether to use log4j rather than *java.util.logging* for Tomcat internal logging
 Log4j configuration type. Valid values are `ini` and `xml`. Defaults to `ini`.
 
 #####`log4j_conf_source`
-Where to get log4j's configuration from. A [sample file](https://raw.githubusercontent.com/tOnI0/aco-tomcat/master/files/log4j/log4j.properties) is provided with this module. Defaults to the sample file `log4j.properties`.
+Where to get log4j's configuration from. A [sample file](https://raw.githubusercontent.com/antoineco/aco-tomcat/master/files/log4j/log4j.properties) is provided with this module. Defaults to the sample file `log4j.properties`.
 
 ####Define: `tomcat::userdb_entry`
 
-Create tomcat UserDatabase entries
+Create Tomcat UserDatabase entries
 
 **Parameters within `tomcat::userdb_entry`:**
 
@@ -590,7 +593,7 @@ User roles (array)
 
 ####Define: `tomcat::context`
 
-Create tomcat context files
+Create Tomcat context files
 
 **Parameters within `tomcat::context`:**
 

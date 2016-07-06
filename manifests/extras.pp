@@ -6,12 +6,6 @@ class tomcat::extras {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
-  if $::tomcat::extra_source == undef {
-    $extra_source="http://archive.apache.org/dist/tomcat/tomcat-${::tomcat::maj_version}/v${::tomcat::version_real}/bin/extras"
-  } else {
-    $extra_source=$::tomcat::extra_source
-  }
-
   Archive {
     extract => false,
     require => File['global extras directory'],
@@ -20,24 +14,24 @@ class tomcat::extras {
   }
 
   archive {
-    "${::tomcat::catalina_home_real}/lib/extras/catalina-jmx-remote-${::tomcat::version_real}.jar":
-      creates =>  "${::tomcat::catalina_home_real}/lib/extras/catalina-jmx-remote-${::tomcat::version_real}.jar",
-      source  => "${extra_source}/catalina-jmx-remote.jar"
+    'catalina-jmx-remote.jar':
+      path   => "${::tomcat::catalina_home_real}/lib/extras/catalina-jmx-remote-${::tomcat::version_real}.jar",
+      source => "${::tomcat::extras_source_real}/catalina-jmx-remote.jar"
     ;
 
-    "${::tomcat::catalina_home_real}/lib/extras/catalina-ws-${::tomcat::version_real}.jar":
-      creates => "${::tomcat::catalina_home_real}/lib/extras/catalina-ws-${::tomcat::version_real}.jar",
-      source  => "${extra_source}/catalina-ws.jar"
+    'catalina-ws.jar':
+      path   => "${::tomcat::catalina_home_real}/lib/extras/catalina-ws-${::tomcat::version_real}.jar",
+      source => "${::tomcat::extras_source_real}/catalina-ws.jar"
     ;
 
-    "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version_real}.jar":
-      creates => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version_real}.jar",
-      source  => "${extra_source}/tomcat-juli-adapters.jar"
+    'tomcat-juli-adapters.jar':
+      path   => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version_real}.jar",
+      source => "${::tomcat::extras_source_real}/tomcat-juli-adapters.jar"
     ;
 
-    "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-extras-${::tomcat::version_real}.jar":
-      creates => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-extras-${::tomcat::version_real}.jar",
-      source  => "${extra_source}/tomcat-juli.jar"
+    'tomcat-juli-extras.jar':
+      path   => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-extras-${::tomcat::version_real}.jar",
+      source => "${::tomcat::extras_source_real}/tomcat-juli.jar"
   }
 
   file {
