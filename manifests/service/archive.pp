@@ -13,6 +13,9 @@ class tomcat::service::archive {
   $service_stop_real = $::tomcat::service_stop_real
   $service_name_real = $::tomcat::service_name_real
   $config_path_real = $::tomcat::config_path_real
+  $tomcat_user_real = $::tomcat::tomcat_user_real
+  $tomcat_group_real = $::tomcat::tomcat_group_real
+  $systemd_service_type_real = $::tomcat::systemd_service_type_real
 
   if $::tomcat::params::systemd {
     # manage systemd unit on compatible systems
@@ -38,9 +41,9 @@ class tomcat::service::archive {
       notify      => Service[$service_name_real]
     }
   } else { # Debian/Ubuntu, RHEL 6, SLES 11, ...
-    $start_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_start_real}'"
-    $stop_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${::tomcat::tomcat_user_real} -s /bin/bash -c '${service_stop_real}'"
-    $status_command = "/usr/bin/pgrep -d , -u ${::tomcat::tomcat_user_real} -G ${::tomcat::tomcat_group_real} -f Dcatalina.base=${::tomcat::catalina_base_real}"
+    $start_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${tomcat_user_real} -s /bin/bash -c '${service_start_real}'"
+    $stop_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${tomcat_user_real} -s /bin/bash -c '${service_stop_real}'"
+    $status_command = "/usr/bin/pgrep -d , -u ${tomcat_user_real} -G ${tomcat_group_real} -f Dcatalina.base=${::tomcat::catalina_base_real}"
 
     # create init script
     file { "${service_name_real} service unit":
