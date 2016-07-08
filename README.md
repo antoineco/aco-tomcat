@@ -281,6 +281,12 @@ Whether to install the log4j library. Boolean value. Defaults to `false`.
 #####`log4j_package_name`
 Log4j package name. Default depends on the distribution.
 
+#####`extras_package_name`
+Package name for Tomcat extra libraries. If set, forces installation of Tomcat extra libraries from a package repository instead of Apache servers. The `ensure` attribute of the package resource will then default to the same value as `${package_ensure}`. Defaults to `undef`.
+
+#####`admin_webapps_package_name`
+Admin webapps package name. Default depends on the distribution.
+
 See also [Common parameters](#common-parameters)
 
 ####Define: `tomcat::instance`
@@ -352,9 +358,6 @@ Whether to install Tomcat extra libraries. Boolean value. Defaults to `false`.
 #####`extras_source`
 Source of the Tomcat extra libraries. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin/extras`
 
-#####`extras_package_name`
-Package name for Tomcat extra libraries. If set, forces installation of Tomcat extra libraries from a package repository instead of Apache servers. The `ensure` attribute of the package resource will then default to the same value as `${package_ensure}`. Defaults to `undef`.
-
 #####`manage_firewall`
 Whether to automatically manage firewall rules. Boolean value. Defaults to `false`.
 
@@ -362,9 +365,6 @@ Whether to automatically manage firewall rules. Boolean value. Defaults to `fals
 
 #####`admin_webapps`
 Whether to enable admin webapps (manager/host-manager). This will also install the required packages if Tomcat was installed from package. This parameter is ignored if Tomcat was installed from archive, since Tomcat archives always contain these apps. Boolean value. Defaults to `true`.
-
-#####`admin_webapps_package_name`
-Admin webapps package name. Default depends on the distribution.
 
 #####`create_default_admin`
 Whether to create default admin user (roles: 'manager-gui', 'manager-script', 'admin-gui' and 'admin-script'). Boolean value. Defaults to `false`.
