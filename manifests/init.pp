@@ -574,25 +574,25 @@ class tomcat (
   }
 
   # start the real action
-  contain ::tomcat::install
-  contain ::tomcat::service
+  contain tomcat::install
+  contain tomcat::service
   Class['::tomcat::install'] -> Class['::tomcat::service']
 
-  contain ::tomcat::config
+  contain tomcat::config
   Class['::tomcat::install'] -> Class['::tomcat::config']
 
   if $log4j_enable {
-    contain ::tomcat::log4j
+    contain tomcat::log4j
     Class['::tomcat::install'] -> Class['::tomcat::log4j']
   }
 
   if $extras_enable_real and !$extras_package_name {
     # install extras via download
-    contain ::tomcat::extras
+    contain tomcat::extras
     Class['::tomcat::install'] -> Class['::tomcat::extras']
   }
 
   if $manage_firewall {
-    contain ::tomcat::firewall
+    contain tomcat::firewall
   }
 }
