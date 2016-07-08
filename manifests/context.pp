@@ -33,8 +33,7 @@ define tomcat::context (
     owner  => $owner,
     group  => $group,
     mode   => '0600',
-    order  => 'numeric',
-    notify => Service[$::tomcat::service_name_real]
+    order  => 'numeric'
   }
 
   # Template uses:

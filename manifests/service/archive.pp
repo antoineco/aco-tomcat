@@ -52,7 +52,8 @@ class tomcat::service::archive {
       owner   => 'root',
       group   => 'root',
       mode    => '0755',
-      content => template("${module_name}/instance/tomcat_init_generic.erb")
+      content => template("${module_name}/instance/tomcat_init_generic.erb"),
+      notify  => Service[$service_name_real]
     }
   }
 

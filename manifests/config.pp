@@ -282,13 +282,12 @@ class tomcat::config {
     listeners        => $context_listeners,
     valves           => $context_valves,
     resourcedefs     => $context_resourcedefs,
-    resourcelinks    => $context_resourcelinks
+    resourcelinks    => $context_resourcelinks,
+    notify           => Service[$::tomcat::service_name_real]
   }
 
   # generate and manage global parameters
   # Template uses:
-  # - $instance
-  # - $service_name_real
   # - $java_home
   # - $catalina_base_real
   # - $catalina_home_real

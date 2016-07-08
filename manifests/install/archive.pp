@@ -44,6 +44,8 @@ class tomcat::install::archive {
     source          => $::tomcat::archive_source_real,
     cleanup         => true,
     extract         => true,
+    user            => $::tomcat::tomcat_user_real,
+    group           => $::tomcat::tomcat_group_real,
     checksum_verify => $::tomcat::checksum_verify,
     checksum_type   => $::tomcat::checksum_type,
     checksum        => $::tomcat::checksum,
@@ -54,7 +56,7 @@ class tomcat::install::archive {
 
 
   # ordering
-  Archive <| title == "apache-tomcat-${::tomcat::version_real}.tar.gz" |> -> File <| tag == 'tomcat_tree' |>
+  Archive["apache-tomcat-${::tomcat::version_real}.tar.gz"] -> File <| tag == 'tomcat_tree' |>
 
   if $::tomcat::log_path_real != "${::tomcat::catalina_base_real}/logs" {
     file {

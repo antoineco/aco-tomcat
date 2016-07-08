@@ -253,7 +253,6 @@ define tomcat::instance (
   if !defined(Class['tomcat']) {
     fail('You must include the tomcat base class before using any tomcat defined resources')
   }
-  require ::tomcat::install
 
   # parameters validation
   validate_re($version, '^(?:[0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(?:-.*)?$', 'incorrect tomcat version number')
@@ -561,10 +560,12 @@ define tomcat::instance (
   }
 
   File {
-    owner   => $tomcat_user,
-    group   => $tomcat_group,
-    mode    => '0644'
+    owner => $tomcat_user,
+    group => $tomcat_group,
+    mode  => '0644'
   }
+
+  Archive { notify  => Service[$service_name_real] }
 
   if !defined(File['tomcat instances root']) {
     file { 'tomcat instances root':
@@ -591,6 +592,8 @@ define tomcat::instance (
       source          => $archive_source_real,
       cleanup         => true,
       extract         => true,
+      user            => $tomcat_user,
+      group           => $tomcat_group,
       checksum_verify => $checksum_verify,
       checksum_type   => $checksum_type,
       checksum        => $checksum,
@@ -600,7 +603,7 @@ define tomcat::instance (
     }
 
     # ordering
-    Archive <| title == "apache-tomcat-${version_real}.tar.gz" |> -> File <| tag == "instance_${name}_tree" |>
+    Archive["apache-tomcat-${version_real}.tar.gz"] -> File <| tag == "instance_${name}_tree" |>
   }
 
   # create/ensure instance directory tree
@@ -733,7 +736,8 @@ define tomcat::instance (
           path   => "/etc/init.d/${service_name_real}",
           owner  => 'root',
           group  => 'root',
-          target => $::tomcat::service_name_real
+          target => $::tomcat::service_name_real,
+          notify => Service[$service_name_real]
         }
       }
       default   : {
@@ -748,7 +752,8 @@ define tomcat::instance (
           owner   => 'root',
           group   => 'root',
           mode    => '0755',
-          content => template("${module_name}/instance/tomcat_init_generic.erb")
+          content => template("${module_name}/instance/tomcat_init_generic.erb"),
+          notify  => Service[$service_name_real]
         }
       }
     }
@@ -971,7 +976,8 @@ define tomcat::instance (
     valves           => $context_valves,
     resourcedefs     => $context_resourcedefs,
     resourcelinks    => $context_resourcelinks,
-    require          => File["${catalina_base_real}/conf"]
+    require          => File["${catalina_base_real}/conf"],
+    notify           => Service[$service_name_real]
   }
 
   # default servlet
@@ -981,6 +987,7 @@ define tomcat::instance (
         ensure  => present,
         owner   => $tomcat_user,
         group   => $tomcat_group,
+        mode    => '0600',
         path    => "${catalina_base_real}/conf/web.xml",
         source  => "puppet:///modules/${module_name}/conf/web.xml",
         require => File["${catalina_base_real}/conf"]
@@ -992,8 +999,6 @@ define tomcat::instance (
 
   # generate and manage global parameters
   # Template uses:
-  # - $instance
-  # - $service_name_real
   # - $java_home
   # - $catalina_base_real
   # - $catalina_home_real
@@ -1002,8 +1007,8 @@ define tomcat::instance (
   # - $catalina_pid_real
   # - $java_opts_real
   # - $catalina_opts_real
-  # - $tomcat::tomcat_user_real
-  # - $tomcat::tomcat_group_real
+  # - $tomcat_user
+  # - $tomcat_group
   # - $maj_version
   # - $lang
   # - $security_manager_real
@@ -1086,17 +1091,19 @@ define tomcat::instance (
           params => { 'path'                => '/manager',
                       'docBase'             => "${admin_webapps_path}/manager",
                       'antiResourceLocking' => false,
-                      'privileged'          => true };
+                      'privileged'          => true },
+          notify => Service[$service_name_real];
 
         "instance ${name} host-manager.xml":
           path   => "${catalina_base_real}/conf/Catalina/${host_name}/host-manager.xml",
           params => { 'path'                => '/host-manager',
                       'docBase'             => "${admin_webapps_path}/host-manager",
                       'antiResourceLocking' => false,
-                      'privileged'          => true }
+                      'privileged'          => true },
+          notify => Service[$service_name_real]
       }
     } else {
-      # warn if admin webapps were selected for installation
+      # warn if admin webapps were selected for installation in a multi-version setup
       if $admin_webapps {
         warning("tomcat archives always contain admin webapps, ignoring parameter 'admin_webapps'")
       }
@@ -1110,12 +1117,12 @@ define tomcat::instance (
   if $log4j_enable {
     # warn user if log4j is not installed
     unless $::tomcat::log4j {
-      warning("instance ${name}: logging with log4j will not work unless the log4j library is installed")
+      warning('logging with log4j will not work unless the log4j library is installed')
     }
 
-    # no need to duplicate libraries if enabled globally
-    if $::tomcat::log4j_enable {
-      warning("instance ${name}: log4j is already enabled globally, ignoring parameter 'log4j_enable'")
+    # no need to duplicate libraries if enabled globally when tomcat versions are identical
+    if $::tomcat::log4j_enable and $version_real == $::tomcat::version_real {
+      warning("log4j is already enabled globally for tomcat ${version_real}, ignoring parameter 'log4j_enable'")
     } else {
       # generate OS-specific variables
       $log4j_path = $::osfamily ? {
@@ -1178,33 +1185,33 @@ define tomcat::instance (
   # -------#
 
   if $extras_enable_real {
-    if $::tomcat::extras_enable_real { # no need to duplicate libraries if enabled globally
-      warning('extra libraries already enabled globally, ignoring parameter \'extras_enable\'')
+    # no need to duplicate libraries if enabled globally when tomcat versions are identical
+    if $::tomcat::extras_enable_real and $version_real == $::tomcat::version_real {
+      warning("extra libraries already enabled globally for tomcat ${version_real}, ignoring parameter 'extras_enable'")
     } else {
       Archive {
-        extract => false,
-        require => File["instance ${name} extras directory"],
         cleanup => false,
-        notify  => Service[$service_name_real]
+        extract => false
       }
+
       archive {
         "instance ${name} catalina-jmx-remote.jar":
-          path   => "${catalina_base_real}/lib/extras/catalina-jmx-remote-${::tomcat::version_real}.jar",
+          path   => "${catalina_base_real}/lib/extras/catalina-jmx-remote-${version_real}.jar",
           source => "${extras_source_real}/catalina-jmx-remote.jar"
         ;
 
         "instance ${name} catalina-ws.jar":
-          path   => "${catalina_base_real}/lib/extras/catalina-ws-${::tomcat::version_real}.jar",
+          path   => "${catalina_base_real}/lib/extras/catalina-ws-${version_real}.jar",
           source => "${extras_source_real}/catalina-ws.jar"
         ;
 
         "instance ${name} tomcat-juli-adapters.jar":
-          path   => "${catalina_base_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version_real}.jar",
+          path   => "${catalina_base_real}/lib/extras/tomcat-juli-adapters-${version_real}.jar",
           source => "${extras_source_real}/tomcat-juli-adapters.jar"
         ;
 
         "instance ${name} tomcat-juli-extras.jar":
-          path   => "${catalina_base_real}/lib/extras/tomcat-juli-extras-${::tomcat::version_real}.jar",
+          path   => "${catalina_base_real}/lib/extras/tomcat-juli-extras-${version_real}.jar",
           source => "${extras_source_real}/tomcat-juli.jar"
       }
 
@@ -1221,22 +1228,22 @@ define tomcat::instance (
         "instance ${name} catalina-jmx-remote.jar":
           ensure => link,
           path   => "${catalina_base_real}/lib/catalina-jmx-remote.jar",
-          target => "extras/catalina-jmx-remote-${::tomcat::version_real}.jar";
+          target => "extras/catalina-jmx-remote-${version_real}.jar";
 
         "instance ${name} catalina-ws.jar":
           ensure => link,
           path   => "${catalina_base_real}/lib/catalina-ws.jar",
-          target => "extras/catalina-ws-${::tomcat::version_real}.jar";
+          target => "extras/catalina-ws-${version_real}.jar";
 
         "instance ${name} tomcat-juli-adapters.jar":
           ensure => link,
           path   => "${catalina_base_real}/lib/tomcat-juli-adapters.jar",
-          target => "extras/tomcat-juli-adapters-${::tomcat::version_real}.jar";
+          target => "extras/tomcat-juli-adapters-${version_real}.jar";
 
         "instance ${name} tomcat-juli-extras.jar":
           ensure => link,
           path   => "${catalina_base_real}/lib/tomcat-juli-extras.jar",
-          target => "extras/tomcat-juli-extras-${::tomcat::version_real}.jar"
+          target => "extras/tomcat-juli-extras-${version_real}.jar"
       }
     }
   }
