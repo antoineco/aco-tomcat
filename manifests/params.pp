@@ -6,6 +6,10 @@ class tomcat::params {
       case $::operatingsystem {
         'Fedora' : {
           case $::operatingsystemmajrelease {
+            '24'    : {
+              $version = '1:8.0.32-4.fc24'
+              $package_name = 'tomcat'
+            }
             '23'    : {
               $version = '1:8.0.32-5.fc23'
               $package_name = 'tomcat'
@@ -21,17 +25,12 @@ class tomcat::params {
           $systemd = true
         }
         'Amazon' : {
-          case $::operatingsystemmajrelease {
-            '2015'  : {
-              $version = '8.0.23-1.54.amzn1'
-              $package_name = 'tomcat8'
-              # $version = '7.0.62-1.10.amzn1'
-              # $package_name = 'tomcat7'
-            }
-            default : {
-              fail("Unsupported OS version ${::operatingsystemrelease}")
-            }
-          }
+          $version = '8.0.32-1.59.amzn1' # ALAS-2016-679
+          $package_name = 'tomcat8'
+          # $version = '7.0.68-1.15.amzn1'  # ALAS-2016-680
+          # $package_name = 'tomcat7'
+          # $version = '6.0.45-1.4.amzn1' # ALAS-2016-681
+          # $package_name = 'tomcat6'
           $systemd = false
         }
         default  : {
@@ -42,7 +41,7 @@ class tomcat::params {
               $systemd = true
             }
             '6'     : {
-              $version = '6.0.24-94.el6_7'
+              $version = '6.0.24-95.el6'
               $package_name = 'tomcat6'
               # = epel repo =
               # $version = '7.0.33-4.el6'
@@ -130,14 +129,14 @@ class tomcat::params {
             '8'     : {
               $version = '8.0.14-1+deb8u1'
               $package_name = 'tomcat8'
-              # $version = '7.0.56-3+deb8u1'
+              # $version = '7.0.56-3+deb8u2'
               # $package_name = 'tomcat7'
             }
             # wheezy
             '7'     : {
-              $version = '7.0.28-4+deb7u3'
+              $version = '7.0.28-4+deb7u4'
               $package_name = 'tomcat7'
-              # $version = '6.0.35-6+deb7u1'
+              # $version = '6.0.45+dfsg-1~deb7u1'
               # $package_name = 'tomcat6'
             }
             default : {
@@ -149,16 +148,16 @@ class tomcat::params {
           case $::operatingsystemrelease {
             # xenial
             '16.04' : {
-              $version = '8.0.32-1ubuntu1'
+              $version = '8.0.32-1ubuntu1.1'
               $package_name = 'tomcat8'
-              # $version = '7.0.68-1'
+              # $version = '7.0.68-1ubuntu0.1'
               # $package_name = 'tomcat7'
             }
             # wily
             '15.10' : {
               $version = '8.0.26-1'
               $package_name = 'tomcat8'
-              # $version = '7.0.64-1'
+              # $version = '7.0.64-1ubuntu0.3'
               # $package_name = 'tomcat7'
             }
             # vivid
@@ -179,7 +178,7 @@ class tomcat::params {
             }
             # trusty
             '14.04' : {
-              $version = '7.0.52-1ubuntu0.3'
+              $version = '7.0.52-1ubuntu0.6'
               $package_name = 'tomcat7'
               # $version = '6.0.39-1'
               # $package_name = 'tomcat6'
