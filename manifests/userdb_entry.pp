@@ -22,9 +22,9 @@ define tomcat::userdb_entry (
     validate_string($username, $password)
     $roles_string = join($roles, ',')
     concat::fragment { "UserDatabase entry (${title})":
-    target  => $database,
-    content => template("${module_name}/common/UserDatabase_entry.erb"),
-    order   => 3
+      target  => $database,
+      content => template("${module_name}/common/UserDatabase_entry.erb"),
+      order   => 3
     }
   }
 }
