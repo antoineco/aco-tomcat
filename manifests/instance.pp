@@ -375,18 +375,7 @@ define tomcat::instance (
   }
 
   if $systemd_service_type == undef {
-    case $::tomcat::install_from {
-      'package' : {
-        if ($::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20') {
-          $systemd_service_type_real = 'forking'
-        } else {
-          $systemd_service_type_real = 'simple'
-        }
-      }
-      default : {
-        $systemd_service_type_real = 'simple'
-      }
-    }
+    $systemd_service_type_real = 'simple'
   } else {
     $systemd_service_type_real = $systemd_service_type
   }
@@ -395,7 +384,7 @@ define tomcat::instance (
     case $::tomcat::install_from {
       # only used on systemd distros
       'package' : {
-        if ($::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20') or $::osfamily == 'Suse' {
+        if $::osfamily == 'Suse' {
           $service_start_real = '/usr/sbin/tomcat-sysd start'
         }
         else {
@@ -418,7 +407,7 @@ define tomcat::instance (
     case $::tomcat::install_from {
       # only used on systemd distros
       'package' : {
-        if ($::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20') or $::osfamily == 'Suse' {
+        if $::osfamily == 'Suse' {
           $service_stop_real = '/usr/sbin/tomcat-sysd stop'
         }
         else {
@@ -706,11 +695,9 @@ define tomcat::instance (
 
   if $::tomcat::params::systemd {
     # manage systemd unit on compatible systems
-    if $::osfamily == 'Suse' { # SuSE
+    if $::osfamily == 'Suse' {
       $systemd_template = "${module_name}/instance/systemd_unit_suse.erb"
-    } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20' { # Fedora 17-19
-      $systemd_template = "${module_name}/instance/systemd_unit_fedora.erb"
-    } else { # Fedora 20+ or RHEL 7+
+    } else { # Fedora, RHEL 7+
       $systemd_template = "${module_name}/instance/systemd_unit_rhel.erb"
     }
     # write service file

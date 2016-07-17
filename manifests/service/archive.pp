@@ -19,11 +19,9 @@ class tomcat::service::archive {
 
   if $::tomcat::params::systemd {
     # manage systemd unit on compatible systems
-    if $::osfamily == 'Suse' { # SuSE
+    if $::osfamily == 'Suse' {
       $systemd_template = "${module_name}/instance/systemd_unit_suse.erb"
-    } elsif $::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20' { # Fedora 17-19
-      $systemd_template = "${module_name}/instance/systemd_unit_fedora.erb"
-    } else { # Fedora 20+ or RHEL 7+
+    } else { # Fedora, RHEL 7+
       $systemd_template = "${module_name}/instance/systemd_unit_rhel.erb"
     }
     # write service file

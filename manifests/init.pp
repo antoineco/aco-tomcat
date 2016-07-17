@@ -12,6 +12,8 @@
 #   where to download archive from (only if installed from archive)
 # [*package_name*]
 #   tomcat package name
+# [*package_ensure*]
+#   tomcat package 'ensure' attribute (falls back to value of '$version')
 # [*service_name*]
 #   tomcat service name
 # [*service_ensure*]
@@ -409,18 +411,7 @@ class tomcat (
   }
 
   if $systemd_service_type == undef {
-    case $::tomcat::install_from {
-      'package' : {
-        if ($::operatingsystem == 'Fedora' and $::operatingsystemmajrelease < '20') {
-          $systemd_service_type_real = 'forking'
-        } else {
-          $systemd_service_type_real = 'simple'
-        }
-      }
-      default : {
-        $systemd_service_type_real = 'simple'
-      }
-    }
+    $systemd_service_type_real = 'simple'
   } else {
     $systemd_service_type_real = $systemd_service_type
   }

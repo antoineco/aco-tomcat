@@ -5,6 +5,9 @@ After=syslog.target network.target
 [Service]
 Type=<%= @systemd_service_type_real %>
 EnvironmentFile=-<%= @config_path_real %>
+Environment="NAME=<%= @service_name_real %>"
+# Backward compatibility
+Environment="SERVICE_NAME=<%= @service_name_real %>"
 ExecStart=<%= @service_start_real %>
 ExecStop=<%= @service_stop_real %>
 SuccessExitStatus=143
