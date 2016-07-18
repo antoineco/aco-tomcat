@@ -108,6 +108,7 @@ class tomcat (
   $log4j                      = false,
   $log4j_package_name         = $::tomcat::params::log4j_package_name,
   $extras_enable              = false,
+  $enable_extras              = undef, #! backward compatibility
   $extras_source              = undef,
   $extras_package_name        = undef,
   $manage_firewall            = false,
@@ -557,11 +558,19 @@ class tomcat (
   }
   ), $host_params)
 
-  # should we download extras libs?
+  # backward compatibility after renaming parameter 'enable_extras'
+  # 'enable_extras' takes precendence over 'extras_enable' to avoid surprises
+  if $enable_extras != undef {
+    $extras_enable_compat = $enable_extras
+  } else {
+    $extras_enable_compat = $extras_enable
+  }
+
+  # should we force download extras libs?
   if $log4j_enable or $jmx_listener {
     $extras_enable_real = true
   } else {
-    $extras_enable_real = $extras_enable
+    $extras_enable_real = $extras_enable_compat
   }
 
   # start the real action

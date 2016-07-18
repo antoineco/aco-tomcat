@@ -77,6 +77,7 @@ define tomcat::instance (
   $tomcat_user                = $::tomcat::tomcat_user_real,
   $tomcat_group               = $::tomcat::tomcat_group_real,
   $extras_enable              = false,
+  $enable_extras              = undef, #! backward compatibility
   $extras_source              = undef,
   $manage_firewall            = false,
   #..................................................................................
@@ -520,11 +521,19 @@ define tomcat::instance (
   }
   ), $host_params)
 
+  # backward compatibility after renaming parameter 'enable_extras'
+  # 'enable_extras' takes precendence over 'extras_enable' to avoid surprises
+  if $enable_extras != undef {
+    $extras_enable_compat = $enable_extras
+  } else {
+    $extras_enable_compat = $extras_enable
+  }
+
   # should we force download extras libs?
-  if ($log4j_enable or $jmx_listener) and !$::tomcat::extras_enable_real {
+  if $log4j_enable or $jmx_listener {
     $extras_enable_real = true
   } else {
-    $extras_enable_real = $extras_enable
+    $extras_enable_real = $extras_enable_compat
   }
 
   # ------------------------------------#

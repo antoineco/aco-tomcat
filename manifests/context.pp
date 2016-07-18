@@ -29,11 +29,11 @@ define tomcat::context (
 
   # generate and manage context configuration
   concat { "${name} tomcat context":
-    path   => $path,
-    owner  => $owner,
-    group  => $group,
-    mode   => '0600',
-    order  => 'numeric'
+    path  => $path,
+    owner => $owner,
+    group => $group,
+    mode  => '0600',
+    order => 'numeric'
   }
 
   # Template uses:

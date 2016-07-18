@@ -666,5 +666,6 @@ Check the [puppetlabs_spec_helper](https://github.com/puppetlabs/puppetlabs_spec
 * [Frank Holtz](https://github.com/scitechfh)
 * [Vincent Kramar](https://github.com/thkrmr)
 * [Joshua Roys](https://github.com/roysjosh)
+* [Martin Zehetmayer](https://github.com/angrox)
 
 Features request and contributions are always welcome!

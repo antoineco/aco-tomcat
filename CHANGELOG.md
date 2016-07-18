@@ -1,3 +1,22 @@
+###1.4.0
+
+**Warning** the `enable_extras` parameter was renamed to `extras_enable` in this release. Backward compatibility will be maintained until the next minor release only.
+
+* New parameters: `package_ensure` and `extras_package_name` ([scitechfh](https://github.com/scitechfh))
+* New parameters: `checksum_verify`, `checksum_type`, `checksum` and `extras_source` ([angrox](https://github.com/angrox))
+* Replace dependency on `puppet/staging` by `puppet/archive`
+* Align content of systemd templates on current state of official RPM packages (RedHat and derivatives)
+* Add support for Ubuntu 16.04 (Xenial), Fedora 24 and Amazon Linux 2016.03
+* Drop support for Debian 6 (Squeeze), OpenSuSE 13.1 and below, Fedora 21 and below
+* Update default package versions
+* Bug fixes:
+ - parameters left blank in systemd units on some Puppet versions
+ - work around for [PUP-1597](https://tickets.puppetlabs.com/browse/PUP-3615) on RHEL 7
+ - dependency cycle between service and context resources
+ - file permissions too strict on configuration files
+ - activation of extras/log4j not working with multi-version setups
+ - tomcat service not notified of all relevant changes
+
 ###1.3.2
 
 * New parameters: `globalnaming_environments` and `ssl_sslenabledprotocols` ([roysjosh](https://github.com/roysjosh))
