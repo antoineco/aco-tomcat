@@ -44,9 +44,10 @@ class tomcat::params {
               $version = '6.0.24-95.el6'
               $package_name = 'tomcat6'
               # = epel repo =
-              # $version = '7.0.33-4.el6'
+              # $version = '7.0.65-1.el6'
               # $package_name = 'tomcat'
               # = jpackage6 repo =
+              # http://mirrors.dotsrc.org/jpackage/6.0/generic/free/repoview/letter_t.group.html
               # $version = '5.5.35-1.jpp6'
               # $package_name = 'tomcat5'
               # $version = '6.0.33-2.jpp6'
@@ -59,6 +60,7 @@ class tomcat::params {
               $version = '5.5.23-0jpp.40.el5_9'
               $package_name = 'tomcat5'
               # = jpackage5 repo =
+              # http://mirrors.dotsrc.org/jpackage/5.0-updates/generic/free/repoview/letter_t.group.html
               # $version = '5.5.27-7.jpp5'
               # $package_name = 'tomcat5'
               # $version = '6.0.36-1.jpp5'
@@ -78,11 +80,20 @@ class tomcat::params {
       case $::operatingsystem {
         'OpenSuSE'           : {
           case $::operatingsystemrelease {
+            '42.1'  : {
+              $version = '8.0.32-5.1'
+              $package_name = 'tomcat'
+              # = JAVA repo =
+              # http://download.opensuse.org/repositories/Java:/packages/openSUSE_Leap_42.1/noarch/
+              # $version = '8.0.36-110.1'
+              # $package_name = 'tomcat'
+            }
             '13.2'  : {
               $version = '7.0.55-2.5'
               $package_name = 'tomcat'
               # = JAVA repo =
-              # $version = '8.0.23-86.16'
+              # http://download.opensuse.org/repositories/Java:/packages/openSUSE_13.2/noarch/
+              # $version = '8.0.36-110.2'
               # $package_name = 'tomcat'
             }
             default : {
