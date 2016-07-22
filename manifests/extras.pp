@@ -7,10 +7,11 @@ class tomcat::extras {
   }
 
   Archive {
-    extract => false,
-    require => File['global extras directory'],
-    cleanup => false,
-    notify  => Service[$::tomcat::service_name_real]
+    provider => 'curl',
+    extract  => false,
+    require  => File['global extras directory'],
+    cleanup  => false,
+    notify   => Service[$::tomcat::service_name_real]
   }
 
   archive {

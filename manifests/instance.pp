@@ -563,7 +563,10 @@ define tomcat::instance (
     mode  => '0644'
   }
 
-  Archive { notify  => Service[$service_name_real] }
+  Archive {
+    provider => 'curl',
+    notify   => Service[$service_name_real]
+  }
 
   if !defined(File['tomcat instances root']) {
     file { 'tomcat instances root':
