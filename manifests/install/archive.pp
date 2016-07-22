@@ -51,7 +51,8 @@ class tomcat::install::archive {
     checksum        => $::tomcat::checksum,
     extract_path    => $::tomcat::catalina_home_real,
     extract_command => 'tar xf %s --strip-components=1',
-    creates         => "${::tomcat::catalina_home_real}/LICENSE"
+    creates         => "${::tomcat::catalina_home_real}/LICENSE",
+    provider        => 'curl'
   }
 
 
