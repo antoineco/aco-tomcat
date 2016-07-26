@@ -1,2 +1,2 @@
 
-  <Manager<%- @manager.each_pair do |attrib, value| -%> <%= attrib %>="<%= value %>"<%- end -%> />
+  <Manager<%- @manager.each_pair do |attrib, value| -%> <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><%- end -%> />

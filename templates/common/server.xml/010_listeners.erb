@@ -26,6 +26,6 @@
 <%- end -%>
 <%- if @listeners and ! @listeners.empty? -%>
   <%- [@listeners].flatten.compact.each do |listener| -%>
-  <Listener<%- listener.each_pair do |attrib, value| -%> <%= attrib %>="<%= value %>"<%- end -%> />
+  <Listener<%- listener.each_pair do |attrib, value| -%> <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><%- end -%> />
   <%- end -%>
 <%- end -%>

@@ -5,5 +5,5 @@
 # ******************
 -->
 <Context<%- if @params and ! @params.empty? -%>
-  <%- @params.each_pair do |attrib, value| -%> <%= attrib %>="<%= value %>"<%- end -%>
+  <%- @params.each_pair do |attrib, value| -%> <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><%- end -%>
 <%- end -%>>
