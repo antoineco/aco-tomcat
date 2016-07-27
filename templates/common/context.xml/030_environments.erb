@@ -1,9 +1,9 @@
 <%- [@environments].flatten.compact.each do |environment| %>
   <%- environment.each_pair do |attrib, value| -%>
     <%- if attrib == environment.keys.first -%>
-  <Environment <%= attrib %>="<%= value %>"<% if attrib == environment.keys.last %> /><% end %>
+  <Environment <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == environment.keys.last %> /><% end %>
     <%- else -%>
-               <%= attrib %>="<%= value %>"<% if attrib == environment.keys.last %> /><% end %>
+               <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == environment.keys.last %> /><% end %>
     <%- end -%>
   <%- end -%>
 <%- end -%>

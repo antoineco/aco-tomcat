@@ -1,7 +1,7 @@
 
     <Connector port="<%= @ajp_port %>" protocol="<%= @ajp_protocol %>"<% if @ssl_connector %> redirectPort="<%= @ssl_port %>"<% end %><% if @ajp_params_real and ! @ajp_params_real.empty? %>
              <%- @ajp_params_real.each_pair do |attrib, value| -%>
-               <%= attrib %>="<%= value %>"<% if attrib == @ajp_params_real.keys.last %> /><% end %>
+               <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == @ajp_params_real.keys.last %> /><% end %>
              <%- end -%>
            <%- else -%>
  />

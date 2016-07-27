@@ -10,9 +10,9 @@
   <%- [@realms].flatten.compact.each do |realm| %>
     <%- realm.each_pair do |attrib, value| -%>
       <%- if attrib == realm.keys.first -%>
-<% if @lockout_realm %>  <% end %>      <Realm <%= attrib %>="<%= value %>"<% if attrib == realm.keys.last %> /><% end %>
+<% if @lockout_realm %>  <% end %>      <Realm <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == realm.keys.last %> /><% end %>
       <%- else -%>
-<% if @lockout_realm %>  <% end %>             <%= attrib %>="<%= value %>"<% if attrib == realm.keys.last %> /><% end %>
+<% if @lockout_realm %>  <% end %>             <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == realm.keys.last %> /><% end %>
       <%- end -%>
     <%- end -%>
   <%- end -%>
