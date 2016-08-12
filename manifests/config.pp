@@ -41,6 +41,7 @@ class tomcat::config {
   $cluster_membership_port = $::tomcat::cluster_membership_port
   $cluster_membership_domain = $::tomcat::cluster_membership_domain
   $cluster_receiver_address = $::tomcat::cluster_receiver_address
+  $combined_realm = $::tomcat::combined_realm
   $lockout_realm = $::tomcat::lockout_realm
   $userdatabase_realm = $::tomcat::userdatabase_realm
   $realms = $::tomcat::realms
@@ -228,6 +229,7 @@ class tomcat::config {
   }
 
   # Template uses:
+  # - $combined_realm
   # - $lockout_realm
   # - $userdatabase_realm
   # - $realms

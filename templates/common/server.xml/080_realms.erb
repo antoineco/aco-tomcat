@@ -1,22 +1,33 @@
+<%- @indent = "" -%>
+<%- if @combined_realm %>
+      <Realm className="org.apache.catalina.realm.CombinedRealm">
+  <%- @indent = @indent + " " * 2 -%>
+<%- end -%>
 <%- if @lockout_realm %>
-      <Realm className="org.apache.catalina.realm.LockOutRealm">
+<%= @indent %>      <Realm className="org.apache.catalina.realm.LockOutRealm">
+  <%- @indent = @indent + " " * 2 -%>
 <%- end -%>
 <%- if @userdatabase_realm -%>
 
-<% if @lockout_realm %>  <% end %>      <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
-<% if @lockout_realm %>  <% end %>             resourceName="UserDatabase" />
+<%= @indent %>      <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+<%= @indent %>             resourceName="UserDatabase" />
 <% end -%>
 <%- if @realms and ! @realms.empty? -%>
   <%- [@realms].flatten.compact.each do |realm| %>
     <%- realm.each_pair do |attrib, value| -%>
       <%- if attrib == realm.keys.first -%>
-<% if @lockout_realm %>  <% end %>      <Realm <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == realm.keys.last %> /><% end %>
+<%= @indent %>      <Realm <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == realm.keys.last %> /><% end %>
       <%- else -%>
-<% if @lockout_realm %>  <% end %>             <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == realm.keys.last %> /><% end %>
+<%= @indent %>             <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == realm.keys.last %> /><% end %>
       <%- end -%>
     <%- end -%>
   <%- end -%>
 <%- end -%>
-<%- if @lockout_realm %>
+<%- if @lockout_realm and @combined_realm %>
+        </Realm>
+<%- elsif @lockout_realm -%>
+      </Realm>
+<%- end -%>
+<%- if @combined_realm %>
       </Realm>
 <%- end -%>
