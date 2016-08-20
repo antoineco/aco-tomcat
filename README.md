@@ -201,7 +201,7 @@ Customize Host
 class { 'tomcat':
   …
   host_autodeploy      => false,
-  host_deployOnStartup => false,
+  host_deployonstartup => false,
   host_unpackwars      => true,
   host_params          => { createDirs => true }
 }
@@ -470,7 +470,7 @@ An array of custom `Realm` entries to be added to the `Engine` container. Each e
 Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html). Defaults to `localhost`. The Host can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
  - `host_appbase`: Application Base directory for this virtual host
  - `host_autodeploy`: whether Tomcat should check periodically for new or updated web applications while Tomcat is running
- - `host_deployOnStartup`: whether web applications from this host should be automatically deployed when Tomcat starts
+ - `host_deployonstartup`: whether web applications from this host should be automatically deployed when Tomcat starts
  - `host_undeployoldversions`: whether to clean unused versions of web applications deployed using parallel deployment
  - `host_unpackwars`: whether to unpack web application archive (WAR) files 
  - `host_params`: optional hash of additional attributes/values to put in the Host container

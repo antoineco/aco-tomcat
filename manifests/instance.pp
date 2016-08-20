@@ -192,7 +192,7 @@ define tomcat::instance (
   $host_name                  = 'localhost',
   $host_appbase               = undef,
   $host_autodeploy            = undef,
-  $host_deployOnStartup       = undef,
+  $host_deployonstartup       = undef,
   $host_undeployoldversions   = undef,
   $host_unpackwars            = undef,
   $host_params                = {},
@@ -515,7 +515,7 @@ define tomcat::instance (
   $host_params_real = merge(delete_undef_values({
     'appBase'             => $host_appbase,
     'autoDeploy'          => $host_autodeploy,
-    'deployOnStartup'     => $host_deployOnStartup,
+    'deployOnStartup'     => $host_deployonstartup,
     'undeployOldVersions' => $host_undeployoldversions,
     'unpackWARs'          => $host_unpackwars
   }
