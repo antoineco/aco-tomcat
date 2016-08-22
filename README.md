@@ -456,6 +456,9 @@ Name of the default [Engine](http://tomcat.apache.org/tomcat-8.0-doc/config/engi
  - `engine_jvmroute`: identifier which must be used in load balancing scenarios to enable session affinity
  - `engine_params`: optional hash of additional attributes/values to put in the Engine container
 
+#####`combined_realm`
+Whether to enable the [Combined Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#Combined_Realm_-_org.apache.catalina.realm.CombinedRealm). Boolean value. Defaults to `false`.
+
 #####`lockout_realm`
 Whether to enable the [LockOut Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html#LockOut_Realm_-_org.apache.catalina.realm.LockOutRealm). Boolean value. Defaults to `true`.
 

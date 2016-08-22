@@ -217,6 +217,7 @@ class tomcat (
   $cluster_receiver_address   = undef,
   #..................................................................................
   # realms
+  $combined_realm             = false,
   $lockout_realm              = true,
   $userdatabase_realm         = true,
   $realms                     = [],

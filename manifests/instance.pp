@@ -184,6 +184,7 @@ define tomcat::instance (
   $cluster_receiver_address   = undef,
   #..................................................................................
   # realms
+  $combined_realm             = false,
   $lockout_realm              = true,
   $userdatabase_realm         = true,
   $realms                     = [],
@@ -918,6 +919,7 @@ define tomcat::instance (
   }
 
   # Template uses:
+  # - $combined_realm
   # - $lockout_realm
   # - $userdatabase_realm
   # - $realms
