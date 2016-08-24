@@ -221,6 +221,11 @@ class tomcat (
   $cluster_membership_port    = '45565',
   $cluster_membership_domain  = 'tccluster',
   $cluster_receiver_address   = undef,
+  $cluster_receiver_port      = '4000',
+  $cluster_farm_deployer      = false,
+  # This directory is currently not managed by this module
+  $cluster_farm_deployer_watchdir = 'deploy',
+  $cluster_farm_deployer_watch_enabled = true,
   #..................................................................................
   # realms
   $combined_realm             = false,
