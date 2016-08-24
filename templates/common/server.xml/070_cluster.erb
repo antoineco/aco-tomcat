@@ -13,7 +13,7 @@
                         dropTime="3000"/>
             <Receiver className="org.apache.catalina.tribes.transport.nio.NioReceiver"
                          address="<%= @cluster_receiver_address %>"
-                         port="4000"
+                         port="<%= @cluster_receiver_port %>"
                          autoBind="100"
                          selectorTimeout="5000"
                          maxThreads="6"/>
@@ -26,6 +26,13 @@
          <Valve className="org.apache.catalina.ha.tcp.ReplicationValve"
                 filter=".*\.gif;.*\.js;.*\.jpg;.*\.png;.*\.css;.*\.txt;"/>
          <Valve className="org.apache.catalina.ha.session.JvmRouteBinderValve"/>
+<%- if @cluster_farm_deployer -%>
+         <Deployer className="org.apache.catalina.ha.deploy.FarmWarDeployer"
+                    tempDir="<%= @catalina_tmpdir_real %>"
+                    deployDir="webapps"
+                    watchDir="<%= @cluster_farm_deployer_watchdir %>"
+                    watchEnabled="<%= @cluster_farm_deployer_watch_enabled %>"/>
+<%- end -%>
          <ClusterListener className="org.apache.catalina.ha.session.JvmRouteSessionIDBinderListener"/>
          <ClusterListener className="org.apache.catalina.ha.session.ClusterSessionListener"/>
       </Cluster>

@@ -43,6 +43,10 @@ class tomcat::config {
   $cluster_membership_port = $::tomcat::cluster_membership_port
   $cluster_membership_domain = $::tomcat::cluster_membership_domain
   $cluster_receiver_address = $::tomcat::cluster_receiver_address
+  $cluster_receiver_port = $::tomcat::cluster_receiver_port
+  $cluster_farm_deployer = $::tomcat::cluster_farm_deployer
+  $cluster_farm_deployer_watchdir = $::tomcat::cluster_farm_deployer_watchdir
+  $cluster_farm_deployer_watch_enabled = $::tomcat::cluster_farm_deployer_watch_enabled
   $combined_realm = $::tomcat::combined_realm
   $lockout_realm = $::tomcat::lockout_realm
   $userdatabase_realm = $::tomcat::userdatabase_realm
