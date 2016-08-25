@@ -45,6 +45,7 @@ class tomcat::config {
   $cluster_receiver_address = $::tomcat::cluster_receiver_address
   $cluster_receiver_port = $::tomcat::cluster_receiver_port
   $cluster_farm_deployer = $::tomcat::cluster_farm_deployer
+  $cluster_parent_real = $::tomcat::cluster_parent_real
   $cluster_farm_deployer_watchdir = $::tomcat::cluster_farm_deployer_watchdir
   $cluster_farm_deployer_watch_enabled = $::tomcat::cluster_farm_deployer_watch_enabled
   $combined_realm = $::tomcat::combined_realm
@@ -238,8 +239,9 @@ class tomcat::config {
   # - $cluster_membership_domain
   # - $cluster_receiver_address
   if $use_simpletcpcluster {
+    $cluster_order = $cluster_parent_real ? { 'host' => 95, default => 70}
     concat::fragment { 'server.xml cluster':
-      order   => 70,
+      order   => $cluster_order,
       content => template("${module_name}/common/server.xml/070_cluster.erb"),
       target  => 'tomcat server configuration'
     }

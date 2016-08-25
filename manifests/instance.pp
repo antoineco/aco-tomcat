@@ -190,6 +190,8 @@ define tomcat::instance (
   $cluster_receiver_address   = undef,
   $cluster_receiver_port      = '4000',
   $cluster_farm_deployer      = false,
+  #cluster_parent can be engine or host, must be host if using farm deployer
+  $cluster_parent             = undef,
   # This directory is currently not managed by this module
   $cluster_farm_deployer_watchdir = 'deploy',
   $cluster_farm_deployer_watch_enabled = true,
@@ -279,6 +281,17 @@ define tomcat::instance (
 
   if $checksum_verify and !$checksum {
     fail('Checksum verification requires \'checksum\' variable to be set')
+  }
+
+  # cluster can live in engine or host, engine was original default, host is required if using farm deployer
+  if $cluster_parent {
+    validate_re($cluster_parent, '^(engine|host)$', 'cluster_parent must be host or engine')
+    if $cluster_farm_deployer and $cluster_parent == 'engine' {
+      fail('Farm deployer cannot be used with cluster_parent=engine')
+    }
+    $cluster_parent_real = $cluster_parent
+  } else {
+    $cluster_parent_real = $cluster_farm_deployer ? { true => 'host', default => 'engine' }
   }
 
   # multi-version installation only supported with archive installation
@@ -934,8 +947,9 @@ define tomcat::instance (
   # - $cluster_membership_domain
   # - $cluster_receiver_address
   if $use_simpletcpcluster {
+    $cluster_order = $cluster_parent_real ? { 'host' => 95, default => 70}
     concat::fragment { "instance ${name} server.xml cluster":
-      order   => 70,
+      order   => $cluster_order,
       content => template("${module_name}/common/server.xml/070_cluster.erb"),
       target  => "instance ${name} server configuration"
     }
@@ -1314,6 +1328,22 @@ define tomcat::instance (
         dport  => [$jmx_registry_port, $jmx_server_port],
         proto  => 'tcp',
         action => 'accept'
+      }
+    }
+
+    #cluster
+    if $use_simpletcpcluster {
+      firewall { "${cluster_receiver_port} accept - tomcat (${name})":
+        dport  => $cluster_receiver_port,
+        proto  => 'tcp',
+        action => 'accept'
+      }
+      firewall { "${$cluster_membership_port} accept - tomcat (${name})":
+        sport       => $cluster_membership_port,
+        dport       => $cluster_membership_port,
+        proto       => 'udp',
+        action      => 'accept',
+        destination => '228.0.0.4'
       }
     }
   }

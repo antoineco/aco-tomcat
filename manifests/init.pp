@@ -223,6 +223,8 @@ class tomcat (
   $cluster_receiver_address   = undef,
   $cluster_receiver_port      = '4000',
   $cluster_farm_deployer      = false,
+  #cluster_parent can be engine or host, must be host if using farm deployer
+  $cluster_parent             = undef,
   # This directory is currently not managed by this module
   $cluster_farm_deployer_watchdir = 'deploy',
   $cluster_farm_deployer_watch_enabled = true,
@@ -304,6 +306,17 @@ class tomcat (
 
   if $checksum_verify and !$checksum {
     fail('Checksum verification requires \'checksum\' variable to be set')
+  }
+
+  # cluster can live in engine or host, engine was original default, host is required if using farm deployer
+  if $cluster_parent {
+    validate_re($cluster_parent, '^(engine|host)$', 'cluster_parent must be host or engine')
+    if $cluster_farm_deployer and $cluster_parent == 'engine' {
+      fail('Farm deployer cannot be used with cluster_parent=engine')
+    }
+    $cluster_parent_real = $cluster_parent
+  } else {
+    $cluster_parent_real = $cluster_farm_deployer ? { true => 'host', default => 'engine' }
   }
 
   # split version string
