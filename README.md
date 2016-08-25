@@ -493,6 +493,9 @@ Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-8.0-doc
 #####`valves`
 An array of custom `Valve` entries to be added to the `Host` container. Each entry is to be supplied as a hash of attributes/values for the `Valve` XML node. See [Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html) for the list of possible attributes.
 
+#####`engine_valves`
+An array of custom `Valve` entries to be added to the `Engine` container. Each entry is to be supplied as a hash of attributes/values for the `Valve` XML node. See [Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html) for the list of possible attributes.
+
 #####`globalnaming_environments`
 An array of `Environment` entries to be added to the `GlobalNamingResources` component. Each entry is to be supplied as a hash of attributes/values for the `Environment` XML node. See [Global Resources](http://tomcat.apache.org/tomcat-8.0-doc/config/globalresources.html#Environment_Entries) for the list of possible attributes.
 

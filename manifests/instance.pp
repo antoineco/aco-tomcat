@@ -209,10 +209,12 @@ define tomcat::instance (
   $host_unpackwars            = undef,
   $host_params                = {},
   #..................................................................................
-  # valves
+  # host valves
   $singlesignon_valve         = false,
   $accesslog_valve            = true,
   $valves                     = [],
+  # engine valves
+  $engine_valves              = [],
   #..................................................................................
   # misc
   $globalnaming_environments  = [],
@@ -270,7 +272,7 @@ define tomcat::instance (
   # parameters validation
   validate_re($version, '^(?:[0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(?:-.*)?$', 'incorrect tomcat version number')
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
-  validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_environments, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
+  validate_array($listeners, $executors, $connectors, $realms, $valves, $engine_valves, $globalnaming_environments, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
   validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables, $tomcat_users, $tomcat_roles)
   validate_bool($checksum_verify)
   validate_re($checksum_type, '^(none|md5|sha1|sha2|sh256|sha384|sha512)$', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
@@ -914,6 +916,16 @@ define tomcat::instance (
     order   => 60,
     content => template("${module_name}/common/server.xml/060_engine.erb"),
     target  => "instance ${name} server configuration"
+  }
+
+  # Template uses:
+  # - $engine_valves
+  if ($engine_valves and $engine_valves != []) {
+    concat::fragment { "instance ${name} server.xml engine valves":
+      order   => 65,
+      content => template("${module_name}/common/server.xml/065_engine_valves.erb"),
+      target  => "instance ${name} server configuration"
+    }
   }
 
   # Template uses:
