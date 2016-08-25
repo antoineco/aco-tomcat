@@ -33,6 +33,8 @@
                     watchDir="<%= @cluster_farm_deployer_watchdir %>"
                     watchEnabled="<%= @cluster_farm_deployer_watch_enabled %>"/>
 <%- end -%>
+<%- if scope.function_versioncmp([@maj_version, '8']) < 0 -%>
          <ClusterListener className="org.apache.catalina.ha.session.JvmRouteSessionIDBinderListener"/>
+<%- end -%>
          <ClusterListener className="org.apache.catalina.ha.session.ClusterSessionListener"/>
       </Cluster>

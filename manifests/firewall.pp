@@ -41,4 +41,20 @@ class tomcat::firewall {
       action => 'accept'
     }
   }
+
+  #cluster
+  if $::tomcat::use_simpletcpcluster {
+    firewall { "${::tomcat::cluster_receiver_port} accept - tomcat":
+      dport  => $::tomcat::cluster_receiver_port,
+      proto  => 'tcp',
+      action => 'accept'
+    }
+    firewall { "${::tomcat::cluster_membership_port} accept - tomcat":
+      sport       => $::tomcat::cluster_membership_port,
+      dport       => $::tomcat::cluster_membership_port,
+      proto       => 'udp',
+      action      => 'accept',
+      destination => '228.0.0.4'
+    }
+  }
 }
