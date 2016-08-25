@@ -54,6 +54,7 @@ class tomcat::config {
   $singlesignon_valve = $::tomcat::singlesignon_valve
   $accesslog_valve = $::tomcat::accesslog_valve
   $valves = $::tomcat::valves
+  $engine_valves = $::tomcat::engine_valves
   $globalnaming_environments = $::tomcat::globalnaming_environments
   $globalnaming_resources = $::tomcat::globalnaming_resources
   $context_params = $::tomcat::context_params
@@ -219,6 +220,16 @@ class tomcat::config {
     order   => 60,
     content => template("${module_name}/common/server.xml/060_engine.erb"),
     target  => 'tomcat server configuration'
+  }
+
+  # Template uses:
+  # - $engine_valves
+  if ($engine_valves and $engine_valves != []) {
+    concat::fragment { 'server.xml engine valves':
+      order   => 65,
+      content => template("${module_name}/common/server.xml/065_engine_valves.erb"),
+      target  => 'tomcat server configuration'
+    }
   }
 
   # Template uses:
