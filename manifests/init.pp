@@ -450,7 +450,12 @@ class tomcat (
       true    => 'jpda start',
       default => 'start'
     }
-    $service_start_real = "${catalina_home_real}/bin/catalina.sh ${start_cmd}"
+    # catalina.sh in archive for 7,8,8.5 takes -security option to enable security manager
+    $security_arg = $security_manager ? {
+      true    => ' -security',
+      default => ''
+    }
+    $service_start_real = "${catalina_home_real}/bin/catalina.sh ${start_cmd}${security_arg}"
   } else {
     $service_start_real = $service_start
   }

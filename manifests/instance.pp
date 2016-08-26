@@ -424,7 +424,13 @@ define tomcat::instance (
           true    => 'jpda start',
           default => 'start'
         }
-        $service_start_real = "${catalina_home_real}/bin/catalina.sh ${start_cmd}"
+        # catalina.sh in archive for 7,8,8.5 takes -security option to enable security manager
+        # module currently does not put catalina.policy in ${catalina_base}/conf folder  
+        $security_arg = $security_manager ? {
+          true    => ' -security',
+          default => ''
+        }
+        $service_start_real = "${catalina_home_real}/bin/catalina.sh ${start_cmd}${security_arg}"
       }
     }
   } else {
