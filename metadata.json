@@ -10,7 +10,7 @@
   "dependencies": [
     {
       "name": "puppetlabs/concat",
-      "version_requirement": ">= 1.0.0 < 2.0.0"
+      "version_requirement": ">= 1.0.0 < 3.0.0"
     },
     {
       "name": "puppetlabs/stdlib",
@@ -78,28 +78,35 @@
       "operatingsystem": "OpenSuSE",
       "operatingsystemrelease": [
         "13.2",
-        "42.1"
+        "42.1",
+        "42.2"
       ]
     },
     {
       "operatingsystem": "SuSE",
       "operatingsystemrelease": [
         "11.3",
-        "12.0"
+        "11.4",
+        "12.0",
+        "12.1"
       ]
     },
     {
       "operatingsystem": "SLES",
       "operatingsystemrelease": [
         "11.3",
-        "12.0"
+        "11.4",
+        "12.0",
+        "12.1"
       ]
     },
     {
       "operatingsystem": "SLED",
       "operatingsystemrelease": [
         "11.3",
-        "12.0"
+        "11.4",
+        "12.0",
+        "12.1"
       ]
     },
     {
