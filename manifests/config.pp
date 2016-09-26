@@ -348,7 +348,7 @@ class tomcat::config {
   concat::fragment { 'main UserDatabase footer':
     target  => 'main UserDatabase',
     content => template("${module_name}/common/UserDatabase_footer.erb"),
-    order   => 3
+    order   => 4
   }
 
   # configure authorized access

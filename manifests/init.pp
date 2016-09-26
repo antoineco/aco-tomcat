@@ -56,6 +56,10 @@
 #   admin user name
 # [*admin_password*]
 #   admin user password
+# [*tomcat_users*]
+#   hash containing user definitions
+# [*tomcat_roles*]
+#   hash containing role definitions
 # [*checksum_verify*]
 #   verify the checksum if tomcat is installed from an archive (boolean)
 # [*checksum_type*]
@@ -126,6 +130,8 @@ class tomcat (
   $create_default_admin       = false,
   $admin_user                 = 'tomcatadmin',
   $admin_password             = 'password',
+  $tomcat_users               = {},
+  $tomcat_roles               = {},
   #..................................................................................
   # logging
   #..................................................................................
@@ -285,13 +291,16 @@ class tomcat (
   validate_re($version, '^(?:[0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(?:-.*)?$', 'incorrect tomcat version number')
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
   validate_array($listeners, $executors, $connectors, $realms, $valves, $globalnaming_environments, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
-  validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables)
+  validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables, $tomcat_users, $tomcat_roles)
   validate_bool($checksum_verify)
   validate_re($checksum_type, '^(none|md5|sha1|sha2|sh256|sha384|sha512)$', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
 
   if $checksum_verify and !$checksum {
     fail('Checksum verification requires \'checksum\' variable to be set')
   }
+
+  create_resources('::tomcat::userdb_entry', $tomcat_users, {})
+  create_resources('::tomcat::userdb_role_entry', $tomcat_roles, {})
 
   # split version string
   $array_version_full = split($version, '[-]')
