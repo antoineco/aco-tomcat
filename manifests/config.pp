@@ -11,6 +11,8 @@ class tomcat::config {
   $maj_version = $::tomcat::maj_version
   $tomcat_user = $::tomcat::tomcat_user_real
   $tomcat_group = $::tomcat::tomcat_group_real
+  $tomcat_users = $::tomcat::tomcat_users
+  $tomcat_roles = $::tomcat::tomcat_roles
   $server_params_real = $::tomcat::server_params_real
   $jmx_listener = $::tomcat::jmx_listener
   $jmx_registry_port = $::tomcat::jmx_registry_port
@@ -348,7 +350,7 @@ class tomcat::config {
   concat::fragment { 'main UserDatabase footer':
     target  => 'main UserDatabase',
     content => template("${module_name}/common/UserDatabase_footer.erb"),
-    order   => 3
+    order   => 4
   }
 
   # configure authorized access
@@ -360,4 +362,8 @@ class tomcat::config {
       roles    => ['manager-gui', 'manager-script', 'admin-gui', 'admin-script']
     }
   }
+
+  # Configure users and roles defined in $tomcat_users and $tomcat_roles
+  create_resources('::tomcat::userdb_entry', $tomcat_users, {})
+  create_resources('::tomcat::userdb_role_entry', $tomcat_roles, {})
 }

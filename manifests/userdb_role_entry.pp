@@ -1,9 +1,7 @@
-# == Define: tomcat::userdb_entry
+# == Define: tomcat::userdb_role_entry
 #
-define tomcat::userdb_entry (
-  $password,
-  $roles,
-  $username = $name,
+define tomcat::userdb_role_entry (
+  $rolename = $name,
   $database = 'main UserDatabase') {
   # The base class must be included first
   if !defined(Class['tomcat']) {
@@ -11,15 +9,12 @@ define tomcat::userdb_entry (
   }
 
   # parameters validation
-  validate_array($roles)
-  validate_string($username, $password)
-
-  $roles_string = join($roles, ',')
+  validate_string($rolename)
 
   # add formated fragment
   concat::fragment { "UserDatabase entry (${title})":
     target  => $database,
-    content => template("${module_name}/common/UserDatabase_entry.erb"),
-    order   => 3
+    content => template("${module_name}/common/UserDatabase_role_entry.erb"),
+    order   => 2
   }
 }
