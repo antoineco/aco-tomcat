@@ -299,9 +299,6 @@ class tomcat (
     fail('Checksum verification requires \'checksum\' variable to be set')
   }
 
-  create_resources('::tomcat::userdb_entry', $tomcat_users, {})
-  create_resources('::tomcat::userdb_role_entry', $tomcat_roles, {})
-
   # split version string
   $array_version_full = split($version, '[-]')
   $version_real = regsubst($array_version_full[0], '[0-9]{1,2}:', '')
