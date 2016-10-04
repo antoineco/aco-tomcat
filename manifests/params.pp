@@ -188,6 +188,13 @@ class tomcat::params {
         }
         'Ubuntu' : {
           case $::operatingsystemrelease {
+            # yakkety
+            '16.10' : {
+              $version = '8.0.36-2ubuntu1'
+              $package_name = 'tomcat8'
+              # $version = '7.0.70-3'
+              # $package_name = 'tomcat7'
+            }
             # xenial
             '16.04' : {
               $version = '8.0.32-1ubuntu1.2'
