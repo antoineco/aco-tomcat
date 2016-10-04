@@ -7,11 +7,11 @@ class tomcat::params {
         'Fedora' : {
           case $::operatingsystemmajrelease {
             '24'    : {
-              $version = '1:8.0.32-4.fc24'
+              $version = '1:8.0.36-2.fc24'
               $package_name = 'tomcat'
             }
             '23'    : {
-              $version = '1:8.0.32-5.fc23'
+              $version = '1:8.0.36-2.fc23'
               $package_name = 'tomcat'
             }
             '22'    : {
@@ -45,7 +45,8 @@ class tomcat::params {
               $version = '6.0.24-95.el6'
               $package_name = 'tomcat6'
               # = epel repo =
-              # $version = '7.0.65-1.el6'
+              # https://dl.fedoraproject.org/pub/epel/6/x86_64/
+              # $version = '7.0.70-2.el6'
               # $package_name = 'tomcat'
               # = jpackage6 repo =
               # http://mirrors.dotsrc.org/jpackage/6.0/generic/free/repoview/letter_t.group.html
@@ -82,19 +83,19 @@ class tomcat::params {
         'OpenSuSE'           : {
           case $::operatingsystemrelease {
             '42.2'  : {
-              $version = '8.0.36-1.2'
+              $version = '8.0.36-2.3'
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_Leap_42.2/noarch/
-              # $version = '8.0.36-110.18'
+              # $version = '8.0.36-114.3'
               # $package_name = 'tomcat'
             }
             '42.1'  : {
-              $version = '8.0.32-5.1'
+              $version = '8.0.32-8.1'
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_Leap_42.1/noarch/
-              # $version = '8.0.36-110.11'
+              # $version = '8.0.36-114.3'
               # $package_name = 'tomcat'
             }
             '13.2'  : {
@@ -102,7 +103,7 @@ class tomcat::params {
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_13.2/noarch/
-              # $version = '8.0.36-110.8'
+              # $version = '8.0.36-114.2'
               # $package_name = 'tomcat'
             }
             default : {
@@ -115,7 +116,7 @@ class tomcat::params {
           # https://download.suse.com/patch/finder
           case $::operatingsystemrelease {
             '12.1'  : {
-              $version = '8.0.32-3.1'
+              $version = '8.0.32-8.7'
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/SLE_12_SP1/noarch/
@@ -128,7 +129,7 @@ class tomcat::params {
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/SLE_12/noarch/
-              # $version = '8.0.36-110.3'
+              # $version = '8.0.36-114.2'
               # $package_name = 'tomcat'
               $systemd = true
             }
@@ -168,9 +169,9 @@ class tomcat::params {
           case $::operatingsystemmajrelease {
             # jessie
             '8'     : {
-              $version = '8.0.14-1+deb8u1'
+              $version = '8.0.14-1+deb8u2'
               $package_name = 'tomcat8'
-              # $version = '7.0.56-3+deb8u2'
+              # $version = '7.0.56-3+deb8u3'
               # $package_name = 'tomcat7'
             }
             # wheezy
@@ -189,7 +190,7 @@ class tomcat::params {
           case $::operatingsystemrelease {
             # xenial
             '16.04' : {
-              $version = '8.0.32-1ubuntu1.1'
+              $version = '8.0.32-1ubuntu1.2'
               $package_name = 'tomcat8'
               # $version = '7.0.68-1ubuntu0.1'
               # $package_name = 'tomcat7'
@@ -219,7 +220,7 @@ class tomcat::params {
             }
             # trusty
             '14.04' : {
-              $version = '7.0.52-1ubuntu0.6'
+              $version = '7.0.52-1ubuntu0.7'
               $package_name = 'tomcat7'
               # $version = '6.0.39-1'
               # $package_name = 'tomcat6'
@@ -249,7 +250,7 @@ class tomcat::params {
             '12.04' : {
               $version = '7.0.26-1ubuntu1.2'
               $package_name = 'tomcat7'
-              # $version = '6.0.35-1ubuntu3.6'
+              # $version = '6.0.35-1ubuntu3.8'
               # $package_name = 'tomcat6'
             }
             default : {
