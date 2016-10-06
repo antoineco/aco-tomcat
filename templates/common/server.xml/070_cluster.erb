@@ -7,6 +7,9 @@
          <Channel className="org.apache.catalina.tribes.group.GroupChannel">
             <Membership className="org.apache.catalina.tribes.membership.McastService"
                         address="228.0.0.4"
+<%- if @cluster_membership_bind_address -%>
+                        bind="<%= @cluster_membership_bind_address %>"
+<%- end -%>
                         port="<%= @cluster_membership_port %>"
                         domain="<%= @cluster_membership_domain %>"
                         frequency="500"
@@ -29,8 +32,8 @@
 <%- if @cluster_farm_deployer -%>
          <Deployer className="org.apache.catalina.ha.deploy.FarmWarDeployer"
                     tempDir="<%= @catalina_tmpdir_real %>"
-                    deployDir="webapps"
-                    watchDir="<%= @cluster_farm_deployer_watchdir %>"
+                    deployDir="<%= @cluster_farm_deployer_deploydir_real %>"
+                    watchDir="<%= @cluster_farm_deployer_watchdir_real %>"
                     watchEnabled="<%= @cluster_farm_deployer_watch_enabled %>"/>
 <%- end -%>
 <%- if scope.function_versioncmp([@maj_version, '8']) < 0 -%>

@@ -41,12 +41,14 @@ class tomcat::config {
   $host_params_real = $::tomcat::host_params_real
   $use_simpletcpcluster = $::tomcat::use_simpletcpcluster
   $cluster_membership_port = $::tomcat::cluster_membership_port
+  $cluster_membership_bind_address = $::tomcat::cluster_membership_bind_address
   $cluster_membership_domain = $::tomcat::cluster_membership_domain
   $cluster_receiver_address = $::tomcat::cluster_receiver_address
   $cluster_receiver_port = $::tomcat::cluster_receiver_port
   $cluster_farm_deployer = $::tomcat::cluster_farm_deployer
   $cluster_parent_real = $::tomcat::cluster_parent_real
   $cluster_farm_deployer_watchdir = $::tomcat::cluster_farm_deployer_watchdir
+  $cluster_farm_deployer_deploydir = $::tomcat::cluster_farm_deployer_deploydir
   $cluster_farm_deployer_watch_enabled = $::tomcat::cluster_farm_deployer_watch_enabled
   $combined_realm = $::tomcat::combined_realm
   $lockout_realm = $::tomcat::lockout_realm
@@ -367,7 +369,7 @@ class tomcat::config {
   concat::fragment { 'main UserDatabase footer':
     target  => 'main UserDatabase',
     content => template("${module_name}/common/UserDatabase_footer.erb"),
-    order   => 4
+    order   => 3
   }
 
   # configure authorized access

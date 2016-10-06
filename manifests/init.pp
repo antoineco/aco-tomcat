@@ -219,14 +219,17 @@ class tomcat (
   # cluster (experimental)
   $use_simpletcpcluster       = false,
   $cluster_membership_port    = '45565',
+  # bind address useful if there are multiple NICs and multicast isn't using the right one
+  $cluster_membership_bind_address = undef,
   $cluster_membership_domain  = 'tccluster',
   $cluster_receiver_address   = undef,
   $cluster_receiver_port      = '4000',
   $cluster_farm_deployer      = false,
   #cluster_parent can be engine or host, must be host if using farm deployer
   $cluster_parent             = undef,
+  $cluster_farm_deployer_watchdir  = undef,
   # This directory is currently not managed by this module
-  $cluster_farm_deployer_watchdir = 'deploy',
+  $cluster_farm_deployer_deploydir = undef,
   $cluster_farm_deployer_watch_enabled = true,
   #..................................................................................
   # realms
@@ -306,17 +309,6 @@ class tomcat (
 
   if $checksum_verify and !$checksum {
     fail('Checksum verification requires \'checksum\' variable to be set')
-  }
-
-  # cluster can live in engine or host, engine was original default, host is required if using farm deployer
-  if $cluster_parent {
-    validate_re($cluster_parent, '^(engine|host)$', 'cluster_parent must be host or engine')
-    if $cluster_farm_deployer and $cluster_parent == 'engine' {
-      fail('Farm deployer cannot be used with cluster_parent=engine')
-    }
-    $cluster_parent_real = $cluster_parent
-  } else {
-    $cluster_parent_real = $cluster_farm_deployer ? { true => 'host', default => 'engine' }
   }
 
   # split version string
@@ -439,7 +431,11 @@ class tomcat (
   }
 
   if $systemd_service_type == undef {
-    $systemd_service_type_real = 'simple'
+    if $install_from == 'archive' {
+      $systemd_service_type_real = 'forking'
+    } else {
+      $systemd_service_type_real = 'simple'
+    }
   } else {
     $systemd_service_type_real = $systemd_service_type
   }
@@ -450,7 +446,7 @@ class tomcat (
       true    => 'jpda start',
       default => 'start'
     }
-    # catalina.sh in archive for 7,8,8.5 takes -security option to enable security manager
+    # catalina.sh in archive for takes -security option to enable security manager
     $security_arg = $security_manager ? {
       true    => ' -security',
       default => ''
@@ -604,6 +600,21 @@ class tomcat (
   } else {
     $extras_enable_real = $extras_enable_compat
   }
+
+  # cluster can live in engine or host, engine was original default, host is required if using farm deployer
+  if $cluster_parent {
+    validate_re($cluster_parent, '^(engine|host)$', 'cluster_parent must be host or engine')
+    if $cluster_farm_deployer and $cluster_parent == 'engine' {
+      fail('Farm deployer cannot be used with cluster_parent=engine')
+    }
+    $cluster_parent_real = $cluster_parent
+  } else {
+    $cluster_parent_real = $cluster_farm_deployer ? { true => 'host', default => 'engine' }
+  }
+  # default name for watchdir is "deploy" b/c you put WAR there to deploy it
+  # deploydir (typically webapps) is where files are deployed to
+  $cluster_farm_deployer_watchdir_real = pick($cluster_farm_deployer_watchdir,"${catalina_base_real}/deploy")
+  $cluster_farm_deployer_deploydir_real = pick($cluster_farm_deployer_deploydir, "${catalina_base_real}/webapps")
 
   # start the real action
   contain tomcat::install
