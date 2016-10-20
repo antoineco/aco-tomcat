@@ -37,12 +37,12 @@ class tomcat::params {
         default  : {
           case $::operatingsystemmajrelease {
             '7'     : {
-              $version = '7.0.54-2.el7_1'
+              $version = '7.0.54-8.el7_2'
               $package_name = 'tomcat'
               $systemd = true
             }
             '6'     : {
-              $version = '6.0.24-95.el6'
+              $version = '6.0.24-98.el6_8'
               $package_name = 'tomcat6'
               # = epel repo =
               # https://dl.fedoraproject.org/pub/epel/6/x86_64/
@@ -83,11 +83,11 @@ class tomcat::params {
         'OpenSuSE'           : {
           case $::operatingsystemrelease {
             '42.2'  : {
-              $version = '8.0.36-2.3'
+              $version = '8.0.36-2.6'
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_Leap_42.2/noarch/
-              # $version = '8.0.36-114.3'
+              # $version = '8.0.36-117.1'
               # $package_name = 'tomcat'
             }
             '42.1'  : {
@@ -95,7 +95,7 @@ class tomcat::params {
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_Leap_42.1/noarch/
-              # $version = '8.0.36-114.3'
+              # $version = '8.0.36-117.2'
               # $package_name = 'tomcat'
             }
             '13.2'  : {
@@ -103,7 +103,7 @@ class tomcat::params {
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_13.2/noarch/
-              # $version = '8.0.36-114.2'
+              # $version = '8.0.36-115.1'
               # $package_name = 'tomcat'
             }
             default : {
@@ -121,34 +121,21 @@ class tomcat::params {
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/SLE_12_SP1/noarch/
               # $version = ''
-              # $package_name = 'tomcat'
               $systemd = true
             }
             '12.0'  : {
               $version = '7.0.68-7.6.1'
               $package_name = 'tomcat'
-              # = JAVA repo =
-              # http://download.opensuse.org/repositories/Java:/packages/SLE_12/noarch/
-              # $version = '8.0.36-114.2'
-              # $package_name = 'tomcat'
               $systemd = true
             }
             '11.4'  : {
               $version = '6.0.45-0.50.1'
               $package_name = 'tomcat6'
-              # = JAVA repo =
-              # http://download.opensuse.org/repositories/Java:/packages/SLE_11/noarch/
-              # $version = '7.0.54-60.1'
-              # $package_name = 'tomcat'
               $systemd = false
             }
             '11.3'  : {
               $version = '6.0.41-0.43.1'
               $package_name = 'tomcat6'
-              # = JAVA repo =
-              # http://download.opensuse.org/repositories/Java:/packages/SLE_11/noarch/
-              # $version = '7.0.54-60.1'
-              # $package_name = 'tomcat'
               $systemd = false
             }
             default : {
@@ -190,9 +177,9 @@ class tomcat::params {
           case $::operatingsystemrelease {
             # yakkety
             '16.10' : {
-              $version = '8.0.36-2ubuntu1'
+              $version = '8.0.37-1'
               $package_name = 'tomcat8'
-              # $version = '7.0.70-3'
+              # $version = '7.0.72-1'
               # $package_name = 'tomcat7'
             }
             # xenial
