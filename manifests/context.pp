@@ -4,6 +4,7 @@ define tomcat::context (
   $path,
   $owner            = $::tomcat::tomcat_user_real,
   $group            = $::tomcat::tomcat_group_real,
+  $file_mode        = $::tomcat::file_mode,
   $params           = {},
   $loader           = {},
   $manager          = {},
@@ -32,7 +33,7 @@ define tomcat::context (
     path  => $path,
     owner => $owner,
     group => $group,
-    mode  => '0600',
+    mode  => $file_mode,
     order => 'numeric'
   }
 

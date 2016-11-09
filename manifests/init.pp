@@ -30,6 +30,8 @@
 #   service user
 # [*tomcat_group*]
 #   service group
+# [*file_mode*]
+#   mode for configuration files
 # [*tomcat_native*]
 #   install tomcat native library (boolean)
 # [*tomcat_native_package_name*]
@@ -107,6 +109,7 @@ class tomcat (
   $service_stop               = undef,
   $tomcat_user                = undef,
   $tomcat_group               = undef,
+  $file_mode                  = '0600',
   $tomcat_native              = false,
   $tomcat_native_package_name = $::tomcat::params::tomcat_native_package_name,
   $log4j                      = false,
