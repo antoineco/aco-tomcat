@@ -89,13 +89,14 @@ class tomcat::config {
   $jpda_suspend = $::tomcat::jpda_suspend
   $jpda_opts_real = $::tomcat::jpda_opts_real
   $custom_variables = $::tomcat::custom_variables
+  $file_mode = $::tomcat::file_mode
 
   # generate and manage server configuration
   concat { 'tomcat server configuration':
     path   => "${::tomcat::catalina_base_real}/conf/server.xml",
     owner  => $tomcat_user,
     group  => $tomcat_group,
-    mode   => '0600',
+    mode   => $file_mode,
     order  => 'numeric',
     notify => Service[$::tomcat::service_name_real]
   }
@@ -355,7 +356,7 @@ class tomcat::config {
     path   => "${::tomcat::catalina_base_real}/conf/tomcat-users.xml",
     owner  => $tomcat_user,
     group  => $tomcat_group,
-    mode   => '0600',
+    mode   => $file_mode,
     order  => 'numeric',
     notify => Service[$::tomcat::service_name_real]
   }

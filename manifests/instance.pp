@@ -26,6 +26,8 @@
 #   service user
 # [*tomcat_group*]
 #   service group
+# [*file_mode*]
+#   mode for configuration files
 # [*extras_enable*]
 #   install extra libraries (boolean)
 # [*extras_source*]
@@ -80,6 +82,7 @@ define tomcat::instance (
   $service_stop               = undef,
   $tomcat_user                = $::tomcat::tomcat_user_real,
   $tomcat_group               = $::tomcat::tomcat_group_real,
+  $file_mode                  = '0600',
   $extras_enable              = false,
   $enable_extras              = undef, #! backward compatibility
   $extras_source              = undef,
@@ -818,7 +821,7 @@ define tomcat::instance (
     path    => "${catalina_base_real}/conf/server.xml",
     owner   => $tomcat_user,
     group   => $tomcat_group,
-    mode    => '0600',
+    mode    => $file_mode,
     order   => 'numeric',
     notify  => Service[$service_name_real],
     require => File["${catalina_base_real}/conf"]
@@ -1043,7 +1046,7 @@ define tomcat::instance (
         ensure  => present,
         owner   => $tomcat_user,
         group   => $tomcat_group,
-        mode    => '0600',
+        mode    => $file_mode,
         path    => "${catalina_base_real}/conf/web.xml",
         source  => "puppet:///modules/${module_name}/conf/web.xml",
         require => File["${catalina_base_real}/conf"]
@@ -1093,7 +1096,7 @@ define tomcat::instance (
     path   => "${catalina_base_real}/conf/tomcat-users.xml",
     owner  => $tomcat_user,
     group  => $tomcat_group,
-    mode   => '0600',
+    mode   => $file_mode,
     order  => 'numeric',
     notify => Service[$service_name_real]
   }
