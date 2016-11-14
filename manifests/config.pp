@@ -90,6 +90,11 @@ class tomcat::config {
   $jpda_opts_real = $::tomcat::jpda_opts_real
   $custom_variables = $::tomcat::custom_variables
 
+  $notify_service = $::tomcat::restart_on_change ? {
+    true  => Service[$::tomcat::service_name_real],
+    false => undef,
+  }
+
   # generate and manage server configuration
   concat { 'tomcat server configuration':
     path   => "${::tomcat::catalina_base_real}/conf/server.xml",
@@ -97,7 +102,7 @@ class tomcat::config {
     group  => $tomcat_group,
     mode   => $::tomcat::file_mode,
     order  => 'numeric',
-    notify => Service[$::tomcat::service_name_real]
+    notify => $notify_service
   }
 
   # Template uses:
@@ -306,7 +311,7 @@ class tomcat::config {
     valves           => $context_valves,
     resourcedefs     => $context_resourcedefs,
     resourcelinks    => $context_resourcelinks,
-    notify           => Service[$::tomcat::service_name_real]
+    notify           => $notify_service
   }
 
   # generate and manage global parameters
@@ -338,7 +343,7 @@ class tomcat::config {
     owner   => $tomcat_user,
     group   => $tomcat_group,
     mode    => '0644',
-    notify  => Service[$::tomcat::service_name_real]
+    notify  => $notify_service
   }
 
   if $::osfamily == 'RedHat' {
@@ -357,7 +362,7 @@ class tomcat::config {
     group  => $tomcat_group,
     mode   => $::tomcat::file_mode,
     order  => 'numeric',
-    notify => Service[$::tomcat::service_name_real]
+    notify => $notify_service
   }
 
   concat::fragment { 'main UserDatabase header':

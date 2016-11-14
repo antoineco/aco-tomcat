@@ -104,6 +104,7 @@ class tomcat (
   $service_name               = undef,
   $service_ensure             = 'running',
   $service_enable             = true,
+  $restart_on_change          = true,
   $systemd_service_type       = undef,
   $service_start              = undef,
   $service_stop               = undef,
@@ -307,7 +308,7 @@ class tomcat (
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
   validate_array($listeners, $executors, $connectors, $realms, $valves, $engine_valves, $globalnaming_environments, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
   validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables, $tomcat_users, $tomcat_roles)
-  validate_bool($checksum_verify)
+  validate_bool($checksum_verify, $restart_on_change)
   validate_re($checksum_type, '^(none|md5|sha1|sha2|sh256|sha384|sha512)$', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
 
   if $checksum_verify and !$checksum {
@@ -622,20 +623,18 @@ class tomcat (
   # start the real action
   contain tomcat::install
   contain tomcat::service
-  Class['::tomcat::install'] -> Class['::tomcat::service']
-
   contain tomcat::config
-  Class['::tomcat::install'] -> Class['::tomcat::config']
+  Class['::tomcat::install'] -> Class['::tomcat::config'] -> Class['::tomcat::service']
 
   if $log4j_enable {
     contain tomcat::log4j
-    Class['::tomcat::install'] -> Class['::tomcat::log4j']
+    Class['::tomcat::install'] -> Class['::tomcat::log4j'] -> Class['::tomcat::service']
   }
 
   if $extras_enable_real and !$extras_package_name {
     # install extras via download
     contain tomcat::extras
-    Class['::tomcat::install'] -> Class['::tomcat::extras']
+    Class['::tomcat::install'] -> Class['::tomcat::extras'] -> Class['::tomcat::service']
   }
 
   if $manage_firewall {

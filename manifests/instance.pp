@@ -77,6 +77,7 @@ define tomcat::instance (
   $service_name               = undef,
   $service_ensure             = 'running',
   $service_enable             = true,
+  $restart_on_change          = $::tomcat::restart_on_change,
   $systemd_service_type       = undef,
   $service_start              = undef,
   $service_stop               = undef,
@@ -283,7 +284,7 @@ define tomcat::instance (
   validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
   validate_array($listeners, $executors, $connectors, $realms, $valves, $engine_valves, $globalnaming_environments, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
   validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables, $tomcat_users, $tomcat_roles)
-  validate_bool($checksum_verify)
+  validate_bool($checksum_verify, $restart_on_change)
   validate_re($checksum_type, '^(none|md5|sha1|sha2|sh256|sha384|sha512)$', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
 
   if $checksum_verify and !$checksum {
@@ -471,6 +472,11 @@ define tomcat::instance (
   $catalina_opts_real = join($catalina_opts, ' ')
   $jpda_opts_real = join($jpda_opts, ' ')
 
+  $notify_service = $restart_on_change ? {
+    true  => Service[$service_name_real],
+    false => undef,
+  }
+
   # generate params hash
   $server_params_real = merge(delete_undef_values({
     'port'     => $server_control_port,
@@ -598,7 +604,7 @@ define tomcat::instance (
 
   Archive {
     provider => 'curl',
-    notify   => Service[$service_name_real]
+    notify   => $notify_service
   }
 
   if !defined(File['tomcat instances root']) {
@@ -757,7 +763,7 @@ define tomcat::instance (
       command     => '/usr/bin/systemctl daemon-reload',
       refreshonly => true,
       subscribe   => File["${service_name_real} service unit"],
-      notify      => Service[$service_name_real]
+      notify      => $notify_service
     }
   } else { # Debian/Ubuntu, RHEL 6, SLES 11, ...
     case $::tomcat::install_from {
@@ -769,7 +775,7 @@ define tomcat::instance (
           owner  => 'root',
           group  => 'root',
           target => $::tomcat::service_name_real,
-          notify => Service[$service_name_real]
+          notify => $notify_service
         }
       }
       default   : {
@@ -785,7 +791,7 @@ define tomcat::instance (
           group   => 'root',
           mode    => '0755',
           content => template("${module_name}/instance/tomcat_init_generic.erb"),
-          notify  => Service[$service_name_real]
+          notify  => $notify_service
         }
       }
     }
@@ -823,7 +829,7 @@ define tomcat::instance (
     group   => $tomcat_group,
     mode    => $file_mode,
     order   => 'numeric',
-    notify  => Service[$service_name_real],
+    notify  => $notify_service,
     require => File["${catalina_base_real}/conf"]
   }
 
@@ -1036,7 +1042,7 @@ define tomcat::instance (
     resourcedefs     => $context_resourcedefs,
     resourcelinks    => $context_resourcelinks,
     require          => File["${catalina_base_real}/conf"],
-    notify           => Service[$service_name_real]
+    notify           => $notify_service
   }
 
   # default servlet
@@ -1084,7 +1090,7 @@ define tomcat::instance (
     content => template("${module_name}/common/setenv.erb"),
     owner   => $tomcat_user,
     group   => $tomcat_group,
-    notify  => Service[$service_name_real]
+    notify  => $notify_service
   }
 
   # ------#
@@ -1098,7 +1104,7 @@ define tomcat::instance (
     group  => $tomcat_group,
     mode   => $file_mode,
     order  => 'numeric',
-    notify => Service[$service_name_real]
+    notify => $notify_service
   }
 
   concat::fragment { "instance ${name} UserDatabase header":
@@ -1155,7 +1161,7 @@ define tomcat::instance (
                       'docBase'             => "${admin_webapps_path}/manager",
                       'antiResourceLocking' => false,
                       'privileged'          => true },
-          notify => Service[$service_name_real];
+          notify => $notify_service;
 
         "instance ${name} host-manager.xml":
           path   => "${catalina_base_real}/conf/Catalina/${host_name}/host-manager.xml",
@@ -1163,7 +1169,7 @@ define tomcat::instance (
                       'docBase'             => "${admin_webapps_path}/host-manager",
                       'antiResourceLocking' => false,
                       'privileged'          => true },
-          notify => Service[$service_name_real]
+          notify => $notify_service
       }
     } else {
       # warn if admin webapps were selected for installation in a multi-version setup
@@ -1197,7 +1203,7 @@ define tomcat::instance (
         ensure => link,
         path   => "${catalina_base_real}/lib/log4j.jar",
         target => $log4j_path,
-        notify => Service[$service_name_real]
+        notify => $notify_service
       }
     }
 
@@ -1207,7 +1213,7 @@ define tomcat::instance (
           ensure => present,
           path   => "${catalina_base_real}/lib/log4j.xml",
           source => $log4j_conf_source,
-          notify => Service[$service_name_real];
+          notify => $notify_service;
 
         "instance ${name} log4j ini configuration":
           ensure => absent,
@@ -1224,7 +1230,7 @@ define tomcat::instance (
           ensure => present,
           path   => "${catalina_base_real}/lib/log4j.properties",
           source => $log4j_conf_source,
-          notify => Service[$service_name_real];
+          notify => $notify_service;
 
         "instance ${name} log4j xml configuration":
           ensure => absent,
