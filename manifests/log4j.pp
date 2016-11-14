@@ -17,13 +17,18 @@ class tomcat::log4j {
     default  => '/usr/share/java/log4j.jar'
   }
 
+  $notify_service = $::tomcat::restart_on_change ? {
+    true  => Service[$::tomcat::service_name_real],
+    false => undef,
+  }
+
   file { 'global log4j library':
     ensure => link,
     owner  => 'root',
     group  => 'root',
     path   => "${::tomcat::catalina_home_real}/lib/log4j.jar",
     target => $log4j_path,
-    notify => Service[$::tomcat::service_name_real]
+    notify => $notify_service
   }
 
   if $::tomcat::log4j_conf_type == 'xml' {
@@ -34,7 +39,7 @@ class tomcat::log4j {
         group  => 'root',
         path   => "${::tomcat::catalina_home_real}/lib/log4j.xml",
         source => $::tomcat::log4j_conf_source,
-        notify => Service[$::tomcat::service_name_real];
+        notify => $notify_service;
 
       'global log4j ini configuration':
         ensure => absent,
@@ -55,7 +60,7 @@ class tomcat::log4j {
         group  => 'root',
         path   => "${::tomcat::catalina_home_real}/lib/log4j.properties",
         source => $::tomcat::log4j_conf_source,
-        notify => Service[$::tomcat::service_name_real];
+        notify => $notify_service;
 
       'global log4j xml configuration':
         ensure => absent,

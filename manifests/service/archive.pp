@@ -17,6 +17,11 @@ class tomcat::service::archive {
   $tomcat_group = $::tomcat::tomcat_group_real
   $systemd_service_type_real = $::tomcat::systemd_service_type_real
 
+  $notify_service = $::tomcat::restart_on_change ? {
+    true  => Service[$::tomcat::service_name_real],
+    false => undef,
+  }
+
   if $::tomcat::params::systemd {
     # manage systemd unit on compatible systems
     if $::osfamily == 'Suse' {
@@ -36,7 +41,7 @@ class tomcat::service::archive {
       command     => '/usr/bin/systemctl daemon-reload',
       refreshonly => true,
       subscribe   => File["${service_name_real} service unit"],
-      notify      => Service[$service_name_real]
+      notify      => $notify_service
     }
   } else { # Debian/Ubuntu, RHEL 6, SLES 11, ...
     $start_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${tomcat_user} -s /bin/bash -c '${service_start_real}'"
@@ -51,7 +56,7 @@ class tomcat::service::archive {
       group   => 'root',
       mode    => '0755',
       content => template("${module_name}/instance/tomcat_init_generic.erb"),
-      notify  => Service[$service_name_real]
+      notify  => $notify_service
     }
   }
 

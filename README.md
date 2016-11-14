@@ -336,6 +336,9 @@ Whether the service should be running. Valid values are `stopped` and `running`.
 #####`service_enable`
 Whether to enable the Tomcat service. Boolean value. Defaults to `true`.
 
+#####`restart_on_change`
+Whether to restart Tomcat service after configuration change. Boolean value. Defaults to `true`.
+
 #####`systemd_service_type`
 The value for the systemd service type if applicable. Defaults to 'simple' for install_from = package, 'forking' for install_from = archive.
 
