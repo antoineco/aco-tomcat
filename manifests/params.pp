@@ -7,11 +7,11 @@ class tomcat::params {
         'Fedora' : {
           case $::operatingsystemmajrelease {
             '24'    : {
-              $version = '1:8.0.36-2.fc24'
+              $version = '1:8.0.38-1.fc24'
               $package_name = 'tomcat'
             }
             '23'    : {
-              $version = '1:8.0.36-2.fc23'
+              $version = '1:8.0.38-1.fc23'
               $package_name = 'tomcat'
             }
             '22'    : {
@@ -26,11 +26,11 @@ class tomcat::params {
         }
         'Amazon' : {
           # https://alas.aws.amazon.com
-          $version = '8.0.36-1.62.amzn1' # ALAS-2016-736
+          $version = '8.0.38-1.65.amzn1'   # ALAS-2016-764
           $package_name = 'tomcat8'
-          # $version = '7.0.70-1.18.amzn1'  # ALAS-2016-736
+          # $version = '7.0.72-1.21.amzn1' # ALAS-2016-764
           # $package_name = 'tomcat7'
-          # $version = '6.0.45-1.5.amzn1' # ALAS-2016-722
+          # $version = '6.0.47-1.7.amzn1'  # ALAS-2016-764
           # $package_name = 'tomcat6'
           $systemd = false
         }
@@ -46,7 +46,7 @@ class tomcat::params {
               $package_name = 'tomcat6'
               # = epel repo =
               # https://dl.fedoraproject.org/pub/epel/6/x86_64/
-              # $version = '7.0.70-2.el6'
+              # $version = '7.0.72-1.el6'
               # $package_name = 'tomcat'
               # = jpackage6 repo =
               # http://mirrors.dotsrc.org/jpackage/6.0/generic/free/repoview/letter_t.group.html
@@ -83,22 +83,27 @@ class tomcat::params {
         'OpenSuSE'           : {
           case $::operatingsystemrelease {
             '42.2'  : {
-              $version = '8.0.36-2.6'
+              # http://download.opensuse.org/distribution/leap/42.2/repo/oss/suse/noarch/
+              # http://download.opensuse.org/update/leap/42.2/oss/noarch/
+              $version = '8.0.36-2.7'
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_Leap_42.2/noarch/
-              # $version = '8.0.36-117.1'
+              # $version = '8.0.36-117.9'
               # $package_name = 'tomcat'
             }
             '42.1'  : {
+              # http://download.opensuse.org/distribution/leap/42.1/repo/oss/suse/noarch/
+              # http://download.opensuse.org/update/leap/42.1/oss/noarch/
               $version = '8.0.32-8.1'
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_Leap_42.1/noarch/
-              # $version = '8.0.36-117.2'
+              # $version = '8.0.36-117.8'
               # $package_name = 'tomcat'
             }
             '13.2'  : {
+              # http://download.opensuse.org/distribution/13.2/repo/oss/suse/noarch/
               $version = '7.0.55-2.5'
               $package_name = 'tomcat'
               # = JAVA repo =
