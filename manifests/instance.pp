@@ -1145,10 +1145,10 @@ define tomcat::instance (
         'package' : {
           $admin_webapps_path = $::osfamily ? {
             'Debian' => "/usr/share/${::tomcat::admin_webapps_package_name_real}",
-            default  => '${catalina.home}/webapps'
+            default  => "\${catalina.home}/webapps"
           } }
         default   : {
-          $admin_webapps_path = '${catalina.home}/webapps'
+          $admin_webapps_path = "\${catalina.home}/webapps"
         }
       }
 
