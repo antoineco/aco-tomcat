@@ -1,6 +1,22 @@
+###1.5.0
+
+**Warning:** the `host_deployOnStartup` parameter was renamed to `host_deployonstartup` (lowercase) in this release. Backward compatibility will be maintained until the next minor release only.
+
+* Add support for Engine scoped valves: `engine_valves` parameter ([hdeadman](https://github.com/hdeadman))
+* New parameters `restart_on_change` and `file_mode` ([ruriky](https://github.com/ruriky))
+* Allow enabling the Security Manager on `archive` installations ([hdeadman](https://github.com/hdeadman))
+* Fix default systemd service type on `archive` installations ([hdeadman](https://github.com/hdeadman))
+* Improve usage of clustering features (SimpleTcpCluster) ([hdeadman](https://github.com/hdeadman))
+ - see undocumented `cluster_*` parameters
+* Fix empty user/group in systemd units
+* Encode values in XML templates ([scitechfh](https://github.com/scitechfh))
+* Set default provider to `curl` for `archive` resources ([scitechfh](https://github.com/scitechfh))
+* Add support for Ubuntu 16.10 (Yakkety), OpenSuSE 42.2, SuSE 12.1
+* Update default package versions
+
 ###1.4.0
 
-**Warning** the `enable_extras` parameter was renamed to `extras_enable` in this release. Backward compatibility will be maintained until the next minor release only.
+**Warning:** the `enable_extras` parameter was renamed to `extras_enable` in this release. Backward compatibility will be maintained until the next minor release only.
 
 * New parameters: `package_ensure` and `extras_package_name` ([scitechfh](https://github.com/scitechfh))
 * New parameters: `checksum_verify`, `checksum_type`, `checksum` and `extras_source` ([angrox](https://github.com/angrox))

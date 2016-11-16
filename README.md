@@ -560,7 +560,7 @@ $JPDA_SUSPEND. Defaults to `undef` (use Tomcat default).
 $JPDA_OPTS. Array. Defaults to `[]`.
 
 #####`security_manager`
-Whether to enable the security manager. Boolean value. Defaults to `false`.
+Whether to enable the [Security Manager](https://tomcat.apache.org/tomcat-8.0-doc/security-manager-howto.html). Boolean value. Defaults to `false`.
 
 #####`lang`
 Tomcat locale. Defaults to `undef` (use Tomcat default).
@@ -697,5 +697,7 @@ Check the [puppetlabs_spec_helper](https://github.com/puppetlabs/puppetlabs_spec
 * [Vincent Kramar](https://github.com/thkrmr)
 * [Joshua Roys](https://github.com/roysjosh)
 * [Martin Zehetmayer](https://github.com/angrox)
+* [Rurik Ylä-Onnenvuori](https://github.com/ruriky)
+* [Hal Deadman](https://github.com/hdeadman)
 
 Features request and contributions are always welcome!
