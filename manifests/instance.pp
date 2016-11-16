@@ -85,7 +85,6 @@ define tomcat::instance (
   $tomcat_group               = $::tomcat::tomcat_group_real,
   $file_mode                  = '0600',
   $extras_enable              = false,
-  $enable_extras              = undef, #! backward compatibility
   $extras_source              = undef,
   $manage_firewall            = false,
   #..................................................................................
@@ -215,6 +214,7 @@ define tomcat::instance (
   $host_appbase               = undef,
   $host_autodeploy            = undef,
   $host_deployonstartup       = undef,
+  $host_deployOnStartup       = undef, #! backward compatibility
   $host_undeployoldversions   = undef,
   $host_unpackwars            = undef,
   $host_params                = {},
@@ -237,7 +237,7 @@ define tomcat::instance (
   $context_manager            = {},
   $context_realm              = {},
   $context_resources          = {},
-  $context_watchedresources   = ['WEB-INF/web.xml','${catalina.base}/conf/web.xml'],
+  $context_watchedresources   = ['WEB-INF/web.xml',"\${catalina.base}/conf/web.xml"],
   $context_parameters         = [],
   $context_environments       = [],
   $context_listeners          = [],
@@ -551,28 +551,29 @@ define tomcat::instance (
   }
   ), $engine_params)
 
+  # backward compatibility after renaming parameter 'host_deployOnStartup'
+  # 'host_deployOnStartup' (uppercase) takes precendence over 'host_deployonstartup' (lowercase) to avoid surprises
+  if $host_deployOnStartup != undef {
+    warning("The 'host_deployOnStartup' parameter was renamed to 'host_deployonstartup' (lowercase)")
+    $host_deployonstartup_compat = $host_deployOnStartup
+  } else {
+    $host_deployonstartup_compat = $host_deployonstartup
+  }
+
   $host_params_real = merge(delete_undef_values({
     'appBase'             => $host_appbase,
     'autoDeploy'          => $host_autodeploy,
-    'deployOnStartup'     => $host_deployonstartup,
+    'deployOnStartup'     => $host_deployonstartup_compat,
     'undeployOldVersions' => $host_undeployoldversions,
     'unpackWARs'          => $host_unpackwars
   }
   ), $host_params)
 
-  # backward compatibility after renaming parameter 'enable_extras'
-  # 'enable_extras' takes precendence over 'extras_enable' to avoid surprises
-  if $enable_extras != undef {
-    $extras_enable_compat = $enable_extras
-  } else {
-    $extras_enable_compat = $extras_enable
-  }
-
   # should we force download extras libs?
   if $log4j_enable or $jmx_listener {
     $extras_enable_real = true
   } else {
-    $extras_enable_real = $extras_enable_compat
+    $extras_enable_real = $extras_enable
   }
 
   # ------------------------------------#
@@ -1116,7 +1117,7 @@ define tomcat::instance (
   concat::fragment { "instance ${name} UserDatabase footer":
     target  => "instance ${name} UserDatabase",
     content => template("${module_name}/common/UserDatabase_footer.erb"),
-    order   => 3
+    order   => 4
   }
 
   # configure authorized access
