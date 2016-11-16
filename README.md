@@ -112,16 +112,6 @@ class { 'tomcat':
 }
 ```
 
-Add an additional admin for the manager
-
-```puppet
-tomcat::userdb_entry { 'foo':
-  database => 'main UserDatabase',
-  password => 'bar',
-  roles    => ['manager-gui', 'manager-script']
-}
-```
-
 Use log4j for Tomcat internal logging and provide a custom XML configuration file
 
 ```puppet
@@ -239,6 +229,38 @@ class { 'tomcat':
       'type'   => 'javax.sql.DataSource'
     }
   ]
+}
+```
+
+Add an additional admin for the manager using a defined type
+
+```puppet
+tomcat::userdb_entry { 'foo':
+  database => 'main UserDatabase',
+  password => 'bar',
+  roles    => ['manager-gui', 'manager-script']
+}
+```
+
+Add roles and users using helper parameters
+
+```puppet
+class { 'tomcat':
+  …
+  tomcat_roles => {
+    'opsgroup' => {} ,
+    'qagroup'  => {}
+  },
+  tomcat_users => {
+    'opsguy' => {
+      password => 'qwerty',
+      roles    => [ 'opsgroup', 'admin-gui' ]
+    },
+    'qaguy' => {
+      password => '01234',
+      roles    => [ 'qagroup', 'manager-gui' ]
+    }
+  }
 }
 ```
 
@@ -593,7 +615,7 @@ Where to get log4j's configuration from. A [sample file](https://raw.githubuserc
 
 ####Define: `tomcat::userdb_entry`
 
-Create Tomcat UserDatabase user entries. For creating a tomcat::userdb_entry using hiera, see parameter tomcat_users.
+Create Tomcat UserDatabase user entries. For creating a `tomcat::userdb_entry` using Hiera, see parameter `tomcat_users`.
 
 **Parameters within `tomcat::userdb_entry`:**
 
@@ -601,7 +623,7 @@ Create Tomcat UserDatabase user entries. For creating a tomcat::userdb_entry usi
 Which database file the entry should be added to. `main UserDatabase` (global) / `instance ${name} UserDatabase` (instance)
 
 #####`username`
-User name (string). Optional, $name of the tomcat::userdb_entry resource is used as the username by default.
+User name (string). Namevar.
 
 #####`password`
 User password (string)
@@ -611,15 +633,15 @@ User roles (array)
 
 ####Define: `tomcat::userdb_role_entry`
 
-Create Tomcat UserDatabase role entries. For creating a tomcat::userdb_role_entry using hiera, see parameter tomcat_roles.
+Create Tomcat UserDatabase role entries. For creating a `tomcat::userdb_role_entry` using Hiera, see parameter `tomcat_roles`.
 
 **Parameters within `tomcat::userdb_role_entry`:**
 
 #####`database`
 Which database file the entry should be added to. `main UserDatabase` (global) / `instance ${name} UserDatabase` (instance)
 
-#####`role`
-Role name (string)
+#####`rolename`
+Role name (string). Namevar.
 
 ####Define: `tomcat::context`
 

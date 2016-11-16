@@ -2,6 +2,8 @@
 
 **Warning:** the `host_deployOnStartup` parameter was renamed to `host_deployonstartup` (lowercase) in this release. Backward compatibility will be maintained until the next minor release only.
 
+* New `tomcat::userdb_role_entry` defined type to manage roles in the user database ([hdeadman](https://github.com/hdeadman))
+* New `tomcat_users` and `tomcat_roles` hash parameters to help the definition of users and roles ([hdeadman](https://github.com/hdeadman))
 * Add support for Engine scoped valves: `engine_valves` parameter ([hdeadman](https://github.com/hdeadman))
 * New parameters `restart_on_change` and `file_mode` ([ruriky](https://github.com/ruriky))
 * Allow enabling the Security Manager on `archive` installations ([hdeadman](https://github.com/hdeadman))
