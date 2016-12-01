@@ -297,6 +297,7 @@ class tomcat::config {
   # generate and manage context configuration
   ::tomcat::context { 'main default':
     path             => "${::tomcat::catalina_base_real}/conf/context.xml",
+    file_mode        => $::tomcat::file_mode,
     params           => $context_params,
     loader           => $context_loader,
     manager          => $context_manager,
@@ -310,6 +311,12 @@ class tomcat::config {
     resourcedefs     => $context_resourcedefs,
     resourcelinks    => $context_resourcelinks,
     notify           => $notify_service
+  }
+
+  # generate and manage default servlet configuration
+  ::tomcat::web { 'main default':
+    path      => "${::tomcat::catalina_base_real}/conf/web.xml",
+    file_mode => $::tomcat::file_mode
   }
 
   # generate and manage global parameters

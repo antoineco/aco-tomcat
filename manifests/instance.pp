@@ -247,7 +247,7 @@ define tomcat::instance (
   #..................................................................................
   # servlet
   #..................................................................................
-  $default_servlet            = false,
+  # TODO
   #..................................................................................
   # environment variables
   #..................................................................................
@@ -474,7 +474,7 @@ define tomcat::instance (
 
   $notify_service = $restart_on_change ? {
     true  => Service[$service_name_real],
-    false => undef,
+    false => undef
   }
 
   # generate params hash
@@ -1030,6 +1030,7 @@ define tomcat::instance (
     path             => "${catalina_base_real}/conf/context.xml",
     owner            => $tomcat_user,
     group            => $tomcat_group,
+    file_mode        => $file_mode,
     params           => $context_params,
     loader           => $context_loader,
     manager          => $context_manager,
@@ -1046,21 +1047,14 @@ define tomcat::instance (
     notify           => $notify_service
   }
 
-  # default servlet
-  if $default_servlet {
-    if $version_real == $::tomcat::version_real {
-      file { "instance ${name} default servlet":
-        ensure  => present,
-        owner   => $tomcat_user,
-        group   => $tomcat_group,
-        mode    => $file_mode,
-        path    => "${catalina_base_real}/conf/web.xml",
-        source  => "puppet:///modules/${module_name}/conf/web.xml",
-        require => File["${catalina_base_real}/conf"]
-      }
-    } else {
-      warning("tomcat archives always contain a default servlet, ignoring parameter 'default_servlet'")
-    }
+  # generate and manage default servlet configuration
+  ::tomcat::web { "instance ${name} default":
+    path      => "${catalina_base_real}/conf/web.xml",
+    owner     => $tomcat_user,
+    group     => $tomcat_group,
+    file_mode => $file_mode,
+    require   => File["${catalina_base_real}/conf"],
+    notify    => $notify_service
   }
 
   # generate and manage global parameters
