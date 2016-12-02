@@ -247,6 +247,7 @@ define tomcat::instance (
   #..................................................................................
   # web apps configuration
   #..................................................................................
+  # servlets
   $default_servlet_debug                = 0,
   $default_servlet_listings             = false,
   $default_servlet_gzip                 = undef,
@@ -266,6 +267,16 @@ define tomcat::instance (
   $jsp_servlet_trimspaces               = undef,
   $jsp_servlet_xpoweredby               = false,
   $jsp_servlet_params                   = {},
+  #..................................................................................
+  # servlet-mappings
+  $default_servletmapping_urlpatterns   = ['/'],
+  $jsp_servletmapping_urlpatterns       = ['*.jsp', '*.jspx'],
+  #..................................................................................
+  # session-config
+  $sessionconfig_sessiontimeout         = 30,
+  #..................................................................................
+  # welcome-file-list
+  $welcome_file_list                    = ['index.html', 'index.htm', 'index.jsp' ],
   #..................................................................................
   # environment variables
   #..................................................................................
@@ -1092,14 +1103,18 @@ define tomcat::instance (
 
   # generate and manage default web apps configuration
   ::tomcat::web { "instance ${name} default":
-    path                   => "${catalina_base_real}/conf/web.xml",
-    owner                  => $tomcat_user,
-    group                  => $tomcat_group,
-    file_mode              => $file_mode,
-    default_servlet_params => $default_servlet_params_real,
-    jsp_servlet_params     => $jsp_servlet_params_real,
-    require                => File["${catalina_base_real}/conf"],
-    notify                 => $notify_service
+    path                               => "${catalina_base_real}/conf/web.xml",
+    owner                              => $tomcat_user,
+    group                              => $tomcat_group,
+    file_mode                          => $file_mode,
+    default_servlet_params             => $default_servlet_params_real,
+    jsp_servlet_params                 => $jsp_servlet_params_real,
+    default_servletmapping_urlpatterns => $default_servletmapping_urlpatterns,
+    jsp_servletmapping_urlpatterns     => $jsp_servletmapping_urlpatterns,
+    sessionconfig_sessiontimeout       => $sessionconfig_sessiontimeout,
+    welcome_file_list                  => $welcome_file_list,
+    require                            => File["${catalina_base_real}/conf"],
+    notify                             => $notify_service
   }
 
   # generate and manage global parameters

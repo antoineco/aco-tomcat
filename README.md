@@ -571,6 +571,9 @@ initParameters for the `jsp` servlet. Generate a single hash for the [`${jsp_ser
  - `jsp_servlet_xpoweredby`: whether X-Powered-By response header is added by servlet. Defaults to `false`
  - `jsp_servlet_params`: optional hash of additional attributes/values to configure the `jsp` servlet
 
+#####`default_servletmapping_urlpatterns`, `jsp_servletmapping_urlpatterns`, `sessionconfig_sessiontimeout`, `welcome_file_list`
+See [tomcat::web](#define-tomcatweb) defined type.
+
 **Global configuration file / environment variables**
 
 #####`config_path`
@@ -756,6 +759,18 @@ A hash of properties/values for the `default` servlet. See [Default Servlet](htt
 
 #####`jsp_servlet_params`
 A hash of properties/values for the `jsp` servlet. See [Jasper 2 JSP Engine](https://tomcat.apache.org/tomcat-8.0-doc/jasper-howto.html) for the list of possible initParameters.
+
+#####`default_servletmapping_urlpatterns`
+List of request URI mapped to the `default` servlet. Defaults to `['/']`.
+
+#####`jsp_servletmapping_urlpatterns`
+List of request URI mapped to the `jsp` servlet. Defaults to `['*.jsp', '*.jspx']`.
+
+#####`sessionconfig_sessiontimeout`
+Default session timeout for applications, in minutes. Defaults to `30`.
+
+#####`welcome_file_list`
+List of file names to look up and serve when a request URI refers to a directory. Defaults to `['index.html', 'index.htm', 'index.jsp' ]`.
 
 ##Testing
 

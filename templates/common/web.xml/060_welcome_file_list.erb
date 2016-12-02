@@ -2,7 +2,7 @@
   <!-- ==================== Default Welcome File List ===================== -->
 
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-        <welcome-file>index.htm</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
+<%- [@welcome_file_list].flatten.compact.each do |file| -%>
+        <welcome-file><%= file %></welcome-file>
+<%- end -%>
     </welcome-file-list>

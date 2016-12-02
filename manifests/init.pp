@@ -276,6 +276,7 @@ class tomcat (
   #..................................................................................
   # web apps configuration
   #..................................................................................
+  # servlets
   $default_servlet_debug                = 0,
   $default_servlet_listings             = false,
   $default_servlet_gzip                 = undef,
@@ -295,6 +296,16 @@ class tomcat (
   $jsp_servlet_trimspaces               = undef,
   $jsp_servlet_xpoweredby               = false,
   $jsp_servlet_params                   = {},
+  #..................................................................................
+  # servlet-mappings
+  $default_servletmapping_urlpatterns   = ['/'],
+  $jsp_servletmapping_urlpatterns       = ['*.jsp', '*.jspx'],
+  #..................................................................................
+  # session-config
+  $sessionconfig_sessiontimeout         = 30,
+  #..................................................................................
+  # welcome-file-list
+  $welcome_file_list                    = ['index.html', 'index.htm', 'index.jsp' ],
   #..................................................................................
   # environment variables
   #..................................................................................
