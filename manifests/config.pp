@@ -313,10 +313,13 @@ class tomcat::config {
     notify           => $notify_service
   }
 
-  # generate and manage default servlet configuration
+  # generate and manage default web apps configuration
   ::tomcat::web { 'main default':
-    path      => "${::tomcat::catalina_base_real}/conf/web.xml",
-    file_mode => $::tomcat::file_mode
+    path                   => "${::tomcat::catalina_base_real}/conf/web.xml",
+    file_mode              => $::tomcat::file_mode,
+    default_servlet_params => $::tomcat::default_servlet_params_real,
+    jsp_servlet_params     => $::tomcat::jsp_servlet_params_real,
+    notify                 => $notify_service
   }
 
   # generate and manage global parameters

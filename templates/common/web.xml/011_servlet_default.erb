@@ -2,13 +2,13 @@
     <servlet>
         <servlet-name>default</servlet-name>
         <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+<%- [@default_servlet_params].flatten.compact.each do |param| -%>
+  <%- param.each_pair do |attrib, value| -%>
         <init-param>
-            <param-name>debug</param-name>
-            <param-value>0</param-value>
+            <param-name><%= attrib %></param-name>
+            <param-value><%= value %></param-value>
         </init-param>
-        <init-param>
-            <param-name>listings</param-name>
-            <param-value>false</param-value>
-        </init-param>
+  <%- end -%>
+<%- end -%>
         <load-on-startup>1</load-on-startup>
     </servlet>

@@ -220,19 +220,16 @@ class tomcat (
   $engine_params              = {},
   #..................................................................................
   # cluster (experimental)
-  $use_simpletcpcluster       = false,
-  $cluster_membership_port    = '45565',
-  # bind address useful if there are multiple NICs and multicast isn't using the right one
-  $cluster_membership_bind_address = undef,
-  $cluster_membership_domain  = 'tccluster',
-  $cluster_receiver_address   = undef,
-  $cluster_receiver_port      = '4000',
-  $cluster_farm_deployer      = false,
-  #cluster_parent can be engine or host, must be host if using farm deployer
-  $cluster_parent             = undef,
-  $cluster_farm_deployer_watchdir  = undef,
-  # This directory is currently not managed by this module
-  $cluster_farm_deployer_deploydir = undef,
+  $use_simpletcpcluster                = false,
+  $cluster_membership_port             = '45565',
+  $cluster_membership_bind_address     = undef, # useful if there are multiple NICs and multicast isn't using the right one
+  $cluster_membership_domain           = 'tccluster',
+  $cluster_receiver_address            = undef,
+  $cluster_receiver_port               = '4000',
+  $cluster_farm_deployer               = false,
+  $cluster_parent                      = undef, # engine/host, must be 'host' if using farm deployer
+  $cluster_farm_deployer_watchdir      = undef,
+  $cluster_farm_deployer_deploydir     = undef, # directory not managed by this module
   $cluster_farm_deployer_watch_enabled = true,
   #..................................................................................
   # realms
@@ -276,6 +273,28 @@ class tomcat (
   $context_valves             = [],
   $context_resourcedefs       = [],
   $context_resourcelinks      = [],
+  #..................................................................................
+  # web apps configuration
+  #..................................................................................
+  $default_servlet_debug                = 0,
+  $default_servlet_listings             = false,
+  $default_servlet_gzip                 = undef,
+  $default_servlet_input                = undef,
+  $default_servlet_output               = undef,
+  $default_servlet_readonly             = undef,
+  $default_servlet_fileencoding         = undef,
+  $default_servlet_showserverinfo       = undef,
+  $default_servlet_params               = {},
+  $jsp_servlet_checkinterval            = undef,
+  $jsp_servlet_development              = undef,
+  $jsp_servlet_enablepooling            = undef,
+  $jsp_servlet_fork                     = false,
+  $jsp_servlet_genstringaschararray     = undef,
+  $jsp_servlet_javaencoding             = undef,
+  $jsp_servlet_modificationtestinterval = undef,
+  $jsp_servlet_trimspaces               = undef,
+  $jsp_servlet_xpoweredby               = false,
+  $jsp_servlet_params                   = {},
   #..................................................................................
   # environment variables
   #..................................................................................
@@ -598,6 +617,31 @@ class tomcat (
     'unpackWARs'          => $host_unpackwars
   }
   ), $host_params)
+
+  $default_servlet_params_real = merge(delete_undef_values({
+    'debug'          => $default_servlet_debug,
+    'listings'       => $default_servlet_listings,
+    'gzip'           => $default_servlet_gzip,
+    'input'          => $default_servlet_input,
+    'output'         => $default_servlet_output,
+    'readonly'       => $default_servlet_readonly,
+    'fileEncoding'   => $default_servlet_fileencoding,
+    'showServerInfo' => $default_servlet_showserverinfo
+  }
+  ), $default_servlet_params)
+
+  $jsp_servlet_params_real = merge(delete_undef_values({
+    'checkInterval'            => $jsp_servlet_checkinterval,
+    'development'              => $jsp_servlet_development,
+    'enablePooling'            => $jsp_servlet_enablepooling,
+    'fork'                     => $jsp_servlet_fork,
+    'genStringAsCharArray'     => $jsp_servlet_genstringaschararray,
+    'javaEncoding'             => $jsp_servlet_javaencoding,
+    'modificationTestInterval' => $jsp_servlet_modificationtestinterval,
+    'trimSpaces'               => $jsp_servlet_trimspaces,
+    'xpoweredBy'               => $jsp_servlet_xpoweredby
+  }
+  ), $jsp_servlet_params)
 
   # should we force download extras libs?
   if $log4j_enable or $jmx_listener {
