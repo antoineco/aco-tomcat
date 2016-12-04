@@ -1,0 +1,14 @@
+
+    <servlet>
+        <servlet-name>default</servlet-name>
+        <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+<%- [@default_servlet_params].flatten.compact.each do |param| -%>
+  <%- param.each_pair do |attrib, value| -%>
+        <init-param>
+            <param-name><%= attrib %></param-name>
+            <param-value><%= value %></param-value>
+        </init-param>
+  <%- end -%>
+<%- end -%>
+        <load-on-startup>1</load-on-startup>
+    </servlet>

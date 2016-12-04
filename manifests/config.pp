@@ -230,7 +230,7 @@ class tomcat::config {
 
   # Template uses:
   # - $engine_valves
-  if ($engine_valves and $engine_valves != []) {
+  if $engine_valves and $engine_valves != [] {
     concat::fragment { 'server.xml engine valves':
       order   => 65,
       content => template("${module_name}/common/server.xml/065_engine_valves.erb"),
@@ -297,6 +297,7 @@ class tomcat::config {
   # generate and manage context configuration
   ::tomcat::context { 'main default':
     path             => "${::tomcat::catalina_base_real}/conf/context.xml",
+    file_mode        => $::tomcat::file_mode,
     params           => $context_params,
     loader           => $context_loader,
     manager          => $context_manager,
@@ -310,6 +311,19 @@ class tomcat::config {
     resourcedefs     => $context_resourcedefs,
     resourcelinks    => $context_resourcelinks,
     notify           => $notify_service
+  }
+
+  # generate and manage default web apps configuration
+  ::tomcat::web { 'main default':
+    path                               => "${::tomcat::catalina_base_real}/conf/web.xml",
+    file_mode                          => $::tomcat::file_mode,
+    default_servlet_params             => $::tomcat::default_servlet_params_real,
+    jsp_servlet_params                 => $::tomcat::jsp_servlet_params_real,
+    default_servletmapping_urlpatterns => $::tomcat::default_servletmapping_urlpatterns,
+    jsp_servletmapping_urlpatterns     => $::tomcat::jsp_servletmapping_urlpatterns,
+    sessionconfig_sessiontimeout       => $::tomcat::sessionconfig_sessiontimeout,
+    welcome_file_list                  => $::tomcat::welcome_file_list,
+    notify                             => $notify_service
   }
 
   # generate and manage global parameters

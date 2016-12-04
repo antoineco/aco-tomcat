@@ -1,0 +1,14 @@
+
+    <servlet>
+        <servlet-name>jsp</servlet-name>
+        <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+<%- [@jsp_servlet_params].flatten.compact.each do |param| -%>
+  <%- param.each_pair do |attrib, value| -%>
+        <init-param>
+            <param-name><%= attrib %></param-name>
+            <param-value><%= value %></param-value>
+        </init-param>
+  <%- end -%>
+<%- end -%>
+        <load-on-startup>3</load-on-startup>
+    </servlet>

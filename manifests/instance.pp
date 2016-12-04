@@ -245,9 +245,38 @@ define tomcat::instance (
   $context_resourcedefs       = [],
   $context_resourcelinks      = [],
   #..................................................................................
-  # servlet
+  # web apps configuration
   #..................................................................................
-  $default_servlet            = false,
+  # servlets
+  $default_servlet_debug                = 0,
+  $default_servlet_listings             = false,
+  $default_servlet_gzip                 = undef,
+  $default_servlet_input                = undef,
+  $default_servlet_output               = undef,
+  $default_servlet_readonly             = undef,
+  $default_servlet_fileencoding         = undef,
+  $default_servlet_showserverinfo       = undef,
+  $default_servlet_params               = {},
+  $jsp_servlet_checkinterval            = undef,
+  $jsp_servlet_development              = undef,
+  $jsp_servlet_enablepooling            = undef,
+  $jsp_servlet_fork                     = false,
+  $jsp_servlet_genstringaschararray     = undef,
+  $jsp_servlet_javaencoding             = undef,
+  $jsp_servlet_modificationtestinterval = undef,
+  $jsp_servlet_trimspaces               = undef,
+  $jsp_servlet_xpoweredby               = false,
+  $jsp_servlet_params                   = {},
+  #..................................................................................
+  # servlet-mappings
+  $default_servletmapping_urlpatterns   = ['/'],
+  $jsp_servletmapping_urlpatterns       = ['*.jsp', '*.jspx'],
+  #..................................................................................
+  # session-config
+  $sessionconfig_sessiontimeout         = 30,
+  #..................................................................................
+  # welcome-file-list
+  $welcome_file_list                    = ['index.html', 'index.htm', 'index.jsp' ],
   #..................................................................................
   # environment variables
   #..................................................................................
@@ -474,7 +503,7 @@ define tomcat::instance (
 
   $notify_service = $restart_on_change ? {
     true  => Service[$service_name_real],
-    false => undef,
+    false => undef
   }
 
   # generate params hash
@@ -568,6 +597,31 @@ define tomcat::instance (
     'unpackWARs'          => $host_unpackwars
   }
   ), $host_params)
+
+  $default_servlet_params_real = merge(delete_undef_values({
+    'debug'          => $default_servlet_debug,
+    'listings'       => $default_servlet_listings,
+    'gzip'           => $default_servlet_gzip,
+    'input'          => $default_servlet_input,
+    'output'         => $default_servlet_output,
+    'readonly'       => $default_servlet_readonly,
+    'fileEncoding'   => $default_servlet_fileencoding,
+    'showServerInfo' => $default_servlet_showserverinfo
+  }
+  ), $default_servlet_params)
+
+  $jsp_servlet_params_real = merge(delete_undef_values({
+    'checkInterval'            => $jsp_servlet_checkinterval,
+    'development'              => $jsp_servlet_development,
+    'enablePooling'            => $jsp_servlet_enablepooling,
+    'fork'                     => $jsp_servlet_fork,
+    'genStringAsCharArray'     => $jsp_servlet_genstringaschararray,
+    'javaEncoding'             => $jsp_servlet_javaencoding,
+    'modificationTestInterval' => $jsp_servlet_modificationtestinterval,
+    'trimSpaces'               => $jsp_servlet_trimspaces,
+    'xpoweredBy'               => $jsp_servlet_xpoweredby
+  }
+  ), $jsp_servlet_params)
 
   # should we force download extras libs?
   if $log4j_enable or $jmx_listener {
@@ -1030,6 +1084,7 @@ define tomcat::instance (
     path             => "${catalina_base_real}/conf/context.xml",
     owner            => $tomcat_user,
     group            => $tomcat_group,
+    file_mode        => $file_mode,
     params           => $context_params,
     loader           => $context_loader,
     manager          => $context_manager,
@@ -1046,21 +1101,20 @@ define tomcat::instance (
     notify           => $notify_service
   }
 
-  # default servlet
-  if $default_servlet {
-    if $version_real == $::tomcat::version_real {
-      file { "instance ${name} default servlet":
-        ensure  => present,
-        owner   => $tomcat_user,
-        group   => $tomcat_group,
-        mode    => $file_mode,
-        path    => "${catalina_base_real}/conf/web.xml",
-        source  => "puppet:///modules/${module_name}/conf/web.xml",
-        require => File["${catalina_base_real}/conf"]
-      }
-    } else {
-      warning("tomcat archives always contain a default servlet, ignoring parameter 'default_servlet'")
-    }
+  # generate and manage default web apps configuration
+  ::tomcat::web { "instance ${name} default":
+    path                               => "${catalina_base_real}/conf/web.xml",
+    owner                              => $tomcat_user,
+    group                              => $tomcat_group,
+    file_mode                          => $file_mode,
+    default_servlet_params             => $default_servlet_params_real,
+    jsp_servlet_params                 => $jsp_servlet_params_real,
+    default_servletmapping_urlpatterns => $default_servletmapping_urlpatterns,
+    jsp_servletmapping_urlpatterns     => $jsp_servletmapping_urlpatterns,
+    sessionconfig_sessiontimeout       => $sessionconfig_sessiontimeout,
+    welcome_file_list                  => $welcome_file_list,
+    require                            => File["${catalina_base_real}/conf"],
+    notify                             => $notify_service
   }
 
   # generate and manage global parameters

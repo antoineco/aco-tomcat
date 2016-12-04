@@ -1,0 +1,7 @@
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+<%- [@default_servletmapping_urlpatterns].flatten.compact.each do |pattern| -%>
+        <url-pattern><%= pattern %></url-pattern>
+<%- end -%>
+    </servlet-mapping>

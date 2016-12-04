@@ -1,0 +1,8 @@
+
+  <!-- ==================== Default Welcome File List ===================== -->
+
+    <welcome-file-list>
+<%- [@welcome_file_list].flatten.compact.each do |file| -%>
+        <welcome-file><%= file %></welcome-file>
+<%- end -%>
+    </welcome-file-list>

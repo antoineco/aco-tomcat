@@ -16,6 +16,7 @@
     * [Define: tomcat::userdb_entry](#define-tomcatuserdb_entry)
     * [Define: tomcat::userdb_role_entry](#define-tomcatuserdb_role_entry)
     * [Define: tomcat::context](#define-tomcatcontext)
+    * [Define: tomcat::web](#define-tomcatweb)
 5. [Testing - How to run the included spec tests](#testing)
 6. [Contributors](#contributors)
 
@@ -232,6 +233,17 @@ class { 'tomcat':
 }
 ```
 
+Configure default servlet (web.xml)
+
+```puppet
+class { 'tomcat':
+  …
+  default_servlet_listings => true,
+  default_servlet_gzip     => true,
+  default_servlet_params   => { 'sendfileSize' => 64 }
+}
+```
+
 Add an additional admin for the manager using a defined type
 
 ```puppet
@@ -289,7 +301,7 @@ What type of source to install from. The module will download the necessary file
 Tomcat package name. Ignored if installed from archive. Default depends on the distribution.
 
 #####`package_ensure`
-Tomcat package `ensure` attribute. Valid values are `undef`, `present` and `latest`. Defaults to `undef` (falls back to `${version}`).
+Tomcat package `ensure` attribute. Valid values are `undef`, `present` and `latest`. Defaults to `undef` (falls back to [`${version}`](#version)).
 
 #####`tomcat_native`
 Whether to install the Tomcat Native library. Boolean value. Defaults to `false`.
@@ -304,7 +316,7 @@ Whether to install the log4j library. Boolean value. Defaults to `false`.
 Log4j package name. Default depends on the distribution.
 
 #####`extras_package_name`
-Package name for Tomcat extra libraries. If set, forces installation of Tomcat extra libraries from a package repository instead of Apache servers. The `ensure` attribute of the package resource will then default to the same value as `${package_ensure}`. Defaults to `undef`.
+Package name for Tomcat extra libraries. If set, forces installation of Tomcat extra libraries from a package repository instead of Apache servers. The `ensure` attribute of the package resource will then default to the same value as [`${package_ensure}`](#package_ensure). Defaults to `undef`.
 
 #####`admin_webapps_package_name`
 Admin webapps package name. Default depends on the distribution.
@@ -319,10 +331,7 @@ Create a Tomcat instance
 
 #####`root_path`
 Absolute path to the root of all Tomcat instances. Defaults to `/var/lib/tomcats`.  
-*Note:* instances will be installed in `${root_path}/${title}` and $CATALINA_BASE will be set to that folder
-
-#####`default_servlet`
-Whether a [Default Servlet](https://tomcat.apache.org/tomcat-8.0-doc/default-servlet.html) (conf/web.xml) should be created for the instance.
+*Note:* instances will be installed in `${root_path}/${title}` and $CATALINA_BASE will be set to that directory
 
 See also [Common parameters](#common-parameters)
 
@@ -350,7 +359,7 @@ Checksum type. Valid values are `none`, `md5`, `sha1`, `sha2`, `sh256`, `sha384`
 Checksum to test against. Defaults to `undef`.
 
 #####`service_name`
-Tomcat service name. Defaults to `${package_name}` (global) / `${package_name}_${title}` (instance).
+Tomcat service name. Defaults to [`${package_name}`](#package_name) (global) / `${package_name}_${title}` (instance).
 
 #####`service_ensure`
 Whether the service should be running. Valid values are `stopped` and `running`. Defaults to `running`.
@@ -371,10 +380,10 @@ Optional override command for starting the service. Default depends on the platf
 Optional override command for stopping the service. Default depends on the platform.
 
 #####`tomcat_user`
-Tomcat user. Defaults to `${service_name}` (Debian) / `tomcat` (all other distributions).
+Tomcat user. Defaults to [`${service_name}`](#service_name) (Debian) / `tomcat` (all other distributions).
 
 #####`tomcat_group`
-Tomcat group. Defaults to `${tomcat_user}`.
+Tomcat group. Defaults to [`${tomcat_user}`](#tomcat_user).
 
 #####`file_mode`
 File mode for certain configuration xml files. Defaults to '0600'.
@@ -412,13 +421,13 @@ Optional hash containing UserDatabase role entries. See [tomcat::userdb_role_ent
 **Server configuration**
 
 #####`server_control_port`
-Server control port. Defaults to `8005` (global) / `8006` (instance). The Server can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Server control port. Defaults to `8005` (global) / `8006` (instance). The Server can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `server_shutdown`: command string that must be received in order to shut down Tomcat. Defaults to `SHUTDOWN`.
  - `server_address`: address on which this server waits for a shutdown command
  - `server_params`: optional hash of additional attributes/values to put in the Server element
 
 #####`apr_listener`
-Whether to enable the [APR Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/apr.html#APR_Lifecycle_Listener_Configuration). The Listener can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Whether to enable the [APR Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/apr.html#APR_Lifecycle_Listener_Configuration). The Listener can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `apr_sslengine`: name of the SSLEngine to use with the APR Lifecycle Listener
 
 #####`jmx_listener`
@@ -431,11 +440,11 @@ Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/t
 An array of custom `Listener` entries to be added to the `Server` block. Each entry is to be supplied as a hash of attributes/values for the `Listener` XML node. See [Listeners](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html) for the list of possible attributes.
 
 #####`svc_name`
-Name of the default [Service](http://tomcat.apache.org/tomcat-8.0-doc/config/service.html). Defaults to `Catalina`. The Service can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Name of the default [Service](http://tomcat.apache.org/tomcat-8.0-doc/config/service.html). Defaults to `Catalina`. The Service can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `svc_params`: optional hash of additional attributes/values to put in the Service element
 
 #####`threadpool_executor`
-Whether to enable the default [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`. The Executor can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Whether to enable the default [Executor (thread pool)](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html). Boolean value. Defaults to `false`. The Executor can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `threadpool_name`: a unique reference name. Defaults to `tomcatThreadPool`.
  - `threadpool_nameprefix`: name prefix for each thread created by the executor
  - `threadpool_maxthreads`: max number of active threads in this pool
@@ -446,24 +455,24 @@ Whether to enable the default [Executor (thread pool)](http://tomcat.apache.org/
 An array of custom `Executor` entries to be added to the `Service` block. Each entry is to be supplied as a hash of attributes/values for the `Executor` XML node. See [Executor](http://tomcat.apache.org/tomcat-8.0-doc/config/executor.html) for the list of possible attributes.
 
 #####`http_connector`
-Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Whether to enable the [HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html). Boolean value. Defaults to `true`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `http_port`: HTTP connector port. Defaults to `8080` (global) / `8081` (instance).
  - `http_protocol`: protocol to use
- - `http_use_threadpool`: whether to use the previously described Executor within the HTTP connector. Boolean value. Defaults to `false`.
+ - `http_use_threadpool`: whether to use the default Executor within the HTTP connector. Defaults to `false`.
  - `http_connectiontimeout`: timeout for a connection
  - `http_uriencoding`: encoding to use for URI
- - `http_compression`: whether to use compression. Boolean value. Defaults to `false`.
+ - `http_compression`: whether to use compression. Defaults to `false`.
  - `http_maxthreads`: maximum number of executor threads
  - `http_params`: optional hash of additional attributes/values to put in the HTTP connector
  
 #####`ssl_connector`
-Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#SSL_Support). Boolean value. Defaults to `false`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#SSL_Support). Boolean value. Defaults to `false`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `ssl_port`: SSL connector port. Defaults to `8443` (global) / `8444` (instance). The HTTP connector's `redirect port` will also be set to this value.
  - `ssl_protocol`: protocol to use
- - `ssl_use_threadpool`: whether to use the previously described Executor within the HTTPS connector (boolean)
+ - `ssl_use_threadpool`: whether to use the default Executor within the HTTPS connector
  - `ssl_connectiontimeout`: timeout for a connection
  - `ssl_uriencoding`: encoding to use for URI
- - `ssl_compression`: whether to use compression. Boolean value. Defaults to `false`.
+ - `ssl_compression`: whether to use compression. Defaults to `false`.
  - `ssl_maxthreads`: maximum number of executor threads
  - `ssl_clientauth`: whether to require a valid certificate chain from the client
  - `ssl_sslenabledprotocols`: SSL protocol(s) to use (explicitly by version)
@@ -472,10 +481,10 @@ Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomc
  - `ssl_params`: optional hash of additional attributes/values to put in the HTTPS connector
 
 #####`ajp_connector`
-Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp). Boolean value. Defaults to `true`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp). Boolean value. Defaults to `true`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `ajp_port`: AJP connector port. Defaults to `8009` (global) / `8010` (instance).
  - `ajp_protocol`: protocol to use. Defaults to `AJP/1.3`
- - `ajp_use_threadpool`: whether to use the previously described Executor within the AJP connector.  Boolean value. Defaults to `false`.
+ - `ajp_use_threadpool`: whether to use the default Executor within the AJP connector. Defaults to `false`.
  - `ajp_connectiontimeout`: timeout for a connection
  - `ajp_uriencoding`: encoding to use for URI
  - `ajp_maxthreads`: maximum number of executor threads
@@ -485,8 +494,8 @@ Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-8.0-doc/co
 An array of custom `Connector` entries to be added to the `Service` block. Each entry is to be supplied as a hash of attributes/values for the `Connector` XML node. See [HTTP](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html)/[AJP](http://tomcat.apache.org/tomcat-8.0-doc/config/ajp.html) for the list of possible attributes.
 
 #####`engine_name`
-Name of the default [Engine](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html). Defaults to `Catalina`. The Engine can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
- - `engine_defaulthost`: default host name. Defaults to `${host_name}`
+Name of the default [Engine](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html). Defaults to `Catalina`. The Engine can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
+ - `engine_defaulthost`: default host name. Defaults to [`${host_name}`](#host_name)
  - `engine_jvmroute`: identifier which must be used in load balancing scenarios to enable session affinity
  - `engine_params`: optional hash of additional attributes/values to put in the Engine container
 
@@ -504,7 +513,7 @@ Boolean value. Defaults to `true`. The User Database Realm is inserted within th
 An array of custom `Realm` entries to be added to the `Engine` container. Each entry is to be supplied as a hash of attributes/values for the `Realm` XML node. See [Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html) for the list of possible attributes.
 
 #####`host_name`
-Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html). Defaults to `localhost`. The Host can be further configured via a series of parameters (will use Tomcat's defaults if not specified):
+Name of the default [Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html). Defaults to `localhost`. The Host can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `host_appbase`: Application Base directory for this virtual host
  - `host_autodeploy`: whether Tomcat should check periodically for new or updated web applications while Tomcat is running
  - `host_deployonstartup`: whether web applications from this host should be automatically deployed when Tomcat starts
@@ -534,6 +543,36 @@ An array of `Resource` entries to be added to the `GlobalNamingResources` compon
 
 #####`context_params`, `context_loader`, `context_manager`, `context_realm`, `context_resources`, `context_watchedresource`, `context_parameters`, `context_environments`, `context_listeners`, `context_valves`, `context_resourcedefs`, `context_resourcelinks`
 See [tomcat::context](#define-tomcatcontext) defined type.
+
+**Servlets configuration**
+
+#####`default_servlet_*`
+initParameters for the `default` servlet. Generate a single hash for the [`${default_servlet_params}`](#default_servlet_params) parameter of the [tomcat::web](#define-tomcatweb) defined type (will use Tomcat's defaults when not specified)
+ - `default_servlet_debug`: debugging level. Defaults to `0`.
+ - `default_servlet_listings`: whether directory listing is shown if no welcome file is present. Defaults to `false`.
+ - `default_servlet_gzip`: whether to serve gzipped files if the user agent supports gzip
+ - `default_servlet_input`: input buffer size in bytes when reading resources to be served
+ - `default_servlet_output`: output buffer size in bytes when writing resources to be served
+ - `default_servlet_readonly`: whether to reject PUT and DELETE commands (http)
+ - `default_servlet_fileencoding`: file encoding used for reading static resources
+ - `default_servlet_showserverinfo`: whether to present server information in response sent to clients
+ - `default_servlet_params`: optional hash of additional attributes/values to configure the `default` servlet
+
+#####`jsp_servlet_*`
+initParameters for the `jsp` servlet. Generate a single hash for the [`${jsp_servlet_params}`](#jsp_servlet_params) parameter of the [tomcat::web](#define-tomcatweb) defined type (will use Tomcat's defaults when not specified)
+ - `jsp_servlet_checkinterval`: time in seconds between checks to see if a JSP page needs to be recompiled
+ - `jsp_servlet_development`: whether to use Jasper in development mode
+ - `jsp_servlet_enablepooling`: whether to enable tag handler pooling
+ - `jsp_servlet_fork`: whether to perform JSP page compiles in a separate JVM from Tomcat. Defaults to `false`.
+ - `jsp_servlet_genstringaschararray`: whether to generate text strings as char arrays
+ - `jsp_servlet_javaencoding`: Java file encoding to use for generating java source files
+ - `jsp_servlet_modificationtestinterval`: interval in seconds to check a JSP for modification
+ - `jsp_servlet_trimspaces`: whether to trim white spaces in template text between actions or directives
+ - `jsp_servlet_xpoweredby`: whether X-Powered-By response header is added by servlet. Defaults to `false`
+ - `jsp_servlet_params`: optional hash of additional attributes/values to configure the `jsp` servlet
+
+#####`default_servletmapping_urlpatterns`, `jsp_servletmapping_urlpatterns`, `sessionconfig_sessiontimeout`, `welcome_file_list`
+See [tomcat::web](#define-tomcatweb) defined type.
 
 **Global configuration file / environment variables**
 
@@ -620,7 +659,7 @@ Create Tomcat UserDatabase user entries. For creating a `tomcat::userdb_entry` u
 **Parameters within `tomcat::userdb_entry`:**
 
 #####`database`
-Which database file the entry should be added to. `main UserDatabase` (global) / `instance ${name} UserDatabase` (instance)
+Which database file the entry should be added to. `main UserDatabase` (global) / `instance ${title} UserDatabase` (instance)
 
 #####`username`
 User name (string). Namevar.
@@ -638,7 +677,7 @@ Create Tomcat UserDatabase role entries. For creating a `tomcat::userdb_role_ent
 **Parameters within `tomcat::userdb_role_entry`:**
 
 #####`database`
-Which database file the entry should be added to. `main UserDatabase` (global) / `instance ${name} UserDatabase` (instance)
+Which database file the entry should be added to. `main UserDatabase` (global) / `instance ${title} UserDatabase` (instance)
 
 #####`rolename`
 Role name (string). Namevar.
@@ -650,7 +689,16 @@ Create Tomcat context files
 **Parameters within `tomcat::context`:**
 
 #####`path`
-Absolute path indicating where the context file should be created. Mandatory. Does not create parent folders.
+Absolute path indicating where the context file should be created. Mandatory. Does not create parent directories.
+
+#####`owner`
+File owner. Defaults to [`${tomcat_user}`](#tomcat_user).
+
+#####`group`
+File group. Defaults to [`${tomcat_group}`](#tomcat_group).
+
+#####`file_mode`
+File mode. Defaults to [`${file_mode}`](#file_mode).
 
 #####`params`
 A hash of attributes/values for the `Context` container. See [Context](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Attributes) for the list of possible attributes.
@@ -687,6 +735,42 @@ An array of `Resource` entries to be added to the `Context` container. Each entr
 
 #####`resourcelinks`
 An array of `ResourceLink` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `ResourceLink` XML node. See [Resource Links](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Links) for the list of possible attributes.
+
+####Define: `tomcat::web`
+
+Create Tomcat web.xml files
+
+**Parameters within `tomcat::web`:**
+
+#####`path`
+Absolute path indicating where the web.xml file should be created. Mandatory. Does not create parent directories.
+
+#####`owner`
+File owner. Defaults to [`${tomcat_user}`](#tomcat_user).
+
+#####`group`
+File group. Defaults to [`${tomcat_group}`](#tomcat_group).
+
+#####`file_mode`
+File mode. Defaults to [`${file_mode}`](#file_mode).
+
+#####`default_servlet_params`
+A hash of properties/values for the `default` servlet. See [Default Servlet](http://tomcat.apache.org/tomcat-8.0-doc/default-servlet.html) for the list of possible initParameters.
+
+#####`jsp_servlet_params`
+A hash of properties/values for the `jsp` servlet. See [Jasper 2 JSP Engine](https://tomcat.apache.org/tomcat-8.0-doc/jasper-howto.html) for the list of possible initParameters.
+
+#####`default_servletmapping_urlpatterns`
+List of request URI mapped to the `default` servlet. Defaults to `['/']`.
+
+#####`jsp_servletmapping_urlpatterns`
+List of request URI mapped to the `jsp` servlet. Defaults to `['*.jsp', '*.jspx']`.
+
+#####`sessionconfig_sessiontimeout`
+Default session timeout for applications, in minutes. Defaults to `30`.
+
+#####`welcome_file_list`
+List of file names to look up and serve when a request URI refers to a directory. Defaults to `['index.html', 'index.htm', 'index.jsp' ]`.
 
 ##Testing
 
