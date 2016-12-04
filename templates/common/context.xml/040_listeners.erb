@@ -1,9 +1,9 @@
 <%- [@listeners].flatten.compact.each do |listener| %>
   <%- listener.each_pair do |attrib, value| -%>
     <%- if attrib == listener.keys.first -%>
-  <Listener <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == listener.keys.last %> /><% end %>
+    <Listener <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == listener.keys.last %> /><% end %>
     <%- else -%>
-            <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == listener.keys.last %> /><% end %>
+              <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == listener.keys.last %> /><% end %>
     <%- end -%>
   <%- end -%>
 <%- end -%>

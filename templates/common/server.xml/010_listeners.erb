@@ -2,9 +2,6 @@
 <%- if scope.function_versioncmp([@version_real, '8.0.14']) >= 0 -%>
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
 <%- end -%>
-<%- if scope.function_versioncmp([@maj_version, '7']) >= 0 -%>
-  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
-<%- end -%>
 <%- if @maj_version == '7' -%>
   <Listener className="org.apache.catalina.core.JasperListener" />
 <%- end -%>
@@ -18,6 +15,9 @@
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
 <%- end -%>
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+<%- if scope.function_versioncmp([@maj_version, '7']) >= 0 -%>
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+<%- end -%>
 <%- if @jmx_listener -%>
   <Listener className="org.apache.catalina.mbeans.JmxRemoteLifecycleListener" rmiRegistryPortPlatform="<%= @jmx_registry_port %>" rmiServerPortPlatform="<%= @jmx_server_port %>"<% if @jmx_bind_address and @jmx_bind_address != '' -%> rmiBindAddress="<%= @jmx_bind_address %>"<% end -%> />
 <%- end -%>
