@@ -8,9 +8,6 @@ define tomcat::userdb_role_entry (
     fail('You must include the tomcat base class before using any tomcat defined resources')
   }
 
-  # parameters validation
-  validate_string($rolename)
-
   # add formated fragment
   concat::fragment { "UserDatabase entry (${title})":
     target  => $database,

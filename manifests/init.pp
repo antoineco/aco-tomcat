@@ -48,6 +48,12 @@
 #   install extras from given package(s)
 # [*manage_firewall*]
 #   manage firewall rules (boolean)
+# [*checksum_verify*]
+#   verify the checksum if tomcat is installed from an archive (boolean)
+# [*checksum_type*]
+#   archive file checksum type (valid: 'none'|'md5'|'sha1'|'sha2'|'sh256'|'sha384'|'sha512')
+# [*checksum*]
+#   archive file checksum
 # [*admin_webapps*]
 #   install admin webapps (boolean - *only* if installed from package)
 # [*admin_webapps_package_name*]
@@ -62,12 +68,6 @@
 #   hash containing user definitions
 # [*tomcat_roles*]
 #   hash containing role definitions
-# [*checksum_verify*]
-#   verify the checksum if tomcat is installed from an archive (boolean)
-# [*checksum_type*]
-#   archive file checksum type (valid: 'none'|'md5'|'sha1'|'sha2'|'sh256'|'sha384'|'sha512')
-# [*checksum*]
-#   The checksum of the archive file
 #
 # see README file for a description of all parameters related to server configuration
 #
@@ -333,16 +333,20 @@ class tomcat (
   $shutdown_verbose           = false,
   $custom_variables           = {}) inherits tomcat::params {
   # parameters validation
-  validate_re($install_from, '^(package|archive)$', '$install_from must be either \'package\' or \'archive\'')
-  validate_re($version, '^(?:[0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(?:-.*)?$', 'incorrect tomcat version number')
-  validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
-  validate_array($listeners, $executors, $connectors, $realms, $valves, $engine_valves, $globalnaming_environments, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
-  validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables, $tomcat_users, $tomcat_roles)
-  validate_bool($checksum_verify, $restart_on_change)
-  validate_re($checksum_type, '^(none|md5|sha1|sha2|sh256|sha384|sha512)$', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
-
+  if $install_from !~ /^(package|archive)$/ {
+    fail('$install_from must be either \'package\' or \'archive\'')
+  }
+  if $version !~ /^(?:[0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(?:-.*)?$/ {
+    fail('incorrect tomcat version number')
+  }
+  if $service_ensure !~ /^(stopped|running)$/ {
+    fail('$service_ensure must be either \'stopped\' or \'running\'')
+  }
+  if $checksum_type !~ /^(none|md5|sha1|sha2|sh256|sha384|sha512)$/ {
+    fail('$checksum can only be one of: none|md5|sha1|sha2|sh256|sha384|sha512')
+  }
   if $checksum_verify and !$checksum {
-    fail('Checksum verification requires \'checksum\' variable to be set')
+    fail('Checksum verification requires $checksum variable to be set')
   }
 
   # split version string
@@ -436,7 +440,9 @@ class tomcat (
   }
 
   if $package_ensure {
-    validate_re($package_ensure, '^(latest|present)$', '$package_ensure must be either \'latest\' or \'present\'')
+    if $package_ensure !~ /^(latest|present)$/ {
+      fail('$package_ensure must be either \'latest\' or \'present\'')
+    }
     $package_ensure_real = $package_ensure
   } else {
     $package_ensure_real = $version
@@ -663,9 +669,11 @@ class tomcat (
 
   # cluster can live in engine or host, engine was original default, host is required if using farm deployer
   if $cluster_parent {
-    validate_re($cluster_parent, '^(engine|host)$', 'cluster_parent must be host or engine')
+    if $cluster_parent !~ /^(engine|host)$/ {
+      fail('$cluster_parent must be either \'host\' or \'engine\'')
+    }
     if $cluster_farm_deployer and $cluster_parent == 'engine' {
-      fail('Farm deployer cannot be used with cluster_parent=engine')
+      fail('Farm deployer cannot be used with $cluster_parent=\'engine\'')
     }
     $cluster_parent_real = $cluster_parent
   } else {

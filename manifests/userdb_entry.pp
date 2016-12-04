@@ -10,10 +10,6 @@ define tomcat::userdb_entry (
     fail('You must include the tomcat base class before using any tomcat defined resources')
   }
 
-  # parameters validation
-  validate_array($roles)
-  validate_string($username, $password)
-
   $roles_string = join($roles, ',')
 
   # add formated fragment

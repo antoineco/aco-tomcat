@@ -34,6 +34,12 @@
 #   where to download extra libraries from
 # [*manage_firewall*]
 #   manage firewall rules (boolean)
+# [*checksum_verify*]
+#   verify the checksum if tomcat is installed from an archive (boolean)
+# [*checksum_type*]
+#   archive file checksum type (valid: 'none'|'md5'|'sha1'|'sha2'|'sh256'|'sha384'|'sha512')
+# [*checksum*]
+#   archive file checksum
 # [*admin_webapps*]
 #   enable admin webapps (boolean)
 # [*create_default_admin*]
@@ -46,12 +52,6 @@
 #   hash containing user definitions
 # [*tomcat_roles*]
 #   hash containing role definitions
-# [*checksum_verify*]
-#   verify the checksum if tomcat is installed from an archive (boolean)
-# [*checksum_type*]
-#   archive file checksum type (valid: 'none'|'md5'|'sha1'|'sha2'|'sh256'|'sha384'|'sha512')
-# [*checksum*]
-#   The checksum of the archive file
 #
 # see README file for a description of all parameters related to server configuration
 #
@@ -309,15 +309,17 @@ define tomcat::instance (
   }
 
   # parameters validation
-  validate_re($version, '^(?:[0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(?:-.*)?$', 'incorrect tomcat version number')
-  validate_re($service_ensure, '^(stopped|running)$', '$service_ensure must be either \'stopped\', or \'running\'')
-  validate_array($listeners, $executors, $connectors, $realms, $valves, $engine_valves, $globalnaming_environments, $globalnaming_resources, $context_watchedresources, $context_parameters, $context_environments, $context_listeners, $context_valves, $context_resourcedefs, $context_resourcelinks, $catalina_opts, $java_opts, $jpda_opts)
-  validate_hash($server_params, $svc_params, $threadpool_params, $http_params, $ssl_params, $ajp_params, $engine_params, $host_params, $context_params, $context_loader, $context_manager, $context_realm, $context_resources, $custom_variables, $tomcat_users, $tomcat_roles)
-  validate_bool($checksum_verify, $restart_on_change)
-  validate_re($checksum_type, '^(none|md5|sha1|sha2|sh256|sha384|sha512)$', 'The checksum type needs to be one of the following: none|md5|sha1|sha2|sh256|sha384|sha512')
-
+  if $version !~ /^(?:[0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(?:-.*)?$/ {
+    fail('incorrect tomcat version number')
+  }
+  if $service_ensure !~ /^(stopped|running)$/ {
+    fail('$service_ensure must be either \'stopped\' or \'running\'')
+  }
+  if $checksum_type !~ /^(none|md5|sha1|sha2|sh256|sha384|sha512)$/ {
+    fail('$checksum can only be one of: none|md5|sha1|sha2|sh256|sha384|sha512')
+  }
   if $checksum_verify and !$checksum {
-    fail('Checksum verification requires \'checksum\' variable to be set')
+    fail('Checksum verification requires $checksum variable to be set')
   }
 
   # multi-version installation only supported with archive installation
@@ -854,9 +856,11 @@ define tomcat::instance (
 
   # cluster can live in engine or host, engine was original default, host is required if using farm deployer
   if $cluster_parent {
-    validate_re($cluster_parent, '^(engine|host)$', 'cluster_parent must be host or engine')
+    if $cluster_parent !~ /^(engine|host)$/ {
+      fail('$cluster_parent must be either \'host\' or \'engine\'')
+    }
     if $cluster_farm_deployer and $cluster_parent == 'engine' {
-      fail('Farm deployer cannot be used with cluster_parent=engine')
+      fail('Farm deployer cannot be used with $cluster_parent=\'engine\'')
     }
     $cluster_parent_real = $cluster_parent
   } else {
