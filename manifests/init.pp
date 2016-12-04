@@ -243,7 +243,6 @@ class tomcat (
   $host_appbase               = undef,
   $host_autodeploy            = undef,
   $host_deployonstartup       = undef,
-  $host_deployOnStartup       = undef, #! backward compatibility
   $host_undeployoldversions   = undef,
   $host_unpackwars            = undef,
   $host_params                = {},
@@ -617,19 +616,10 @@ class tomcat (
   }
   ), $engine_params)
 
-  # backward compatibility after renaming parameter 'host_deployOnStartup'
-  # 'host_deployOnStartup' (uppercase) takes precendence over 'host_deployonstartup' (lowercase) to avoid surprises
-  if $host_deployOnStartup != undef {
-    warning("The 'host_deployOnStartup' parameter was renamed to 'host_deployonstartup' (lowercase)")
-    $host_deployonstartup_compat = $host_deployOnStartup
-  } else {
-    $host_deployonstartup_compat = $host_deployonstartup
-  }
-
   $host_params_real = merge(delete_undef_values({
     'appBase'             => $host_appbase,
     'autoDeploy'          => $host_autodeploy,
-    'deployOnStartup'     => $host_deployonstartup_compat,
+    'deployOnStartup'     => $host_deployonstartup,
     'undeployOldVersions' => $host_undeployoldversions,
     'unpackWARs'          => $host_unpackwars
   }

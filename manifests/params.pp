@@ -89,7 +89,7 @@ class tomcat::params {
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_Leap_42.2/noarch/
-              # $version = '8.0.36-117.9'
+              # $version = '8.0.36-117.13'
               # $package_name = 'tomcat'
             }
             '42.1'  : {
@@ -99,7 +99,7 @@ class tomcat::params {
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_Leap_42.1/noarch/
-              # $version = '8.0.36-117.8'
+              # $version = '8.0.36-117.11'
               # $package_name = 'tomcat'
             }
             '13.2'  : {
@@ -120,8 +120,13 @@ class tomcat::params {
         /^(SLES|SLED|SuSE)$/ : {
           # https://download.suse.com/patch/finder
           case $::operatingsystemrelease {
+            #'12.2'  : {
+            #  $version = ''
+            #  $package_name = 'tomcat'
+            #  $systemd = true
+            #}
             '12.1'  : {
-              $version = '8.0.32-8.7'
+              $version = '8.0.32-8.7' # tomcat 1293
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/SLE_12_SP1/noarch/
@@ -129,17 +134,17 @@ class tomcat::params {
               $systemd = true
             }
             '12.0'  : {
-              $version = '7.0.68-7.6.1'
+              $version = '7.0.68-7.6.1' # tomcat 478
               $package_name = 'tomcat'
               $systemd = true
             }
             '11.4'  : {
-              $version = '6.0.45-0.50.1'
+              $version = '6.0.45-0.50.1' # tomcat6 12465
               $package_name = 'tomcat6'
               $systemd = false
             }
             '11.3'  : {
-              $version = '6.0.41-0.43.1'
+              $version = '6.0.41-0.43.1' # tomcat6 9487
               $package_name = 'tomcat6'
               $systemd = false
             }

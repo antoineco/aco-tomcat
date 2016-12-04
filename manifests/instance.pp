@@ -214,7 +214,6 @@ define tomcat::instance (
   $host_appbase               = undef,
   $host_autodeploy            = undef,
   $host_deployonstartup       = undef,
-  $host_deployOnStartup       = undef, #! backward compatibility
   $host_undeployoldversions   = undef,
   $host_unpackwars            = undef,
   $host_params                = {},
@@ -445,9 +444,8 @@ define tomcat::instance (
       # only used on systemd distros
       'package' : {
         if $::osfamily == 'Suse' {
-          $service_start_real = '/usr/sbin/tomcat-sysd start'
-        }
-        else {
+          $service_start_real = '/usr/lib/tomcat/server start'
+        } else {
           $service_start_real = '/usr/libexec/tomcat/server start'
         }
       }
@@ -475,8 +473,7 @@ define tomcat::instance (
       'package' : {
         if $::osfamily == 'Suse' {
           $service_stop_real = '/usr/sbin/tomcat-sysd stop'
-        }
-        else {
+        } else {
           $service_stop_real = '/usr/libexec/tomcat/server stop'
         }
       }
@@ -582,19 +579,10 @@ define tomcat::instance (
   }
   ), $engine_params)
 
-  # backward compatibility after renaming parameter 'host_deployOnStartup'
-  # 'host_deployOnStartup' (uppercase) takes precendence over 'host_deployonstartup' (lowercase) to avoid surprises
-  if $host_deployOnStartup != undef {
-    warning("The 'host_deployOnStartup' parameter was renamed to 'host_deployonstartup' (lowercase)")
-    $host_deployonstartup_compat = $host_deployOnStartup
-  } else {
-    $host_deployonstartup_compat = $host_deployonstartup
-  }
-
   $host_params_real = merge(delete_undef_values({
     'appBase'             => $host_appbase,
     'autoDeploy'          => $host_autodeploy,
-    'deployOnStartup'     => $host_deployonstartup_compat,
+    'deployOnStartup'     => $host_deployonstartup,
     'undeployOldVersions' => $host_undeployoldversions,
     'unpackWARs'          => $host_unpackwars
   }
@@ -795,34 +783,40 @@ define tomcat::instance (
   # service #
   # --------#
 
-  if $::operatingsystem == 'OpenSuSE' {
-    Service {
-      provider => systemd # not explicit on OpenSuSE
-    }
-  }
+  # scenarios
+  # --------------------------------------------------------------------------
+  #| install. | package                      | archive                        |
+  #| init     |                              |                                |
+  #|----------|------------------------------|--------------------------------|
+  #| sysVinit | symlink to init.d script     | create init.d, use catalina.sh |
+  #|----------|------------------------------|--------------------------------|
+  #| systemd  | create unit, use main script | create unit, use catalina.sh   |
+  # --------------------------------------------------------------------------
 
   if $::tomcat::params::systemd {
     # manage systemd unit on compatible systems
-    if $::osfamily == 'Suse' {
-      $systemd_template = "${module_name}/instance/systemd_unit_suse.erb"
-    } else { # Fedora, RHEL 7+
-      $systemd_template = "${module_name}/instance/systemd_unit_rhel.erb"
-    }
-    # write service file
+    # Template uses:
+    # - $systemd_service_type_real
+    # - $service_name_real
+    # - $config_path_real
+    # - $service_start_real
+    # - $service_stop_real
+    # - $tomcat_user
+    # - $tomcat_group
     file { "${service_name_real} service unit":
-      path    => "/usr/lib/systemd/system/${service_name_real}.service",
+      path    => "/etc/systemd/system/${service_name_real}.service",
       owner   => 'root',
       group   => 'root',
-      content => template($systemd_template)
+      content => template("${module_name}/instance/systemd_service_unit.erb")
     }
     # Refresh systemd configuration
-    exec { "refresh_${service_name_real}":
+    exec { "refresh ${service_name_real}":
       command     => '/usr/bin/systemctl daemon-reload',
       refreshonly => true,
       subscribe   => File["${service_name_real} service unit"],
       notify      => $notify_service
     }
-  } else { # Debian/Ubuntu, RHEL 6, SLES 11, ...
+  } else { # Debian, RHEL 6, SLES 11, ...
     case $::tomcat::install_from {
       'package' : {
         # symlink main init script
@@ -836,11 +830,16 @@ define tomcat::instance (
         }
       }
       default   : {
-        $start_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${tomcat_user} -s /bin/bash -c '${service_start_real}'"
-        $stop_command = "export CATALINA_BASE=${catalina_base_real}; /bin/su ${tomcat_user} -s /bin/bash -c '${service_stop_real}'"
-        $status_command = "/usr/bin/pgrep -d , -u ${tomcat_user} -G ${tomcat_group} -f Dcatalina.base=${catalina_base_real}"
+        $start_command = "/bin/su ${tomcat_user} -s /bin/bash -c '${service_start_real}'"
+        $stop_command = "/bin/su ${tomcat_user} -s /bin/bash -c '${service_stop_real}'"
+        $status_command = "/usr/bin/pgrep -d , -u ${tomcat_user} -G ${tomcat_group} -f Dcatalina.base=\$CATALINA_BASE"
 
         # create init script
+        # Template uses:
+        # - $catalina_base_real
+        # - $start_command
+        # - $stop_command
+        # - $status_command
         file { "${service_name_real} service unit":
           ensure  => present,
           path    => "/etc/init.d/${service_name_real}",

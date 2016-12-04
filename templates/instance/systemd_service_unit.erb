@@ -1,18 +1,17 @@
 [Unit]
 Description=Apache Tomcat Web Application Container
-After=network.target
+After=syslog.target network.target
 
 [Service]
 Type=<%= @systemd_service_type_real %>
+Environment="NAME=<%= @service_name_real if @root_path %>"
 EnvironmentFile=-<%= @config_path_real %>
-User=<%= @tomcat_user %>
-Group=<%= @tomcat_group %>
 ExecStart=<%= @service_start_real %>
 ExecStop=<%= @service_stop_real %>
-StandardOutput=syslog
-SyslogIdentifier=%n
-SyslogFacility=daemon
 SuccessExitStatus=143
+User=<%= @tomcat_user %>
+Group=<%= @tomcat_group %>
+
 
 [Install]
 WantedBy=multi-user.target

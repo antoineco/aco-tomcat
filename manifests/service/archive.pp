@@ -9,6 +9,7 @@ class tomcat::service::archive {
   }
 
   # forward variables used in templates
+  $catalina_base_real = $::tomcat::catalina_base_real
   $service_start_real = $::tomcat::service_start_real
   $service_stop_real = $::tomcat::service_stop_real
   $service_name_real = $::tomcat::service_name_real
@@ -24,31 +25,38 @@ class tomcat::service::archive {
 
   if $::tomcat::params::systemd {
     # manage systemd unit on compatible systems
-    if $::osfamily == 'Suse' {
-      $systemd_template = "${module_name}/instance/systemd_unit_suse.erb"
-    } else { # Fedora, RHEL 7+
-      $systemd_template = "${module_name}/instance/systemd_unit_rhel.erb"
-    }
-    # write service file
+    # Template uses:
+    # - $systemd_service_type_real
+    # - $service_name_real
+    # - $config_path_real
+    # - $service_start_real
+    # - $service_stop_real
+    # - $tomcat_user
+    # - $tomcat_group
     file { "${service_name_real} service unit":
-      path    => "/usr/lib/systemd/system/${service_name_real}.service",
+      path    => "/etc/systemd/system/${service_name_real}.service",
       owner   => 'root',
       group   => 'root',
-      content => template($systemd_template)
+      content => template("${module_name}/instance/systemd_service_unit.erb")
     }
     # Refresh systemd configuration
-    exec { "refresh_${service_name_real}":
+    exec { "refresh ${service_name_real}":
       command     => '/usr/bin/systemctl daemon-reload',
       refreshonly => true,
       subscribe   => File["${service_name_real} service unit"],
       notify      => $notify_service
     }
-  } else { # Debian/Ubuntu, RHEL 6, SLES 11, ...
-    $start_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${tomcat_user} -s /bin/bash -c '${service_start_real}'"
-    $stop_command = "export CATALINA_BASE=${::tomcat::catalina_base_real}; /bin/su ${tomcat_user} -s /bin/bash -c '${service_stop_real}'"
-    $status_command = "/usr/bin/pgrep -d , -u ${tomcat_user} -G ${tomcat_group} -f Dcatalina.base=${::tomcat::catalina_base_real}"
+  } else { # Debian, RHEL 6, SLES 11, ...
+    $start_command = "/bin/su ${tomcat_user} -s /bin/bash -c '${service_start_real}'"
+    $stop_command = "/bin/su ${tomcat_user} -s /bin/bash -c '${service_stop_real}'"
+    $status_command = "/usr/bin/pgrep -d , -u ${tomcat_user} -G ${tomcat_group} -f Dcatalina.base=\$CATALINA_BASE"
 
     # create init script
+    # Template uses:
+    # - $catalina_base_real
+    # - $start_command
+    # - $stop_command
+    # - $status_command
     file { "${service_name_real} service unit":
       ensure  => present,
       path    => "/etc/init.d/${service_name_real}",
