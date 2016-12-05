@@ -1,3 +1,15 @@
+###1.6.0
+
+* Configurable `web.xml` files
+ - **Warning** replaces `default_servlet` instance parameter
+ - New `tomcat::web` defined type to manage `web.xml` files
+ - See `default_servlet*`, `jsp_servlet*`, `sessionconfig_sessiontimeout` and `welcome_file_list` parameters
+* Update systemd unit, expect tomcat script path as set in latest available packages
+ - **Warning** check the current location of your tomcat startup script, especially if using an old OS package version
+* Replace or remove calls to deprecated `validate_*` stdlib functions
+* Add support for Fedora 25 and Amazon Linux 2016.09
+* Drop support for Fedora 22
+
 ###1.5.0
 
 **Warning:** the `host_deployOnStartup` parameter was renamed to `host_deployonstartup` (lowercase) in this release. Backward compatibility will be maintained until the next minor release only.
@@ -70,7 +82,7 @@ Enforce tomcat package version. `version` now takes a full package version when 
 
 ###1.1.0
 
-New `tomcat::context` defined type to manage additional contexts
+New `tomcat::context` defined type to manage `context.xml` files
 
 ###1.0.3
 
