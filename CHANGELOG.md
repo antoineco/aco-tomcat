@@ -1,11 +1,17 @@
+###1.6.1
+
+* Unset `provider` parameter on all `archive` resources (from `puppet-archive` module)
+ - quick and dirty workaround until [SERVER-94](https://tickets.puppetlabs.com/browse/SERVER-94) gets fixed
+ - **Warning:** may break behind a HTTP proxy (untested)
+
 ###1.6.0
 
 * Configurable `web.xml` files
- - **Warning** replaces `default_servlet` instance parameter
+ - **Warning:** replaces `default_servlet` instance parameter
  - New `tomcat::web` defined type to manage `web.xml` files
  - See `default_servlet*`, `jsp_servlet*`, `sessionconfig_sessiontimeout` and `welcome_file_list` parameters
 * Update systemd unit, expect tomcat script path as set in latest available packages
- - **Warning** check the current location of your tomcat startup script, especially if using an old OS package version
+ - **Warning:** check the current location of your tomcat startup script, especially if using an old OS package version
 * Replace or remove calls to deprecated `validate_*` stdlib functions
 * Add support for Fedora 25 and Amazon Linux 2016.09
 * Drop support for Fedora 22

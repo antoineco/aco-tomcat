@@ -648,8 +648,8 @@ define tomcat::instance (
   }
 
   Archive {
-    provider => 'curl',
-    notify   => $notify_service
+    #provider => 'curl',
+    notify => $notify_service
   }
 
   if !defined(File['tomcat instances root']) {

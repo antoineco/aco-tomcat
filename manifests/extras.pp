@@ -12,11 +12,11 @@ class tomcat::extras {
   }
 
   Archive {
-    provider => 'curl',
-    extract  => false,
-    require  => File['global extras directory'],
-    cleanup  => false,
-    notify   => $notify_service
+    #provider => 'curl',
+    extract => false,
+    require => File['global extras directory'],
+    cleanup => false,
+    notify  => $notify_service
   }
 
   archive {
