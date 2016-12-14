@@ -110,6 +110,7 @@ class tomcat (
   $service_name               = undef,
   $service_ensure             = 'running',
   $service_enable             = true,
+  $force_init                 = false,
   $restart_on_change          = true,
   $systemd_service_type       = undef,
   $service_start              = undef,
