@@ -824,38 +824,35 @@ define tomcat::instance (
       notify      => $notify_service
     }
   } else { # Debian, RHEL 6, SLES 11, ...
-    case $::tomcat::install_from {
-      'package' : {
-        # symlink main init script
-        file { "${service_name_real} service unit":
-          ensure => link,
-          path   => "/etc/init.d/${service_name_real}",
-          owner  => 'root',
-          group  => 'root',
-          target => $::tomcat::service_name_real,
-          notify => $notify_service
-        }
+    if $::tomcat::install_from == 'package' and !$::tomcat::force_init {
+      # symlink main init script
+      file { "${service_name_real} service unit":
+        ensure => link,
+        path   => "/etc/init.d/${service_name_real}",
+        owner  => 'root',
+        group  => 'root',
+        target => $::tomcat::service_name_real,
+        notify => $notify_service
       }
-      default   : {
-        $start_command = "/bin/su ${tomcat_user} -s /bin/bash -c '${service_start_real}'"
-        $stop_command = "/bin/su ${tomcat_user} -s /bin/bash -c '${service_stop_real}'"
-        $status_command = "/usr/bin/pgrep -d , -u ${tomcat_user} -G ${tomcat_group} -f Dcatalina.base=\$CATALINA_BASE"
+    } else {
+      $start_command = "/bin/su ${tomcat_user} -s /bin/bash -c '${service_start_real}'"
+      $stop_command = "/bin/su ${tomcat_user} -s /bin/bash -c '${service_stop_real}'"
+      $status_command = "/usr/bin/pgrep -d , -u ${tomcat_user} -G ${tomcat_group} -f Dcatalina.base=\$CATALINA_BASE"
 
-        # create init script
-        # Template uses:
-        # - $catalina_base_real
-        # - $start_command
-        # - $stop_command
-        # - $status_command
-        file { "${service_name_real} service unit":
-          ensure  => present,
-          path    => "/etc/init.d/${service_name_real}",
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0755',
-          content => template("${module_name}/instance/tomcat_init_generic.erb"),
-          notify  => $notify_service
-        }
+      # create init script
+      # Template uses:
+      # - $catalina_base_real
+      # - $start_command
+      # - $stop_command
+      # - $status_command
+      file { "${service_name_real} service unit":
+        ensure  => present,
+        path    => "/etc/init.d/${service_name_real}",
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+        content => template("${module_name}/instance/tomcat_init_generic.erb"),
+        notify  => $notify_service
       }
     }
   }
