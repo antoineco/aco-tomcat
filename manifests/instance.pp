@@ -472,7 +472,7 @@ define tomcat::instance (
       # only used on systemd distros
       'package' : {
         if $::osfamily == 'Suse' {
-          $service_stop_real = '/usr/sbin/tomcat-sysd stop'
+          $service_stop_real = '/usr/lib/tomcat/server stop'
         } else {
           $service_stop_real = '/usr/libexec/tomcat/server stop'
         }
