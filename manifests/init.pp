@@ -492,7 +492,7 @@ class tomcat (
   }
 
   if $service_start == undef {
-    # unused with $install_from == 'package'
+    # unused when $install_from == 'package'
     $start_cmd = $jpda_enable ? {
       true    => 'jpda start',
       default => 'start'
@@ -508,10 +508,8 @@ class tomcat (
   }
 
   if $service_stop == undef {
-    case $install_from {
-      'package' : { $service_stop_real = '/usr/sbin/tomcat-sysd stop' }
-      default   : { $service_stop_real = "${catalina_home_real}/bin/catalina.sh stop" }
-    }
+    # unused when $install_from == 'package'
+    $service_stop_real = "${catalina_home_real}/bin/catalina.sh stop"
   } else {
     $service_stop_real = $service_stop
   }
