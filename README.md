@@ -373,6 +373,9 @@ Whether to restart Tomcat service after configuration change. Boolean value. Def
 #####`systemd_service_type`
 The value for the systemd service type if applicable. Defaults to 'simple' for install_from = package, 'forking' for install_from = archive.
 
+#####`force_init`
+Whether to force the generation of a generic init script/unit for the tomcat service. Useful for custom OS packages which do not include any. Defaults to `false`.
+
 #####`service_start`
 Optional override command for starting the service. Default depends on the platform.
 
