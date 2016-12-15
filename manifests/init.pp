@@ -26,6 +26,8 @@
 #   enable service (boolean)
 # [*systemd_service_type*]
 #   value for systemd service type
+# [*force_init*]
+#   force generation of a generic init script/unit
 # [*service_start*]
 #   override service startup command
 # [*service_stop*]
@@ -110,9 +112,9 @@ class tomcat (
   $service_name               = undef,
   $service_ensure             = 'running',
   $service_enable             = true,
-  $force_init                 = false,
   $restart_on_change          = true,
   $systemd_service_type       = undef,
+  $force_init                 = false,
   $service_start              = undef,
   $service_stop               = undef,
   $tomcat_user                = undef,
