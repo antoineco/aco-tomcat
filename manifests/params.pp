@@ -7,15 +7,15 @@ class tomcat::params {
         'Fedora' : {
           case $::operatingsystemmajrelease {
             '25'    : {
-              $version = '1:8.0.38-1.fc25'
+              $version = '1:8.0.39'
               $package_name = 'tomcat'
             }
             '24'    : {
-              $version = '1:8.0.38-1.fc24'
+              $version = '1:8.0.39'
               $package_name = 'tomcat'
             }
             '23'    : {
-              $version = '1:8.0.38-1.fc23'
+              $version = '1:8.0.39'
               $package_name = 'tomcat'
             }
             default : {
@@ -26,7 +26,7 @@ class tomcat::params {
         }
         'Amazon' : {
           # https://alas.aws.amazon.com
-          $version = '8.0.38-1.65.amzn1'   # ALAS-2016-764
+          $version = '8.0.38'
           $package_name = 'tomcat8'
           # $version = '7.0.72-1.21.amzn1' # ALAS-2016-764
           # $package_name = 'tomcat7'
@@ -37,12 +37,12 @@ class tomcat::params {
         default  : {
           case $::operatingsystemmajrelease {
             '7'     : {
-              $version = '7.0.54-8.el7_2'
+              $version = '7.0.69'
               $package_name = 'tomcat'
               $systemd = true
             }
             '6'     : {
-              $version = '6.0.24-98.el6_8'
+              $version = '6.0.24'
               $package_name = 'tomcat6'
               # = epel repo =
               # https://dl.fedoraproject.org/pub/epel/6/x86_64/
@@ -59,7 +59,7 @@ class tomcat::params {
               $systemd = false
             }
             '5'     : {
-              $version = '5.5.23-0jpp.40.el5_9'
+              $version = '5.5.23'
               $package_name = 'tomcat5'
               # = jpackage5 repo =
               # http://mirrors.dotsrc.org/jpackage/5.0-updates/generic/free/repoview/letter_t.group.html
@@ -85,7 +85,7 @@ class tomcat::params {
             '42.2'  : {
               # http://download.opensuse.org/distribution/leap/42.2/repo/oss/suse/noarch/
               # http://download.opensuse.org/update/leap/42.2/oss/noarch/
-              $version = '8.0.36-2.7'
+              $version = '8.0.36'
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_Leap_42.2/noarch/
@@ -95,7 +95,7 @@ class tomcat::params {
             '42.1'  : {
               # http://download.opensuse.org/distribution/leap/42.1/repo/oss/suse/noarch/
               # http://download.opensuse.org/update/leap/42.1/oss/noarch/
-              $version = '8.0.32-8.1'
+              $version = '8.0.32'
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_Leap_42.1/noarch/
@@ -104,7 +104,7 @@ class tomcat::params {
             }
             '13.2'  : {
               # http://download.opensuse.org/distribution/13.2/repo/oss/suse/noarch/
-              $version = '7.0.55-2.5'
+              $version = '7.0.55'
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/openSUSE_13.2/noarch/
@@ -120,13 +120,13 @@ class tomcat::params {
         /^(SLES|SLED|SuSE)$/ : {
           # https://download.suse.com/patch/finder
           case $::operatingsystemrelease {
-            #'12.2'  : {
-            #  $version = ''
-            #  $package_name = 'tomcat'
-            #  $systemd = true
-            #}
+            '12.2'  : {
+              $version = '8.0.36'
+              $package_name = 'tomcat'
+              $systemd = true
+            }
             '12.1'  : {
-              $version = '8.0.32-8.7' # tomcat 1293
+              $version = '8.0.32'
               $package_name = 'tomcat'
               # = JAVA repo =
               # http://download.opensuse.org/repositories/Java:/packages/SLE_12_SP1/noarch/
@@ -134,17 +134,17 @@ class tomcat::params {
               $systemd = true
             }
             '12.0'  : {
-              $version = '7.0.68-7.6.1' # tomcat 478
+              $version = '7.0.68'
               $package_name = 'tomcat'
               $systemd = true
             }
             '11.4'  : {
-              $version = '6.0.45-0.50.1' # tomcat6 12465
+              $version = '6.0.45'
               $package_name = 'tomcat6'
               $systemd = false
             }
             '11.3'  : {
-              $version = '6.0.41-0.43.1' # tomcat6 9487
+              $version = '6.0.41'
               $package_name = 'tomcat6'
               $systemd = false
             }
