@@ -10,6 +10,10 @@
 #   tomcat full version number (valid format: x.y.z[-package_suffix])
 # [*archive_source*]
 #   where to download archive from (only if installed from archive)
+# [*proxy_server*]
+#   proxy server url
+# [*proxy_type*]
+#   proxy server type (valid: 'none'|'http'|'https'|'ftp')
 # [*service_name*]
 #   tomcat service name
 # [*service_ensure*]
@@ -74,6 +78,8 @@ define tomcat::instance (
   $root_path                  = '/var/lib/tomcats',
   $version                    = $::tomcat::version_real,
   $archive_source             = undef,
+  $proxy_server               = undef,
+  $proxy_type                 = undef,
   $service_name               = undef,
   $service_ensure             = 'running',
   $service_enable             = true,
@@ -648,8 +654,9 @@ define tomcat::instance (
   }
 
   Archive {
-    #provider => 'curl',
-    notify => $notify_service
+    proxy_server => $proxy_server,
+    proxy_type   => $proxy_type,
+    notify       => $notify_service
   }
 
   if !defined(File['tomcat instances root']) {

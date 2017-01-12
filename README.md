@@ -142,6 +142,15 @@ class { 'tomcat':
 }
 ```
 
+Download Tomcat archives behind a proxy server
+
+```puppet
+class { 'tomcat':
+  …
+  proxy_server => 'http://user:password@proxy.example.com:8080'
+}
+```
+
 ###Configuration scenarios
 
 Enable the standard AJP connector on non-default port with custom parameters
@@ -348,6 +357,12 @@ Must include the full package suffix if Tomcat is installed from a package repos
 
 #####`archive_source`
 Source of the Tomcat server archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin/apache-tomcat-<version>.tar.gz`
+
+#####`proxy_server`
+URL of a proxy server used for downloading Tomcat archives
+
+#####`proxy_type`
+Type of the proxy server. Valid values are `none`, `http`, `https` and `ftp`. Optional. Default determined by the scheme used in `${proxy_server}`
 
 #####`checksum_verify`
 Whether to enable the checksum verification of Tomcat installation archive. Boolean value. Defaults to `false`.

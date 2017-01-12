@@ -10,6 +10,10 @@
 #   tomcat full version number (valid format: x.y.z[-package_suffix])
 # [*archive_source*]
 #   where to download archive from (only if installed from archive)
+# [*proxy_server*]
+#   proxy server url
+# [*proxy_type*]
+#   proxy server type (valid: 'none'|'http'|'https'|'ftp')
 # [*package_name*]
 #   tomcat package name
 # [*package_ensure*]
@@ -99,6 +103,8 @@ class tomcat (
   $install_from               = 'package',
   $version                    = $::tomcat::params::version,
   $archive_source             = undef,
+  $proxy_server               = undef,
+  $proxy_type                 = undef,
   $package_name               = $::tomcat::params::package_name,
   $package_ensure             = undef,
   $service_name               = undef,
@@ -467,6 +473,11 @@ class tomcat (
     }
   } else {
     $config_path_real = $config_path
+  }
+
+  $notify_service = $restart_on_change ? {
+    true    => Service[$service_name_real],
+    default => undef
   }
 
   if $systemd_service_type == undef {

@@ -6,17 +6,13 @@ class tomcat::extras {
     fail('You must include the tomcat base class before using any tomcat sub class')
   }
 
-  $notify_service = $::tomcat::restart_on_change ? {
-    true  => Service[$::tomcat::service_name_real],
-    false => undef,
-  }
-
   Archive {
-    #provider => 'curl',
-    extract => false,
-    require => File['global extras directory'],
-    cleanup => false,
-    notify  => $notify_service
+    proxy_server => $::tomcat::proxy_server,
+    proxy_type   => $::tomcat::proxy_type,
+    extract      => false,
+    cleanup      => false,
+    require      => File['global extras directory'],
+    notify       => $::tomcat::notify_service
   }
 
   archive {

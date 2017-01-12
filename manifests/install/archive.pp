@@ -42,6 +42,8 @@ class tomcat::install::archive {
   archive { "apache-tomcat-${::tomcat::version_real}.tar.gz":
     path            => "${::tomcat::catalina_home_real}/apache-tomcat-${::tomcat::version_real}.tar.gz",
     source          => $::tomcat::archive_source_real,
+    proxy_server    => $::tomcat::proxy_server,
+    proxy_type      => $::tomcat::proxy_type,
     cleanup         => true,
     extract         => true,
     user            => $::tomcat::tomcat_user_real,
@@ -51,8 +53,7 @@ class tomcat::install::archive {
     checksum        => $::tomcat::checksum,
     extract_path    => $::tomcat::catalina_home_real,
     extract_command => 'tar xf %s --strip-components=1',
-    creates         => "${::tomcat::catalina_home_real}/LICENSE",
-    #provider        => 'curl'
+    creates         => "${::tomcat::catalina_home_real}/LICENSE"
   }
 
 
