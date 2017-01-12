@@ -1,3 +1,10 @@
+###1.6.2
+
+* Add proxy support via new parameters `proxy_server` and `proxy_type`
+* New parameter `force_init` which generates a generic init script/unit for packages which do not include any
+* Add support for SuSE 12.1
+* Update default package versions
+
 ###1.6.1
 
 * Unset `provider` parameter on all `archive` resources (from `puppet-archive` module)
