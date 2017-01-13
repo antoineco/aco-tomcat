@@ -166,16 +166,16 @@ class tomcat::params {
           case $::operatingsystemmajrelease {
             # jessie
             '8'     : {
-              $version = '8.0.14-1+deb8u2'
+              $version = '8.0.14-1+deb8u5'
               $package_name = 'tomcat8'
-              # $version = '7.0.56-3+deb8u3'
+              # $version = '7.0.56-3+deb8u6'
               # $package_name = 'tomcat7'
             }
             # wheezy
             '7'     : {
-              $version = '7.0.28-4+deb7u4'
+              $version = '7.0.28-4+deb7u8'
               $package_name = 'tomcat7'
-              # $version = '6.0.45+dfsg-1~deb7u1'
+              # $version = '6.0.45+dfsg-1~deb7u5'
               # $package_name = 'tomcat6'
             }
             default : {
