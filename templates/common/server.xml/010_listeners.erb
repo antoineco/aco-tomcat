@@ -22,7 +22,9 @@
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 <%- end -%>
 <%- if @jmx_listener -%>
-  <Listener className="org.apache.catalina.mbeans.JmxRemoteLifecycleListener" rmiRegistryPortPlatform="<%= @jmx_registry_port %>" rmiServerPortPlatform="<%= @jmx_server_port %>"<% if @jmx_bind_address and @jmx_bind_address != '' -%> rmiBindAddress="<%= @jmx_bind_address %>"<% end -%> />
+  <Listener className="org.apache.catalina.mbeans.JmxRemoteLifecycleListener" rmiRegistryPortPlatform="<%= @jmx_registry_port %>" rmiServerPortPlatform="<%= @jmx_server_port %>" <% -%>
+  <%- if @jmx_bind_address and @jmx_bind_address != '' -%> rmiBindAddress="<%= @jmx_bind_address %>" <% end -%>
+  <%- if defined? @jmx_uselocalports %>useLocalPorts="<%= @jmx_uselocalports %>" <% end -%>/>
 <%- end -%>
 <%- if @apr_listener -%>
   <Listener className="org.apache.catalina.core.AprLifecycleListener" <% if @apr_sslengine and @apr_sslengine != '' -%>SSLEngine="<%= @apr_sslengine %>" <% end -%>/>

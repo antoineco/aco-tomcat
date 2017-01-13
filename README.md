@@ -455,10 +455,11 @@ Whether to enable the [APR Lifecycle Listener](http://tomcat.apache.org/tomcat-8
  - `apr_sslengine`: name of the SSLEngine to use with the APR Lifecycle Listener
 
 #####`jmx_listener`
-Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener). The listener can be further configured via a series of parameters:
+Whether to enable the [JMX Remote Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener). The listener can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `jmx_registry_port`: JMX/RMI registry port for the JMX Remote Lifecycle Listener. Defaults to `8050` (global) / `8052` (instance).
  - `jmx_server_port`: JMX/RMI server port for the JMX Remote Lifecycle Listener. Defaults to `8051` (global) / `8053` (instance).
- - `jmx_bind_address`: JMX/RMI server interface address for the JMX Remote Lifecycle Listener. Defaults to `undef` (use Tomcat default).
+ - `jmx_bind_address`: JMX/RMI server interface address for the JMX Remote Lifecycle Listener
+ - `jmx_uselocalports`: force usage of local ports to connect to the the JMX/RMI server
 
 #####`listeners`
 An array of custom `Listener` entries to be added to the `Server` block. Each entry is to be supplied as a hash of attributes/values for the `Listener` XML node. See [Listeners](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html) for the list of possible attributes.

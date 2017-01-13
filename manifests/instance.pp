@@ -136,7 +136,8 @@ define tomcat::instance (
   $jmx_listener               = false,
   $jmx_registry_port          = 8052,
   $jmx_server_port            = 8053,
-  $jmx_bind_address           = '',
+  $jmx_bind_address           = undef,
+  $jmx_uselocalports          = undef,
   # custom listeners
   $listeners                  = [],
   #..................................................................................

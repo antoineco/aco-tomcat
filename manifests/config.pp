@@ -16,6 +16,7 @@ class tomcat::config {
   $jmx_registry_port = $::tomcat::jmx_registry_port
   $jmx_server_port = $::tomcat::jmx_server_port
   $jmx_bind_address = $::tomcat::jmx_bind_address
+  $jmx_uselocalports = $::tomcat::jmx_uselocalports
   $versionlogger_listener = $::tomcat::versionlogger_listener
   $versionlogger_logargs = $::tomcat::versionlogger_logargs
   $versionlogger_logenv = $::tomcat::versionlogger_logenv

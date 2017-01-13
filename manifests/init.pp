@@ -172,7 +172,8 @@ class tomcat (
   $jmx_listener               = false,
   $jmx_registry_port          = 8050,
   $jmx_server_port            = 8051,
-  $jmx_bind_address           = '',
+  $jmx_bind_address           = undef,
+  $jmx_uselocalports          = undef,
   # custom listeners
   $listeners                  = [],
   #..................................................................................
