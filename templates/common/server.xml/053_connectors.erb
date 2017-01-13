@@ -1,9 +1,75 @@
 <%- [@connectors].flatten.compact.each do |connector| -%>
+  <%-# -- BEGIN initialize nested elements -- %>
+  <%- @upgradeprotocol = {} -%>
+  <%- @sslhostconfigs = [] -%>
+  <%- @has_nested_elements = false -%>
+  <%- if connector.has_key? 'upgradeprotocol' -%>
+    <%- @upgradeprotocol = connector.delete('upgradeprotocol') -%>
+  <%- end -%>
+  <%- if connector.has_key? 'sslhostconfigs' -%>
+    <%- @sslhostconfigs = connector.delete('sslhostconfigs') -%>
+  <%- end -%>
+  <%- if ! @sslhostconfigs.empty? or ! @upgradeprotocol.empty? -%>
+    <%- @has_nested_elements = true -%>
+  <%- end -%>
+  <%-# -- END initialize nested elements -- %>
   <%- connector.each_pair do |attrib, value| %>
     <%- if attrib == connector.keys.first -%>
     <Connector <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
     <%- else -%>
                <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
     <%- end -%>
-  <%- end %> />
+  <%- end %><%= @has_nested_elements ? ">" : " />" %>
+  <%-# --                       -- %>
+  <%-# -- UpgradeProtocol block -- %>
+  <%-# --                       -- %>
+  <%- if ! @upgradeprotocol.empty? -%>
+    <%- @upgradeprotocol.each_pair do |attrib, value| -%>
+      <%- if attrib == @upgradeprotocol.keys.first -%>
+        <UpgradeProtocol <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+      <%- else %>
+                         <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+      <%- end -%>
+    <%- end %> />
+  <%- end -%>
+  <%-# --                     -- %>
+  <%-# -- SSLHostConfig block -- %>
+  <%-# --                     -- %>
+  <%- [@sslhostconfigs].flatten.compact.each do |sslhostconfig| -%>
+    <%-# -- BEGIN initialize nested Certificates -- %>
+    <%- @certificates = [] -%>
+    <%- @has_nested_certificates = false -%>
+    <%- if sslhostconfig.has_key? 'certificates' -%>
+      <%- @certificates = sslhostconfig.delete('certificates') -%>
+    <%- end -%>
+    <%- if ! @certificates.empty? -%>
+      <%- @has_nested_certificates = true -%>
+    <%- end -%>
+    <%-# -- END initialize nested Certificates -- %>
+    <%- sslhostconfig.each_pair do |attrib, value| -%>
+      <%- if attrib == sslhostconfig.keys.first -%>
+        <SSLHostConfig <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+      <%- else %>
+                       <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+      <%- end -%>
+    <%- end %><%= @has_nested_certificates ? ">" : " />" %>
+    <%-# --                   -- %>
+    <%-# -- Certificate block -- %>
+    <%-# --                   -- %>
+    <%- [@certificates].flatten.compact.each do |certificate| -%>
+      <%- certificate.each_pair do |attrib, value| -%>
+        <%- if attrib == certificate.keys.first -%>
+            <Certificate <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+        <%- else %>
+                         <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+        <%- end -%>
+      <%- end %> />
+    <%- end -%>
+    <%- if @has_nested_certificates -%>
+        </SSLHostConfig>
+    <%- end -%>
+  <%- end -%>
+  <%- if @has_nested_elements -%>
+    </Connector>
+  <%- end -%>
 <%- end -%>
