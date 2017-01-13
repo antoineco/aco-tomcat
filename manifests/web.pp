@@ -10,7 +10,8 @@ define tomcat::web (
   $default_servletmapping_urlpatterns = [],
   $jsp_servletmapping_urlpatterns     = [],
   $sessionconfig_sessiontimeout       = undef,
-  $welcome_file_list                  = []
+  $welcome_file_list                  = [],
+  $version                            = $::tomcat::version_real
   ) {
   # The base class must be included first
   if !defined(Class['tomcat']) {
@@ -29,6 +30,8 @@ define tomcat::web (
     order => 'numeric'
   }
 
+  # Template uses:
+  # - $version
   concat::fragment { "${name} tomcat web header":
     order   => 0,
     content => template("${module_name}/common/web.xml/000_header.erb"),

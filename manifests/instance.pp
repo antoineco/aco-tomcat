@@ -1120,6 +1120,7 @@ define tomcat::instance (
     jsp_servletmapping_urlpatterns     => $jsp_servletmapping_urlpatterns,
     sessionconfig_sessiontimeout       => $sessionconfig_sessiontimeout,
     welcome_file_list                  => $welcome_file_list,
+    version                            => $version_real,
     require                            => File["${catalina_base_real}/conf"],
     notify                             => $notify_service
   }
