@@ -125,6 +125,11 @@ define tomcat::instance (
   $server_params              = {},
   #..................................................................................
   # listeners
+  $versionlogger_listener     = true,
+  $versionlogger_logargs      = undef,
+  $versionlogger_logenv       = undef,
+  $versionlogger_logprops     = undef,
+  # apr
   $apr_listener               = false,
   $apr_sslengine              = undef,
   # jmx
@@ -908,6 +913,10 @@ define tomcat::instance (
   # - $jmx_registry_port
   # - $jmx_server_port
   # - $jmx_bind_address
+  # - $versionlogger_listener
+  # - $versionlogger_logargs
+  # - $versionlogger_logenv
+  # - $versionlogger_logprops
   # - $apr_listener
   # - $apr_sslengine
   # - $listeners

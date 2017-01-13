@@ -16,6 +16,10 @@ class tomcat::config {
   $jmx_registry_port = $::tomcat::jmx_registry_port
   $jmx_server_port = $::tomcat::jmx_server_port
   $jmx_bind_address = $::tomcat::jmx_bind_address
+  $versionlogger_listener = $::tomcat::versionlogger_listener
+  $versionlogger_logargs = $::tomcat::versionlogger_logargs
+  $versionlogger_logenv = $::tomcat::versionlogger_logenv
+  $versionlogger_logprops = $::tomcat::versionlogger_logprops
   $apr_listener = $::tomcat::apr_listener
   $apr_sslengine = $::tomcat::apr_sslengine
   $svc_params_real = $::tomcat::svc_params_real
@@ -116,6 +120,10 @@ class tomcat::config {
   # - $jmx_registry_port
   # - $jmx_server_port
   # - $jmx_bind_address
+  # - $versionlogger_listener
+  # - $versionlogger_logargs
+  # - $versionlogger_logenv
+  # - $versionlogger_logprops
   # - $apr_listener
   # - $apr_sslengine
   # - $listeners

@@ -444,6 +444,12 @@ Server control port. Defaults to `8005` (global) / `8006` (instance). The Server
  - `server_address`: address on which this server waits for a shutdown command
  - `server_params`: optional hash of additional attributes/values to put in the Server element
 
+#####`versionlogger_listener`
+Whether to enable the [Version Logging Lifecycle Listener](https://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#Version_Logging_Lifecycle_Listener_-_org.apache.catalina.startup.VersionLoggerListener). The Listener can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
+ - `versionlogger_logargs`: log command line arguments
+ - `versionlogger_logenv`: log current environment variables
+ - `versionlogger_logprops`: log current Java system properties
+
 #####`apr_listener`
 Whether to enable the [APR Lifecycle Listener](http://tomcat.apache.org/tomcat-8.0-doc/apr.html#APR_Lifecycle_Listener_Configuration). The Listener can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `apr_sslengine`: name of the SSLEngine to use with the APR Lifecycle Listener

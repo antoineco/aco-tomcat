@@ -161,6 +161,11 @@ class tomcat (
   $server_params              = {},
   #..................................................................................
   # listeners
+  $versionlogger_listener     = true,
+  $versionlogger_logargs      = undef,
+  $versionlogger_logenv       = undef,
+  $versionlogger_logprops     = undef,
+  # apr
   $apr_listener               = false,
   $apr_sslengine              = undef,
   # jmx
