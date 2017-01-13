@@ -444,6 +444,9 @@ Server control port. Defaults to `8005` (global) / `8006` (instance). The Server
  - `server_address`: address on which this server waits for a shutdown command
  - `server_params`: optional hash of additional attributes/values to put in the Server element
 
+#####`jrememleak_attrs`
+Optional hash of attributes for the [JRE Memory Leak Prevention Listener](http://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#JRE_Memory_Leak_Prevention_Listener_-_org.apache.catalina.core.JreMemoryLeakPreventionListener). Defaults to an empty hash.
+
 #####`versionlogger_listener`
 Whether to enable the [Version Logging Lifecycle Listener](https://tomcat.apache.org/tomcat-8.0-doc/config/listeners.html#Version_Logging_Lifecycle_Listener_-_org.apache.catalina.startup.VersionLoggerListener). The Listener can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `versionlogger_logargs`: log command line arguments

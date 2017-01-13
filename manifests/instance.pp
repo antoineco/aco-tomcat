@@ -125,6 +125,8 @@ define tomcat::instance (
   $server_params              = {},
   #..................................................................................
   # listeners
+  $jrememleak_attrs           = {},
+  # versionlogger
   $versionlogger_listener     = true,
   $versionlogger_logargs      = undef,
   $versionlogger_logenv       = undef,
@@ -910,6 +912,7 @@ define tomcat::instance (
   }
 
   # Template uses:
+  # - $jrememleak_attrs
   # - $jmx_listener
   # - $jmx_registry_port
   # - $jmx_server_port

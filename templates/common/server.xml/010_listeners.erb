@@ -3,7 +3,7 @@
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" <% -%>
   <%- if defined? @versionlogger_logargs %>logArgs="<%= @versionlogger_logargs %>" <% end -%>
   <%- if defined? @versionlogger_logenv %>logEnv="<%= @versionlogger_logenv %>" <% end -%>
-  <%- if defined? @versionlogger_logprops %>logProps="<%= @versionlogger_logprops %>" <% end -%>/>
+  <%- if defined? @versionlogger_logprops %>logProps="<%= @versionlogger_logprops %>" <% end %>/>
 <%- end -%>
 <%- if @maj_version == '7' -%>
   <Listener className="org.apache.catalina.core.JasperListener" />
@@ -15,7 +15,12 @@
   <Listener className="org.apache.catalina.storeconfig.StoreConfigLifecycleListener" />
 <%- end -%>
 <%- if scope.function_versioncmp([@maj_version, '6']) >= 0 -%>
-  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener"<% -%>
+    <%- if @jrememleak_attrs and ! @jrememleak_attrs.empty? -%>
+      <%- @jrememleak_attrs.each_pair do |attrib, value| %>
+            <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+      <%- end -%>
+    <%- end %> />
 <%- end -%>
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
 <%- if scope.function_versioncmp([@maj_version, '7']) >= 0 -%>

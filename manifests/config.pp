@@ -12,6 +12,7 @@ class tomcat::config {
   $tomcat_user = $::tomcat::tomcat_user_real
   $tomcat_group = $::tomcat::tomcat_group_real
   $server_params_real = $::tomcat::server_params_real
+  $jrememleak_attrs = $::tomcat::jrememleak_attrs
   $jmx_listener = $::tomcat::jmx_listener
   $jmx_registry_port = $::tomcat::jmx_registry_port
   $jmx_server_port = $::tomcat::jmx_server_port
@@ -117,6 +118,7 @@ class tomcat::config {
   }
 
   # Template uses:
+  # - $jrememleak_attrs
   # - $jmx_listener
   # - $jmx_registry_port
   # - $jmx_server_port

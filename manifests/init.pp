@@ -161,6 +161,8 @@ class tomcat (
   $server_params              = {},
   #..................................................................................
   # listeners
+  $jrememleak_attrs           = {},
+  # versionlogger
   $versionlogger_listener     = true,
   $versionlogger_logargs      = undef,
   $versionlogger_logenv       = undef,
