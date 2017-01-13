@@ -2,7 +2,7 @@
 <%- if @versionlogger_listener and scope.function_versioncmp([@version_real, '7']) >= 0 -%>
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" <% -%>
   <%- if defined? @versionlogger_logargs %>logArgs="<%= @versionlogger_logargs %>" <% end -%>
-  <%- if defined? @versionlogger_logenv %>logEnv="<%= @versionlogger_logenv %>" <% end -%>
+  <%- if defined? @versionlogger_logenv %>logEnv="<%= @versionlogger_logenv.encode(:xml => :attr) %>" <% end -%>
   <%- if defined? @versionlogger_logprops %>logProps="<%= @versionlogger_logprops %>" <% end %>/>
 <%- end -%>
 <%- if @maj_version == '7' -%>

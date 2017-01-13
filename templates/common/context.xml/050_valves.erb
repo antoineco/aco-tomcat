@@ -1,9 +1,9 @@
-<%- [@valves].flatten.compact.each do |valve| %>
-  <%- valve.each_pair do |attrib, value| -%>
+<%- [@valves].flatten.compact.each do |valve| -%>
+  <%- valve.each_pair do |attrib, value| %>
     <%- if attrib == valve.keys.first -%>
-    <Valve <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == valve.keys.last %> /><% end %>
+    <Valve <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
     <%- else -%>
-           <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == valve.keys.last %> /><% end %>
+           <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
     <%- end -%>
-  <%- end -%>
+  <%- end %> />
 <%- end -%>

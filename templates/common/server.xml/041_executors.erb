@@ -1,9 +1,9 @@
-<%- [@executors].flatten.compact.each do |executor| %>
-  <%- executor.each_pair do |attrib, value| -%>
+<%- [@executors].flatten.compact.each do |executor| -%>
+  <%- executor.each_pair do |attrib, value| %>
     <%- if attrib == executor.keys.first -%>
-    <Executor <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == executor.keys.last %> /><% end %>
+    <Executor <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
     <%- else -%>
-              <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == executor.keys.last %> /><% end %>
+              <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
     <%- end -%>
-  <%- end -%>
+  <%- end %> />
 <%- end -%>

@@ -1,8 +1,7 @@
 
-      <Host name="<%= @host_name %>"<% if @host_params_real and ! @host_params_real.empty? %>
-             <%- @host_params_real.each_pair do |attrib, value| -%>
-            <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == @host_params_real.keys.last %>><% end %>
+      <Host name="<%= @host_name %>"<% -%>
+           <%- if @host_params_real and ! @host_params_real.empty? -%>
+             <%- @host_params_real.each_pair do |attrib, value| %>
+            <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
              <%- end -%>
-           <%- else -%>
->
-           <%- end -%>
+           <%- end %>>

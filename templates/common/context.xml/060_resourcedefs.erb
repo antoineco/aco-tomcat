@@ -1,9 +1,9 @@
-<%- [@resourcedefs].flatten.compact.each do |resourcedef| %>
-  <%- resourcedef.each_pair do |attrib, value| -%>
+<%- [@resourcedefs].flatten.compact.each do |resourcedef| -%>
+  <%- resourcedef.each_pair do |attrib, value| %>
     <%- if attrib == resourcedef.keys.first -%>
-    <Resource <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == resourcedef.keys.last %> /><% end %>
+    <Resource <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
     <%- else -%>
-              <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == resourcedef.keys.last %> /><% end %>
+              <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
     <%- end -%>
-  <%- end -%>
+  <%- end %> />
 <%- end -%>

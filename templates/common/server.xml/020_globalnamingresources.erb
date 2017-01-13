@@ -1,14 +1,14 @@
 
   <GlobalNamingResources>
 <%- if @globalnaming_environments and ! @globalnaming_environments.empty? -%>
-  <%- [@globalnaming_environments].flatten.compact.each do |environment| %>
-    <%- environment.each_pair do |attrib, value| -%>
+  <%- [@globalnaming_environments].flatten.compact.each do |environment| -%>
+    <%- environment.each_pair do |attrib, value| %>
       <%- if attrib == environment.keys.first -%>
-    <Environment <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == environment.keys.last %> /><% end %>
+    <Environment <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
       <%- else -%>
-                 <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == environment.keys.last %> /><% end %>
+                 <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
       <%- end -%>
-    <%- end -%>
+    <%- end %> />
   <%- end -%>
 <%- end -%>
 <%- if @userdatabase_realm -%>
@@ -20,14 +20,14 @@
               pathname="conf/tomcat-users.xml" />
 <%- end -%>
 <%- if @globalnaming_resources and ! @globalnaming_resources.empty? -%>
-  <%- [@globalnaming_resources].flatten.compact.each do |resource| %>
-    <%- resource.each_pair do |attrib, value| -%>
+  <%- [@globalnaming_resources].flatten.compact.each do |resource| -%>
+    <%- resource.each_pair do |attrib, value| %>
       <%- if attrib == resource.keys.first -%>
-    <Resource <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == resource.keys.last %> /><% end %>
+    <Resource <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
       <%- else -%>
-              <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == resource.keys.last %> /><% end %>
+              <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
       <%- end -%>
-    <%- end -%>
+    <%- end %> />
   <%- end -%>
 <%- end -%>
 

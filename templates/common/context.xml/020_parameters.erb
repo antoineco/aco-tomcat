@@ -1,9 +1,9 @@
-<%- [@parameters].flatten.compact.each do |parameter| %>
-  <%- parameter.each_pair do |attrib, value| -%>
+<%- [@parameters].flatten.compact.each do |parameter| -%>
+  <%- parameter.each_pair do |attrib, value| %>
     <%- if attrib == parameter.keys.first -%>
-    <Parameter <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == parameter.keys.last %> /><% end %>
+    <Parameter <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
     <%- else -%>
-               <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == parameter.keys.last %> /><% end %>
+               <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
     <%- end -%>
-  <%- end -%>
+  <%- end %> />
 <%- end -%>

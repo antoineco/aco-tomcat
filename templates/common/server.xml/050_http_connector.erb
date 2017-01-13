@@ -1,8 +1,7 @@
 
-    <Connector port="<%= @http_port %>"<% if @ssl_connector %> redirectPort="<%= @ssl_port %>"<% end %><% if @http_params_real and ! @http_params_real.empty? %>
-             <%- @http_params_real.each_pair do |attrib, value| -%>
-               <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><% if attrib == @http_params_real.keys.last %> /><% end %>
+    <Connector port="<%= @http_port %>"<% if @ssl_connector %> redirectPort="<%= @ssl_port %>"<% end %><% -%>
+           <%- if @http_params_real and ! @http_params_real.empty? -%>
+             <%- @http_params_real.each_pair do |attrib, value| %>
+               <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
              <%- end -%>
-           <%- else -%>
- />
-           <%- end -%>
+           <%- end %> />
