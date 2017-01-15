@@ -27,7 +27,7 @@ The tomcat module installs and configures Apache Tomcat instances from either th
 ##Module description
 
 This module will install the desired version of the Apache Tomcat Web Application Container from almost any possible source, including the repositories available on the target system (distribution repositories or third-party sources like [JPackage](http://www.jpackage.org) and [EPEL](https://fedoraproject.org/wiki/EPEL))  
-A long list of parameters permit a fine-tuning of the server and the JVM. Tomcat's most common elements are provided, and virtually any missing parameters can be included using the hash parameters present in each block.  
+A long list of parameters allow a fine tuning of the server and the JVM. Tomcat's most common elements are provided, and virtually any missing parameters can be included using the hash parameters present in each block.  
 It is also possible to configure, besides the server itself, admin applications, extra libraries, the log4j logger, etc.  
 The creation of individual instances following [Apache's guidelines](http://tomcat.apache.org/tomcat-9.0-doc/RUNNING.txt) is supported via a custom type.
 
@@ -406,12 +406,15 @@ Parameters common to both `tomcat` and `tomcat::instance`
 **Packages and service**
 
 #####`version`
-Tomcat full version number. The valid format is 'x.y.z[-package_suffix]'  
-Must include the full package suffix if Tomcat is installed from a package repository, the package `ensure` attribute will be enforced to this value.  
+Tomcat full version number. The valid format is 'x.y.z[.M##][-package_suffix]'. The package `ensure` attribute will be enforced to this value if Tomcat is installed from a package repository.  
+Must include the full package suffix on Debian variants.  
 *Note:* multi-version only supported if installed from archive
 
 #####`archive_source`
-Source of the Tomcat server archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin/apache-tomcat-<version>.tar.gz`
+Base path of the source of the Tomcat installation archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin`.
+
+#####`archive_filename`
+File name of the Tomcat installation archive, if installed from archive. Defaults to `apache-tomcat-<version>.tar.gz`.
 
 #####`proxy_server`
 URL of a proxy server used for downloading Tomcat archives
@@ -466,7 +469,7 @@ Whether to install Tomcat extra libraries. Boolean value. Defaults to `false`.
 *Warning:* extra libraries are enabled globally if defined within the global context
 
 #####`extras_source`
-Source of the Tomcat extra libraries. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin/extras`
+Base path of the source of the Tomcat extra libraries. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin/extras`.
 
 #####`manage_firewall`
 Whether to automatically manage firewall rules. Boolean value. Defaults to `false`.
@@ -566,7 +569,7 @@ Whether to enable the [SSL-enabled HTTP connector](http://tomcat.apache.org/tomc
 #####`ajp_connector`
 Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-9.0-doc/config/ajp). Boolean value. Defaults to `true`. The Connector can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `ajp_port`: AJP connector port. Defaults to `8009` (global) / `8010` (instance).
- - `ajp_protocol`: protocol to use. Defaults to `AJP/1.3`
+ - `ajp_protocol`: protocol to use. Defaults to `AJP/1.3`.
  - `ajp_use_threadpool`: whether to use the default Executor within the AJP connector. Defaults to `false`.
  - `ajp_connectiontimeout`: timeout for a connection
  - `ajp_uriencoding`: encoding to use for URI
@@ -575,14 +578,14 @@ Whether to enable the [AJP connector](http://tomcat.apache.org/tomcat-9.0-doc/co
 
 #####`connectors`
 An array of custom `Connector` entries to be added to the `Service` block. Each entry is to be supplied as a hash of attributes/values for the `Connector` XML node. See [HTTP](http://tomcat.apache.org/tomcat-9.0-doc/config/http.html)/[AJP](http://tomcat.apache.org/tomcat-9.0-doc/config/ajp.html) for the list of possible attributes.  
-Additionally, the following parameters can be used to configure nested elements:
+Additionally, the following attributes are treated differently and used to configure nested elements:
  - `upgradeprotocol`: [HTTP Upgrade Protocol element](https://tomcat.apache.org/tomcat-9.0-doc/config/http2.html). Hash parameter
  - `sslhostconfigs`: [SSLHostConfig element(s)](https://tomcat.apache.org/tomcat-9.0-doc/config/http.html#SSL_Support_-_SSLHostConfig). Array of Hashs parameter
    - `certificates`: [Certificate element(s)](https://tomcat.apache.org/tomcat-9.0-doc/config/http.html#SSL_Support_-_Certificate). Array of Hashs parameter
 
 #####`engine_name`
 Name of the default [Engine](http://tomcat.apache.org/tomcat-9.0-doc/config/engine.html). Defaults to `Catalina`. The Engine can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
- - `engine_defaulthost`: default host name. Defaults to [`${host_name}`](#host_name)
+ - `engine_defaulthost`: default host name. Defaults to [`${host_name}`](#host_name).
  - `engine_jvmroute`: identifier which must be used in load balancing scenarios to enable session affinity
  - `engine_params`: optional hash of additional attributes/values to put in the Engine container
 
@@ -598,7 +601,7 @@ Boolean value. Defaults to `true`. The User Database Realm is inserted within th
 
 #####`realms`
 An array of custom `Realm` entries to be added to the `Engine` container. Each entry is to be supplied as a hash of attributes/values for the `Realm` XML node. See [Realm](http://tomcat.apache.org/tomcat-9.0-doc/config/realm.html) for the list of possible attributes.  
-Additionally, the following parameters can be used to configure nested elements:
+Additionally, the following attributes are treated differently and used to configure nested elements:
  - `credentialhandler`: [CredentialHandler Component](https://tomcat.apache.org/tomcat-9.0-doc/config/credentialhandler.html). Hash parameter
 
 #####`host_name`
@@ -657,7 +660,7 @@ initParameters for the `jsp` servlet. Generate a single hash for the [`${jsp_ser
  - `jsp_servlet_javaencoding`: Java file encoding to use for generating java source files
  - `jsp_servlet_modificationtestinterval`: interval in seconds to check a JSP for modification
  - `jsp_servlet_trimspaces`: whether to trim white spaces in template text between actions or directives
- - `jsp_servlet_xpoweredby`: whether X-Powered-By response header is added by servlet. Defaults to `false`
+ - `jsp_servlet_xpoweredby`: whether X-Powered-By response header is added by servlet. Defaults to `false`.
  - `jsp_servlet_params`: optional hash of additional attributes/values to configure the `jsp` servlet
 
 #####`default_servletmapping_urlpatterns`, `jsp_servletmapping_urlpatterns`, `sessionconfig_sessiontimeout`, `welcome_file_list`
@@ -800,14 +803,14 @@ A hash of attributes/values for the `Manager` nested component. See [Manager](ht
 
 #####`realm`
 A hash of attributes/values for the `Realm` nested component. See [Realm](http://tomcat.apache.org/tomcat-9.0-doc/config/realm.html) for the list of possible attributes.  
-Additionally, the following parameters can be used to configure nested elements:
+Additionally, the following attributes are treated differently and used to configure nested elements:
  - `credentialhandler`: [CredentialHandler Component](https://tomcat.apache.org/tomcat-9.0-doc/config/credentialhandler.html). Hash parameter
 
 #####`resources`
 A hash of attributes/values for the `Resources` nested component. See [Resources](http://tomcat.apache.org/tomcat-9.0-doc/config/resources.html) for the list of possible attributes.
 
 #####`watchedresource`
-An array of `WatchedResource` entries to be added to the `Context` container. Each entry is to be supplied as a string. Defaults to `['WEB-INF/web.xml','${catalina.base}/conf/web.xml']`
+An array of `WatchedResource` entries to be added to the `Context` container. Each entry is to be supplied as a string. Defaults to `['WEB-INF/web.xml','${catalina.base}/conf/web.xml']`.
 
 #####`parameters`
 An array of `Parameter` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Parameter` XML node. See [Context Parameters](http://tomcat.apache.org/tomcat-9.0-doc/config/context.html#Context_Parameters) for the list of possible attributes.

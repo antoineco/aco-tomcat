@@ -1,3 +1,15 @@
+###1.7.0
+
+* Add support for Tomcat 9
+ - Configurable nested UpgradeProtocol, SSLHostConfig and Certificate elements (Connector)
+ - Configurable nested CredentialHandler element (Realm)
+ - *Refer to the configuration examples for further usage instructions*
+* Make the VersionLogger Listener attributes configurable via `versionlogger_*` parameters
+* Make the JreMemoryLeakPrevention Listener attributes configurable via `jrememleak_attrs` parameter
+* New parameter `jmx_uselocalports` for the JMX Listener
+* **Warning:** the path to Tomcat archives is now composed of both `archive_source` and `archive_filename` (new) parameters
+* Fix ignored `listeners` parameter
+
 ###1.6.2
 
 * Add proxy support via new parameters `proxy_server` and `proxy_type`
