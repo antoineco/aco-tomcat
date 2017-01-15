@@ -7,9 +7,11 @@
 # [*install_from*]
 #   what type of source to install from (valid: 'package'|'archive')
 # [*version*]
-#   tomcat full version number (valid format: x.y.z[-package_suffix])
+#   tomcat full version number (valid format: x.y.z[.M##][-package_suffix])
 # [*archive_source*]
-#   where to download archive from (only if installed from archive)
+#   base path to the archive to download (only if installed from archive)
+# [*archive_filename*]
+#   file name of the archive to download (only if installed from archive)
 # [*proxy_server*]
 #   proxy server url
 # [*proxy_type*]
@@ -49,7 +51,7 @@
 # [*extras_enable*]
 #   install extra libraries (boolean)
 # [*extras_source*]
-#   where to download extra libraries from
+#   base path to tomcat extra libraries
 # [*extras_package_name*]
 #   install extras from given package(s)
 # [*manage_firewall*]
@@ -105,6 +107,7 @@ class tomcat (
   $install_from               = 'package',
   $version                    = $::tomcat::params::version,
   $archive_source             = undef,
+  $archive_filename           = undef,
   $proxy_server               = undef,
   $proxy_type                 = undef,
   $package_name               = $::tomcat::params::package_name,
@@ -352,7 +355,7 @@ class tomcat (
   if $install_from !~ /^(package|archive)$/ {
     fail('$install_from must be either \'package\' or \'archive\'')
   }
-  if $version !~ /^(?:[0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(?:-.*)?$/ {
+  if $version !~ /^([0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(\.M[0-9]{1,2})(-.*)?$/ {
     fail('incorrect tomcat version number')
   }
   if $service_ensure !~ /^(stopped|running)$/ {
@@ -381,9 +384,15 @@ class tomcat (
   }
 
   if $archive_source == undef {
-    $archive_source_real = "http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version_real}/bin/apache-tomcat-${version_real}.tar.gz"
+    $archive_source_real = "http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version_real}/bin"
   } else {
     $archive_source_real = $archive_source
+  }
+
+  if $archive_filename == undef {
+    $archive_filename_real = "apache-tomcat-${version_real}.tar.gz"
+  } else {
+    $archive_filename_real = $archive_filename
   }
 
   if $extras_source == undef {

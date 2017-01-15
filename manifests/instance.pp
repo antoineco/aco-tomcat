@@ -7,9 +7,11 @@
 # [*root_path*]
 #   common root installation path for all instances
 # [*version*]
-#   tomcat full version number (valid format: x.y.z[-package_suffix])
+#   tomcat full version number (valid format: x.y.z[.M##][-package_suffix])
 # [*archive_source*]
-#   where to download archive from (only if installed from archive)
+#   base path to the archive to download (only if installed from archive)
+# [*archive_filename*]
+#   file name of the archive to download (only if installed from archive)
 # [*proxy_server*]
 #   proxy server url
 # [*proxy_type*]
@@ -35,7 +37,7 @@
 # [*extras_enable*]
 #   install extra libraries (boolean)
 # [*extras_source*]
-#   where to download extra libraries from
+#   base path to tomcat extra libraries
 # [*manage_firewall*]
 #   manage firewall rules (boolean)
 # [*checksum_verify*]
@@ -78,6 +80,7 @@ define tomcat::instance (
   $root_path                  = '/var/lib/tomcats',
   $version                    = $::tomcat::version_real,
   $archive_source             = undef,
+  $archive_filename           = undef,
   $proxy_server               = undef,
   $proxy_type                 = undef,
   $service_name               = undef,
@@ -322,7 +325,7 @@ define tomcat::instance (
   }
 
   # parameters validation
-  if $version !~ /^(?:[0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(?:-.*)?$/ {
+  if $version !~ /^([0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(\.M[0-9]{1,2})(-.*)?$/ {
     fail('incorrect tomcat version number')
   }
   if $service_ensure !~ /^(stopped|running)$/ {
@@ -359,9 +362,15 @@ define tomcat::instance (
   }
 
   if $archive_source == undef {
-    $archive_source_real = "http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version_real}/bin/apache-tomcat-${version_real}.tar.gz"
+    $archive_source_real = "http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version_real}/bin"
   } else {
     $archive_source_real = $archive_source
+  }
+
+  if $archive_filename == undef {
+    $archive_filename_real = "apache-tomcat-${version_real}.tar.gz"
+  } else {
+    $archive_filename_real = $archive_filename
   }
 
   if $extras_source == undef {
@@ -689,7 +698,7 @@ define tomcat::instance (
     } ->
     archive { "apache-tomcat-${version_real}.tar.gz":
       path            => "${catalina_home_real}/apache-tomcat-${version_real}.tar.gz",
-      source          => $archive_source_real,
+      source          => "${archive_source_real}/${archive_filename_real}",
       cleanup         => true,
       extract         => true,
       user            => $tomcat_user,

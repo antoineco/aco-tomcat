@@ -41,7 +41,7 @@ class tomcat::install::archive {
   } ->
   archive { "apache-tomcat-${::tomcat::version_real}.tar.gz":
     path            => "${::tomcat::catalina_home_real}/apache-tomcat-${::tomcat::version_real}.tar.gz",
-    source          => $::tomcat::archive_source_real,
+    source          => "${::tomcat::archive_source_real}/${::tomcat::archive_filename_real}",
     proxy_server    => $::tomcat::proxy_server,
     proxy_type      => $::tomcat::proxy_type,
     cleanup         => true,
