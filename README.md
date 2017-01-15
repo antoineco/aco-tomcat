@@ -215,7 +215,7 @@ class { 'tomcat':
 }
 ```
 
-Configure custom listeners
+Configure custom Listeners
 
 ```puppet
 class { 'tomcat':
@@ -254,6 +254,26 @@ class { 'tomcat':
   catalina_opts     => [ '-Dcom.sun.management.jmxremote',
                          '-Dcom.sun.management.jmxremote.ssl=false',
                          '-Dcom.sun.management.jmxremote.authenticate=false' ]
+}
+```
+
+Configure custom Realms
+
+```puppet
+class { 'tomcat':
+  …
+  realms => [
+    { 'className' => 'org.apache.catalina.realm.MemoryRealm',
+      'pathname'  => 'conf/myUsersDb.xml'
+    },
+    { 'className'         => 'org.apache.catalina.realm.DataSourceRealm',
+      'dataSourceName'    => 'jdbc/myDataSource',
+      'credentialhandler' => {
+        'className' => 'org.apache.catalina.realm.MessageDigestCredentialHandler',
+        'algorithm' => 'md5'
+      }
+    }
+  ]
 }
 ```
 
@@ -577,7 +597,9 @@ Whether to enable the [UserDatabase Realm](http://tomcat.apache.org/tomcat-9.0-d
 Boolean value. Defaults to `true`. The User Database Realm is inserted within the Lock Out Realm if it is enabled.
 
 #####`realms`
-An array of custom `Realm` entries to be added to the `Engine` container. Each entry is to be supplied as a hash of attributes/values for the `Realm` XML node. See [Realm](http://tomcat.apache.org/tomcat-9.0-doc/config/realm.html) for the list of possible attributes.
+An array of custom `Realm` entries to be added to the `Engine` container. Each entry is to be supplied as a hash of attributes/values for the `Realm` XML node. See [Realm](http://tomcat.apache.org/tomcat-9.0-doc/config/realm.html) for the list of possible attributes.  
+Additionally, the following parameters can be used to configure nested elements:
+ - `credentialhandler`: [CredentialHandler Component](https://tomcat.apache.org/tomcat-9.0-doc/config/credentialhandler.html). Hash parameter
 
 #####`host_name`
 Name of the default [Host](http://tomcat.apache.org/tomcat-9.0-doc/config/host.html). Defaults to `localhost`. The Host can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
@@ -777,7 +799,9 @@ A hash of attributes/values for the `Loader` nested component. See [Loader](http
 A hash of attributes/values for the `Manager` nested component. See [Manager](http://tomcat.apache.org/tomcat-9.0-doc/config/manager.html) for the list of possible attributes.
 
 #####`realm`
-A hash of attributes/values for the `Realm` nested component. See [Realm](http://tomcat.apache.org/tomcat-9.0-doc/config/realm.html) for the list of possible attributes.
+A hash of attributes/values for the `Realm` nested component. See [Realm](http://tomcat.apache.org/tomcat-9.0-doc/config/realm.html) for the list of possible attributes.  
+Additionally, the following parameters can be used to configure nested elements:
+ - `credentialhandler`: [CredentialHandler Component](https://tomcat.apache.org/tomcat-9.0-doc/config/credentialhandler.html). Hash parameter
 
 #####`resources`
 A hash of attributes/values for the `Resources` nested component. See [Resources](http://tomcat.apache.org/tomcat-9.0-doc/config/resources.html) for the list of possible attributes.
