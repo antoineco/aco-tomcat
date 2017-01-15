@@ -14,13 +14,38 @@
 <%- end -%>
 <%- if @realms and ! @realms.empty? -%>
   <%- [@realms].flatten.compact.each do |realm| -%>
+    <%-# -- BEGIN initialize nested CredentialHandler -- %>
+    <%- @credentialhandler = {} -%>
+    <%- @has_nested_credentialhandler = false -%>
+    <%- if realm.has_key? 'credentialhandler' -%>
+      <%- @credentialhandler = realm.delete('credentialhandler') -%>
+    <%- end -%>
+    <%- if defined? @credentialhandler and ! @credentialhandler.empty? -%>
+      <%- @has_nested_credentialhandler = true -%>
+    <%- end -%>
+    <%-# -- END initialize nested CredentialHandler -- %>
     <%- realm.each_pair do |attrib, value| %>
       <%- if attrib == realm.keys.first -%>
 <%= @indent %>      <Realm <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
       <%- else -%>
 <%= @indent %>             <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
       <%- end -%>
-    <%- end %> />
+    <%- end %><%= @has_nested_credentialhandler ? ">" : " />" %>
+    <%-# --                         -- %>
+    <%-# -- CredentialHandler block -- %>
+    <%-# --                         -- %>
+    <%- if @has_nested_credentialhandler -%>
+      <%- @credentialhandler.each_pair do |attrib, value| -%>
+        <%- if attrib == @credentialhandler.keys.first -%>
+<%= @indent %>          <CredentialHandler <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+        <%- else %>
+<%= @indent %>                             <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+        <%- end -%>
+      <%- end %> />
+    <%- end -%>
+    <%- if @has_nested_credentialhandler -%>
+<%= @indent %>      </Realm>
+    <%- end -%>
   <%- end -%>
 <%- end -%>
 <%- if @lockout_realm and @combined_realm %>
