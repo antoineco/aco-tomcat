@@ -29,11 +29,11 @@ class tomcat::params {
         }
         'Amazon' : {
           # https://alas.aws.amazon.com
-          $version = '8.0.39'              # ALAS-2016-778
+          $version = '8.0.39'           # ALAS-2017-796
           $package_name = 'tomcat8'
-          # $version = '7.0.73-1.23.amzn1' # ALAS-2016-777
+          # $version = '7.0.75'         # ALAS-2017-796
           # $package_name = 'tomcat7'
-          # $version = '6.0.48-1.8.amzn1'  # ALAS-2016-776
+          # $version = '6.0.48'         # ALAS-2016-776
           # $package_name = 'tomcat6'
           $systemd = false
         }
@@ -166,15 +166,15 @@ class tomcat::params {
             # jessie
             # https://packages.debian.org/jessie/tomcat8
             '8'     : {
-              $version = '8.0.14-1+deb8u6'
+              $version = '8.0.14-1+deb8u7'
               $package_name = 'tomcat8'
-              # $version = '7.0.56-3+deb8u6'
+              # $version = '7.0.56-3+deb8u8'
               # $package_name = 'tomcat7'
             }
             # wheezy
             # https://packages.debian.org/wheezy/tomcat7
             '7'     : {
-              $version = '7.0.28-4+deb7u9'
+              $version = '7.0.28-4+deb7u10'
               $package_name = 'tomcat7'
               # $version = '6.0.45+dfsg-1~deb7u5'
               # $package_name = 'tomcat6'
@@ -189,7 +189,7 @@ class tomcat::params {
             # yakkety
             # http://packages.ubuntu.com/yakkety/amd64/tomcat8/download
             '16.10' : {
-              $version = '8.0.37-1'
+              $version = '8.0.37-1ubuntu0.1'
               $package_name = 'tomcat8'
               # $version = '7.0.72-1'
               # $package_name = 'tomcat7'
@@ -197,7 +197,7 @@ class tomcat::params {
             # xenial
             # http://packages.ubuntu.com/xenial/amd64/tomcat8/download
             '16.04' : {
-              $version = '8.0.32-1ubuntu1.2'
+              $version = '8.0.32-1ubuntu1.3'
               $package_name = 'tomcat8'
               # $version = '7.0.68-1ubuntu0.1'
               # $package_name = 'tomcat7'
@@ -228,7 +228,7 @@ class tomcat::params {
             # trusty
             # http://packages.ubuntu.com/trusty/amd64/tomcat7/download
             '14.04' : {
-              $version = '7.0.52-1ubuntu0.7'
+              $version = '7.0.52-1ubuntu0.9'
               $package_name = 'tomcat7'
               # $version = '6.0.39-1'
               # $package_name = 'tomcat6'
@@ -259,7 +259,7 @@ class tomcat::params {
             '12.04' : {
               $version = '7.0.26-1ubuntu1.2'
               $package_name = 'tomcat7'
-              # $version = '6.0.35-1ubuntu3.8'
+              # $version = '6.0.35-1ubuntu3.10'
               # $package_name = 'tomcat6'
             }
             default : {
