@@ -322,6 +322,7 @@ class tomcat (
   #..................................................................................
   # session-config
   $sessionconfig_sessiontimeout         = 30,
+  $sessionconfig_trackingmode           = undef,
   #..................................................................................
   # welcome-file-list
   $welcome_file_list                    = ['index.html', 'index.htm', 'index.jsp' ],

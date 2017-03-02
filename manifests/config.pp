@@ -334,6 +334,7 @@ class tomcat::config {
     default_servletmapping_urlpatterns => $::tomcat::default_servletmapping_urlpatterns,
     jsp_servletmapping_urlpatterns     => $::tomcat::jsp_servletmapping_urlpatterns,
     sessionconfig_sessiontimeout       => $::tomcat::sessionconfig_sessiontimeout,
+    sessionconfig_trackingmode         => $::tomcat::sessionconfig_trackingmode,
     welcome_file_list                  => $::tomcat::welcome_file_list,
     notify                             => $notify_service
   }
