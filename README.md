@@ -497,7 +497,7 @@ Optional hash containing UserDatabase role entries. See [tomcat::userdb_role_ent
 **Server configuration**
 
 #####`server_control_port`
-Server control port. Defaults to `8005` (global) / `8006` (instance). The Server can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
+Server control port. Defaults to `8005` (global) / `8006` (instance). The [Server](https://tomcat.apache.org/tomcat-9.0-doc/config/server.html) can be further configured via a series of parameters (will use Tomcat's defaults when not specified):
  - `server_shutdown`: command string that must be received in order to shut down Tomcat. Defaults to `SHUTDOWN`.
  - `server_address`: address on which this server waits for a shutdown command
  - `server_params`: optional hash of additional attributes/values to put in the Server element
@@ -861,10 +861,10 @@ List of request URI mapped to the `default` servlet. Defaults to `['/']`.
 List of request URI mapped to the `jsp` servlet. Defaults to `['*.jsp', '*.jspx']`.
 
 #####`sessionconfig_sessiontimeout`
-Default session timeout for applications, in minutes. Defaults to `30`.
+Default session timeout for applications, in minutes. Defaults to `30`. See [SessionConfig](https://tomcat.apache.org/tomcat-9.0-doc/api/org/apache/tomcat/util/descriptor/web/SessionConfig.html) for details about session configuration.
 
 #####`sessionconfig_trackingmode`
-Default session tracking mode for applications. [Defaults to](https://tomcat.apache.org/tomcat-9.0-doc/servletapi/javax/servlet/ServletContext.html#getDefaultSessionTrackingModes--) `URL`, `COOKIE` (unless the context parameter cookies=false) and `SSL` (if a connector used by this context has secure=true).
+Default session tracking mode for applications. See [Enum SessionTrackingMode](https://tomcat.apache.org/tomcat-9.0-doc/servletapi/javax/servlet/SessionTrackingMode.html) for a list of possible values, and [ServletContext.getEffectiveSessionTrackingModes()](https://tomcat.apache.org/tomcat-9.0-doc/servletapi/javax/servlet/ServletContext.html#getDefaultSessionTrackingModes--) for a description of the default behaviour.
 
 #####`welcome_file_list`
 List of file names to look up and serve when a request URI refers to a directory. Defaults to `['index.html', 'index.htm', 'index.jsp' ]`.
