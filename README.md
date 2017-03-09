@@ -663,7 +663,7 @@ initParameters for the `jsp` servlet. Generate a single hash for the [`${jsp_ser
  - `jsp_servlet_xpoweredby`: whether X-Powered-By response header is added by servlet. Defaults to `false`.
  - `jsp_servlet_params`: optional hash of additional attributes/values to configure the `jsp` servlet
 
-#####`default_servletmapping_urlpatterns`, `jsp_servletmapping_urlpatterns`, `sessionconfig_sessiontimeout`, `welcome_file_list`
+#####`default_servletmapping_urlpatterns`, `jsp_servletmapping_urlpatterns`, `sessionconfig_sessiontimeout`, `sessionconfig_trackingmode`, `welcome_file_list`
 See [tomcat::web](#define-tomcatweb) defined type.
 
 **Global configuration file / environment variables**
@@ -862,6 +862,9 @@ List of request URI mapped to the `jsp` servlet. Defaults to `['*.jsp', '*.jspx'
 
 #####`sessionconfig_sessiontimeout`
 Default session timeout for applications, in minutes. Defaults to `30`.
+
+#####`sessionconfig_trackingmode`
+Default session tracking mode for applications. [Defaults to](https://tomcat.apache.org/tomcat-9.0-doc/servletapi/javax/servlet/ServletContext.html#getDefaultSessionTrackingModes--) `URL`, `COOKIE` (unless the context parameter cookies=false) and `SSL` (if a connector used by this context has secure=true).
 
 #####`welcome_file_list`
 List of file names to look up and serve when a request URI refers to a directory. Defaults to `['index.html', 'index.htm', 'index.jsp' ]`.

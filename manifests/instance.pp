@@ -290,6 +290,7 @@ define tomcat::instance (
   #..................................................................................
   # session-config
   $sessionconfig_sessiontimeout         = 30,
+  $sessionconfig_trackingmode           = undef,
   #..................................................................................
   # welcome-file-list
   $welcome_file_list                    = ['index.html', 'index.htm', 'index.jsp' ],
@@ -1141,6 +1142,7 @@ define tomcat::instance (
     default_servletmapping_urlpatterns => $default_servletmapping_urlpatterns,
     jsp_servletmapping_urlpatterns     => $jsp_servletmapping_urlpatterns,
     sessionconfig_sessiontimeout       => $sessionconfig_sessiontimeout,
+    sessionconfig_trackingmode         => $sessionconfig_trackingmode,
     welcome_file_list                  => $welcome_file_list,
     version                            => $version_real,
     require                            => File["${catalina_base_real}/conf"],

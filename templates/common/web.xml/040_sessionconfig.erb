@@ -2,5 +2,10 @@
   <!-- ==================== Default Session Configuration ================= -->
 
     <session-config>
+<% if @sessionconfig_sessiontimeout -%>
         <session-timeout><%= @sessionconfig_sessiontimeout %></session-timeout>
+<% end -%>
+<% if @sessionconfig_trackingmode -%>
+        <tracking-mode><%= @sessionconfig_trackingmode %></tracking-mode>
+<% end -%>
     </session-config>
