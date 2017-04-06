@@ -696,7 +696,8 @@ define tomcat::instance (
       path    => $catalina_home_real,
       require => File['tomcat instances root'],
       alias   => $catalina_home_alias
-    } ->
+    }
+
     archive { "apache-tomcat-${version_real}.tar.gz":
       path            => "${catalina_home_real}/apache-tomcat-${version_real}.tar.gz",
       source          => "${archive_source_real}/${archive_filename_real}",
@@ -709,7 +710,8 @@ define tomcat::instance (
       checksum        => $checksum,
       extract_path    => $catalina_home_real,
       extract_command => 'tar xf %s --strip-components=1',
-      creates         => "${catalina_home_real}/LICENSE"
+      creates         => "${catalina_home_real}/LICENSE",
+      require         => File["instance ${name} catalina_home"]
     }
 
     # ordering
@@ -787,10 +789,11 @@ define tomcat::instance (
       ensure  => directory,
       path    => "${catalina_base_real}/conf/policy.d",
       require => File["${catalina_base_real}/conf"]
-    } ->
+    }
     file { "instance ${name} catalina.policy":
-      ensure => present,
-      path   => "${catalina_base_real}/conf/policy.d/catalina.policy"
+      ensure  => present,
+      path    => "${catalina_base_real}/conf/policy.d/catalina.policy",
+      require => File["instance ${name} conf/policy.d directory"]
     }
   }
 
@@ -1239,8 +1242,10 @@ define tomcat::instance (
       }
 
       file { ["${catalina_base_real}/conf/Catalina","${catalina_base_real}/conf/Catalina/${host_name}"]:
-        ensure  => directory
-      } ->
+        ensure => directory,
+        tag    => "instance_${name}_catalina_tree"
+      }
+
       ::tomcat::context {
         "instance ${name} manager.xml":
           path   => "${catalina_base_real}/conf/Catalina/${host_name}/manager.xml",
@@ -1248,7 +1253,8 @@ define tomcat::instance (
                       'docBase'             => "${admin_webapps_path}/manager",
                       'antiResourceLocking' => false,
                       'privileged'          => true },
-          notify => $notify_service;
+          notify => $notify_service,
+          tag    => "instance_${name}_admin_context";
 
         "instance ${name} host-manager.xml":
           path   => "${catalina_base_real}/conf/Catalina/${host_name}/host-manager.xml",
@@ -1256,8 +1262,12 @@ define tomcat::instance (
                       'docBase'             => "${admin_webapps_path}/host-manager",
                       'antiResourceLocking' => false,
                       'privileged'          => true },
-          notify => $notify_service
+          notify => $notify_service,
+          tag    => "instance_${name}_admin_context"
       }
+
+      # ordering
+      Tomcat::Context["instance_${name}_admin_context"] -> File <| tag == "instance_${name}_catalina_tree" |>
     } else {
       # warn if admin webapps were selected for installation in a multi-version setup
       if $admin_webapps {

@@ -38,7 +38,8 @@ class tomcat::install::archive {
 
   file { $::tomcat::catalina_home_real:
     ensure => directory
-  } ->
+  }
+
   archive { "apache-tomcat-${::tomcat::version_real}.tar.gz":
     path            => "${::tomcat::catalina_home_real}/apache-tomcat-${::tomcat::version_real}.tar.gz",
     source          => "${::tomcat::archive_source_real}/${::tomcat::archive_filename_real}",
@@ -53,7 +54,8 @@ class tomcat::install::archive {
     checksum        => $::tomcat::checksum,
     extract_path    => $::tomcat::catalina_home_real,
     extract_command => 'tar xf %s --strip-components=1',
-    creates         => "${::tomcat::catalina_home_real}/LICENSE"
+    creates         => "${::tomcat::catalina_home_real}/LICENSE",
+    require         => File[$::tomcat::catalina_home_real]
   }
 
 
