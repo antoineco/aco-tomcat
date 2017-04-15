@@ -6,14 +6,18 @@ class tomcat::params {
       case $::operatingsystem {
         'Fedora' : {
           case $::operatingsystemmajrelease {
+            '26'    : {
+              $version = '1:8.0.42'
+              $package_name = 'tomcat'
+            }
             # https://dl.fedoraproject.org/pub/fedora/linux/updates/25/x86_64/t/
             '25'    : {
-              $version = '1:8.0.39'
+              $version = '1:8.0.42'
               $package_name = 'tomcat'
             }
             # https://dl.fedoraproject.org/pub/fedora/linux/updates/24/x86_64/t/
             '24'    : {
-              $version = '1:8.0.39'
+              $version = '1:8.0.42'
               $package_name = 'tomcat'
             }
             # https://dl.fedoraproject.org/pub/fedora/linux/updates/23/x86_64/t/
@@ -29,11 +33,11 @@ class tomcat::params {
         }
         'Amazon' : {
           # https://alas.aws.amazon.com
-          $version = '8.0.39'           # ALAS-2017-796
+          $version = '8.0.41'           # ALAS-2017-796
           $package_name = 'tomcat8'
           # $version = '7.0.75'         # ALAS-2017-796
           # $package_name = 'tomcat7'
-          # $version = '6.0.48'         # ALAS-2016-776
+          # $version = '6.0.51'         # ALAS-2017-810
           # $package_name = 'tomcat6'
           $systemd = false
         }
@@ -166,7 +170,7 @@ class tomcat::params {
             # jessie
             # https://packages.debian.org/jessie/tomcat8
             '8'     : {
-              $version = '8.0.14-1+deb8u7'
+              $version = '8.0.14-1+deb8u8'
               $package_name = 'tomcat8'
               # $version = '7.0.56-3+deb8u8'
               # $package_name = 'tomcat7'
@@ -174,7 +178,7 @@ class tomcat::params {
             # wheezy
             # https://packages.debian.org/wheezy/tomcat7
             '7'     : {
-              $version = '7.0.28-4+deb7u10'
+              $version = '7.0.28-4+deb7u11'
               $package_name = 'tomcat7'
               # $version = '6.0.45+dfsg-1~deb7u5'
               # $package_name = 'tomcat6'
@@ -186,6 +190,14 @@ class tomcat::params {
         }
         'Ubuntu' : {
           case $::operatingsystemrelease {
+            # zesty
+            # http://packages.ubuntu.com/zesty/amd64/tomcat8/download
+            '17.04' : {
+              $version = '8.0.38-2ubuntu2'
+              $package_name = 'tomcat8'
+              # $version = '7.0.72-1'
+              # $package_name = 'tomcat7'
+            }
             # yakkety
             # http://packages.ubuntu.com/yakkety/amd64/tomcat8/download
             '16.10' : {
@@ -228,7 +240,7 @@ class tomcat::params {
             # trusty
             # http://packages.ubuntu.com/trusty/amd64/tomcat7/download
             '14.04' : {
-              $version = '7.0.52-1ubuntu0.9'
+              $version = '7.0.52-1ubuntu0.10'
               $package_name = 'tomcat7'
               # $version = '6.0.39-1'
               # $package_name = 'tomcat6'
