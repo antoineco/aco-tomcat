@@ -1,3 +1,7 @@
+### 1.8.1
+
+Hotfix: remove references to tomcat-juli extra libraries
+
 ### 1.8.0
 
 * Drop support for internal logging with log4j
