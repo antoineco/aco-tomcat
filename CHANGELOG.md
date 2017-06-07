@@ -1,15 +1,15 @@
 ### 1.8.0
 
 * Drop support for internal logging with log4j
- - [Removed](https://bz.apache.org/bugzilla/show_bug.cgi?id=58588) in Tomcat 8.5
+  - [Removed](https://bz.apache.org/bugzilla/show_bug.cgi?id=58588) in Tomcat 8.5
 * Update default package versions
 
 ### 1.7.0
 
 * Add support for Tomcat 9
- - Configurable nested UpgradeProtocol, SSLHostConfig and Certificate elements (Connector)
- - Configurable nested CredentialHandler element (Realm)
- - *Refer to the configuration examples for further usage instructions*
+  - Configurable nested UpgradeProtocol, SSLHostConfig and Certificate elements (Connector)
+  - Configurable nested CredentialHandler element (Realm)
+  - *Refer to the configuration examples for further usage instructions*
 * Make the VersionLogger Listener attributes configurable via `versionlogger_*` parameters
 * Make the JreMemoryLeakPrevention Listener attributes configurable via `jrememleak_attrs` parameter
 * New parameter `jmx_uselocalports` for the JMX Listener
@@ -26,17 +26,17 @@
 ### 1.6.1
 
 * Unset `provider` parameter on all `archive` resources (from `puppet-archive` module)
- - quick and dirty workaround until [SERVER-94](https://tickets.puppetlabs.com/browse/SERVER-94) gets fixed
- - **Warning:** may break behind a HTTP proxy (untested)
+  - quick and dirty workaround until [SERVER-94](https://tickets.puppetlabs.com/browse/SERVER-94) gets fixed
+  - **Warning:** may break behind a HTTP proxy (untested)
 
 ### 1.6.0
 
 * Configurable `web.xml` files
- - **Warning:** replaces `default_servlet` instance parameter
- - New `tomcat::web` defined type to manage `web.xml` files
- - See `default_servlet*`, `jsp_servlet*`, `sessionconfig_sessiontimeout` and `welcome_file_list` parameters
+  - **Warning:** replaces `default_servlet` instance parameter
+  - New `tomcat::web` defined type to manage `web.xml` files
+  - See `default_servlet*`, `jsp_servlet*`, `sessionconfig_sessiontimeout` and `welcome_file_list` parameters
 * Update systemd unit, expect tomcat script path as set in latest available packages
- - **Warning:** check the current location of your tomcat startup script, especially if using an old OS package version
+  - **Warning:** check the current location of your tomcat startup script, especially if using an old OS package version
 * Replace or remove calls to deprecated `validate_*` stdlib functions
 * Add support for Fedora 25 and Amazon Linux 2016.09
 * Drop support for Fedora 22
@@ -52,7 +52,7 @@
 * Allow enabling the Security Manager on `archive` installations ([hdeadman](https://github.com/hdeadman))
 * Fix default systemd service type on `archive` installations ([hdeadman](https://github.com/hdeadman))
 * Improve usage of clustering features (SimpleTcpCluster) ([hdeadman](https://github.com/hdeadman))
- - see undocumented `cluster_*` parameters
+  - see undocumented `cluster_*` parameters
 * Fix empty user/group in systemd units
 * Encode values in XML templates ([scitechfh](https://github.com/scitechfh))
 * Set default provider to `curl` for `archive` resources ([scitechfh](https://github.com/scitechfh))
@@ -71,12 +71,12 @@
 * Drop support for Debian 6 (Squeeze), OpenSuSE 13.1 and below, Fedora 21 and below
 * Update default package versions
 * Bug fixes:
- - parameters left blank in systemd units on some Puppet versions
- - work around for [PUP-1597](https://tickets.puppetlabs.com/browse/PUP-3615) on RHEL 7
- - dependency cycle between service and context resources
- - file permissions too strict on configuration files
- - activation of extras/log4j not working with multi-version setups
- - tomcat service not notified of all relevant changes
+  - parameters left blank in systemd units on some Puppet versions
+  - work around for [PUP-1597](https://tickets.puppetlabs.com/browse/PUP-3615) on RHEL 7
+  - dependency cycle between service and context resources
+  - file permissions too strict on configuration files
+  - activation of extras/log4j not working with multi-version setups
+  - tomcat service not notified of all relevant changes
 
 ### 1.3.2
 
@@ -131,17 +131,17 @@ Fix documentation format and add Context config example
 ### 1.0.0
 
 * New Context parameters for configuring context.xml:
- - `context_params`
- - `context_loader`
- - `context_manager`
- - `context_realm`
- - `context_resources`
- - `context_parameters`
- - `context_environments`
- - `context_listeners`
- - `context_valves`
- - `context_resourcedefs`
- - `context_resourcelinks`
+  - `context_params`
+  - `context_loader`
+  - `context_manager`
+  - `context_realm`
+  - `context_resources`
+  - `context_parameters`
+  - `context_environments`
+  - `context_listeners`
+  - `context_valves`
+  - `context_resourcedefs`
+  - `context_resourcelinks`
 * Support Debian 8, Fedora 22 and RHEL 5
 * Do not create user/group if already defined
 * Minor bugfixes
@@ -168,25 +168,25 @@ Fix compatibility with future parser in Puppet 3.7.4 ([PUP-3615](https://tickets
 
 * New `listeners` parameters: create custom Listener components within the server configuration
 * New Server parameters. Warning: `control_port` renamed to `server_control_port`
- - `server_control_port`
- - `server_shutdown`
- - `server_address`
+  - `server_control_port`
+  - `server_shutdown`
+  - `server_address`
 * New Service parameters.
- - `svc_name`
- - `svc_params`
+  - `svc_name`
+  - `svc_params`
 * New Engine parameters. Warning: `jvmroute` renamed to `engine_jvmroute`
- - `engine_name`
- - `engine_defaulthost`
- - `engine_jvmroute`
- - `engine_params`
+  - `engine_name`
+  - `engine_defaulthost`
+  - `engine_jvmroute`
+  - `engine_params`
 * New Host parameters. Warning: **all** old parameters renamed and default values removed!
- - `host_name`
- - `host_appbase`
- - `host_autodeploy`
- - `host_deployOnStartup`
- - `host_undeployoldversions`
- - `host_unpackwars`
- - `host_params`
+  - `host_name`
+  - `host_appbase`
+  - `host_autodeploy`
+  - `host_deployOnStartup`
+  - `host_undeployoldversions`
+  - `host_unpackwars`
+  - `host_params`
 * Fix instance startup on Fedora 20+, drop support for Fedora 15 and 16
 * `custom_fragment` renamed to `custom_variables` (hash)
 * Refactoring
@@ -194,12 +194,12 @@ Fix compatibility with future parser in Puppet 3.7.4 ([PUP-3615](https://tickets
 ### 0.8.2
 
 * New parameters related to Executors
- - `threadpool_name`
- - `threadpool_nameprefix`
- - `threadpool_maxthreads`
- - `threadpool_minsparethreads`
- - `threadpool_params`
- - `executors`
+  - `threadpool_name`
+  - `threadpool_nameprefix`
+  - `threadpool_maxthreads`
+  - `threadpool_minsparethreads`
+  - `threadpool_params`
+  - `executors`
 
 ### 0.8.1
 
