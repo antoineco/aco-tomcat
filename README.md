@@ -28,7 +28,7 @@ The tomcat module installs and configures Apache Tomcat instances from either th
 
 This module will install the desired version of the Apache Tomcat Web Application Container from almost any possible source, including the repositories available on the target system (distribution repositories or third-party sources like [JPackage](http://www.jpackage.org) and [EPEL](https://fedoraproject.org/wiki/EPEL))  
 A long list of parameters allow a fine tuning of the server and the JVM. Tomcat's most common elements are provided, and virtually any missing parameters can be included using the hash parameters present in each block.  
-It is also possible to configure, besides the server itself, admin applications, extra libraries, the log4j logger, etc.  
+It is also possible to configure, besides the server itself, admin applications, extra libraries, etc.  
 The creation of individual instances following [Apache's guidelines](http://tomcat.apache.org/tomcat-9.0-doc/RUNNING.txt) is supported via a custom type.
 
 ## Setup
@@ -110,18 +110,6 @@ class { 'tomcat':
   create_default_admin => true,
   admin_user           => 'tomcatmaster',
   admin_password       => 'meow'
-}
-```
-
-Use log4j for Tomcat internal logging and provide a custom XML configuration file
-
-```puppet
-class { 'tomcat':
-  …
-  log4j             => true,
-  log4j_enable      => true,
-  log4j_conf_type   => 'xml',
-  log4j_conf_source => 'puppet:///modules/my_configs/tomcat_log4j.xml'
 }
 ```
 
@@ -372,12 +360,6 @@ Whether to install the Tomcat Native library. Boolean value. Defaults to `false`
 
 ##### `tomcat_native_package_name`
 Tomcat Native library package name. Default depends on the distribution.
-
-##### `log4j`
-Whether to install the log4j library. Boolean value. Defaults to `false`.
-
-##### `log4j_package_name`
-Log4j package name. Default depends on the distribution.
 
 ##### `extras_package_name`
 Package name for Tomcat extra libraries. If set, forces installation of Tomcat extra libraries from a package repository instead of Apache servers. The `ensure` attribute of the package resource will then default to the same value as [`${package_ensure}`](#package_ensure). Defaults to `undef`.
@@ -729,20 +711,8 @@ Hash of custom environment variables.
 
 **Logging**
 
-Some extra documentation about [log4j](http://logging.apache.org/log4j/)'s usage with Tomcat is available on [this page](http://tomcat.apache.org/tomcat-9.0-doc/logging.html#Using_Log4j).
-
 ##### `log_path`
 Absolute path to the log directory. Defaults to `/var/log/${service_name}`.
-
-##### `log4j_enable`
-Whether to use log4j rather than *java.util.logging* for Tomcat internal logging. Boolean value. Defaults to `false`.  
-*Warning:* log4j is enabled globally if defined within the global context
-
-##### `log4j_conf_type`
-Log4j configuration type. Valid values are `ini` and `xml`. Defaults to `ini`.
-
-##### `log4j_conf_source`
-Where to get log4j's configuration from. A [sample file](https://raw.githubusercontent.com/antoineco/aco-tomcat/master/files/log4j/log4j.properties) is provided with this module. Defaults to the sample file `log4j.properties`.
 
 #### Define: `tomcat::userdb_entry`
 

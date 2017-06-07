@@ -115,9 +115,6 @@ define tomcat::instance (
   # logging
   #..................................................................................
   $log_path                   = undef,
-  $log4j_enable               = false,
-  $log4j_conf_type            = 'ini',
-  $log4j_conf_source          = "puppet:///modules/${module_name}/log4j/log4j.properties",
   #..................................................................................
   # server configuration
   #..................................................................................
@@ -638,7 +635,7 @@ define tomcat::instance (
   ), $jsp_servlet_params)
 
   # should we force download extras libs?
-  if $log4j_enable or $jmx_listener {
+  if $jmx_listener {
     $extras_enable_real = true
   } else {
     $extras_enable_real = $extras_enable
@@ -1273,76 +1270,6 @@ define tomcat::instance (
       if $admin_webapps {
         warning("tomcat archives always contain admin webapps, ignoring parameter 'admin_webapps'")
       }
-    }
-  }
-
-  # --------#
-  # logging #
-  # --------#
-
-  if $log4j_enable {
-    # warn user if log4j is not installed
-    unless $::tomcat::log4j {
-      warning('logging with log4j will not work unless the log4j library is installed')
-    }
-
-    # no need to duplicate libraries if enabled globally when tomcat versions are identical
-    if $::tomcat::log4j_enable and $version_real == $::tomcat::version_real {
-      warning("log4j is already enabled globally for tomcat ${version_real}, ignoring parameter 'log4j_enable'")
-    } else {
-      # generate OS-specific variables
-      $log4j_path = $::osfamily ? {
-        'Debian' => '/usr/share/java/log4j-1.2.jar',
-        default  => '/usr/share/java/log4j.jar'
-      }
-
-      file { "instance ${name} log4j library":
-        ensure => link,
-        path   => "${catalina_base_real}/lib/log4j.jar",
-        target => $log4j_path,
-        notify => $notify_service
-      }
-    }
-
-    if $log4j_conf_type == 'xml' {
-      file {
-        "instance ${name} log4j xml configuration":
-          ensure => present,
-          path   => "${catalina_base_real}/lib/log4j.xml",
-          source => $log4j_conf_source,
-          notify => $notify_service;
-
-        "instance ${name} log4j ini configuration":
-          ensure => absent,
-          path   => "${catalina_base_real}/lib/log4j.properties";
-
-        "instance ${name} log4j dtd file":
-          ensure => present,
-          path   => "${catalina_base_real}/lib/log4j.dtd",
-          source => "puppet:///modules/${module_name}/log4j/log4j.dtd"
-      }
-    } else {
-      file {
-        "instance ${name} log4j ini configuration":
-          ensure => present,
-          path   => "${catalina_base_real}/lib/log4j.properties",
-          source => $log4j_conf_source,
-          notify => $notify_service;
-
-        "instance ${name} log4j xml configuration":
-          ensure => absent,
-          path   => "${catalina_base_real}/lib/log4j.xml";
-
-        "instance ${name} log4j dtd file":
-          ensure => absent,
-          path   => "${catalina_base_real}/lib/log4j.dtd"
-      }
-    }
-
-    file { "instance ${name} logging configuration":
-      ensure => absent,
-      path   => "${catalina_base_real}/conf/logging.properties",
-      backup => true
     }
   }
 

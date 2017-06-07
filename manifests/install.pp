@@ -20,12 +20,4 @@ class tomcat::install {
       name   => $::tomcat::tomcat_native_package_name
     }
   }
-
-  # log4j library
-  if $::tomcat::log4j {
-    package { 'tomcat log4j library':
-      ensure => present,
-      name   => $::tomcat::log4j_package_name
-    }
-  }
 }

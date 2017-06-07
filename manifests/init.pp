@@ -44,10 +44,6 @@
 #   install tomcat native library (boolean)
 # [*tomcat_native_package_name*]
 #   tomcat native library package name
-# [*log4j*]
-#   install log4j libraries (boolean)
-# [*log4j_package_name*]
-#   log4j package name
 # [*extras_enable*]
 #   install extra libraries (boolean)
 # [*extras_source*]
@@ -125,8 +121,6 @@ class tomcat (
   $file_mode                  = '0600',
   $tomcat_native              = false,
   $tomcat_native_package_name = $::tomcat::params::tomcat_native_package_name,
-  $log4j                      = false,
-  $log4j_package_name         = $::tomcat::params::log4j_package_name,
   $extras_enable              = false,
   $extras_source              = undef,
   $extras_package_name        = undef,
@@ -151,9 +145,6 @@ class tomcat (
   # logging
   #..................................................................................
   $log_path                   = undef,
-  $log4j_enable               = false,
-  $log4j_conf_type            = 'ini',
-  $log4j_conf_source          = "puppet:///modules/${module_name}/log4j/log4j.properties",
   #..................................................................................
   # server configuration
   #..................................................................................
@@ -681,7 +672,7 @@ class tomcat (
   ), $jsp_servlet_params)
 
   # should we force download extras libs?
-  if $log4j_enable or $jmx_listener {
+  if $jmx_listener {
     $extras_enable_real = true
   } else {
     $extras_enable_real = $extras_enable
@@ -709,11 +700,6 @@ class tomcat (
   contain tomcat::service
   contain tomcat::config
   Class['::tomcat::install'] -> Class['::tomcat::config'] -> Class['::tomcat::service']
-
-  if $log4j_enable {
-    contain tomcat::log4j
-    Class['::tomcat::install'] -> Class['::tomcat::log4j'] -> Class['::tomcat::service']
-  }
 
   if $extras_enable_real and !$extras_package_name {
     # download and install extras from archive

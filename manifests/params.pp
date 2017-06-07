@@ -83,7 +83,6 @@ class tomcat::params {
         }
       }
       $tomcat_native_package_name = 'tomcat-native'
-      $log4j_package_name = 'log4j'
     }
     'Suse'   : {
       case $::operatingsystem {
@@ -161,7 +160,6 @@ class tomcat::params {
         }
       }
       $tomcat_native_package_name = 'libtcnative-1-0'
-      $log4j_package_name = 'log4j'
     }
     'Debian' : {
       case $::operatingsystem {
@@ -284,7 +282,6 @@ class tomcat::params {
         }
       }
       $tomcat_native_package_name = 'libtcnative-1'
-      $log4j_package_name = 'liblog4j1.2-java'
       $systemd = false
     }
     default  : {

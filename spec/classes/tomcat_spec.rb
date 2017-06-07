@@ -21,11 +21,6 @@ describe 'tomcat' do
       let(:params) { { :extras_enable => true } }
       it { is_expected.to contain_class('tomcat::extras').that_requires('Class[tomcat::install]') }
     end
-    context 'log4j logging' do
-      let(:params) { { :log4j_enable => true } }
-      it { is_expected.to contain_class('tomcat::log4j').that_requires('Class[tomcat::install]') }
-      it { is_expected.to contain_class('tomcat::extras').that_requires('Class[tomcat::install]') }
-    end
     context 'firewall management' do
       let(:params) { { :manage_firewall => true } }
       it { is_expected.to contain_class('tomcat::firewall') }

@@ -33,16 +33,11 @@ describe 'tomcat::install' do
   end
   describe 'extras packages' do
     context 'default installation' do
-      it { is_expected.not_to contain_package('tomcat log4j library') }
       it { is_expected.not_to contain_package('tomcat native library') }
     end
     context 'with tomcat native' do
       let(:pre_condition) { 'class { "tomcat": tomcat_native => true }' }
       it { is_expected.to contain_package('tomcat native library') }
-    end
-    context 'with log4j' do
-      let(:pre_condition) { 'class { "tomcat": log4j => true }' }
-      it { is_expected.to contain_package('tomcat log4j library') }
     end
   end
 end
