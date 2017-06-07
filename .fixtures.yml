@@ -1,6 +1,8 @@
 fixtures:
   forge_modules:
-    concat: puppetlabs/concat
+    concat:
+      repo: puppetlabs/concat
+      ref: 2.2.1
     firewall: puppetlabs/firewall
     archive: puppet/archive
     stdlib: puppetlabs/stdlib
