@@ -24,28 +24,12 @@ class tomcat::extras {
     'catalina-ws.jar':
       path   => "${::tomcat::catalina_home_real}/lib/extras/catalina-ws-${::tomcat::version_real}.jar",
       source => "${::tomcat::extras_source_real}/catalina-ws.jar"
-    ;
-
-    'tomcat-juli-adapters.jar':
-      path   => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-adapters-${::tomcat::version_real}.jar",
-      source => "${::tomcat::extras_source_real}/tomcat-juli-adapters.jar"
-    ;
-
-    'tomcat-juli-extras.jar':
-      path   => "${::tomcat::catalina_home_real}/lib/extras/tomcat-juli-extras-${::tomcat::version_real}.jar",
-      source => "${::tomcat::extras_source_real}/tomcat-juli.jar"
   }
 
   file {
     'global extras directory':
       ensure => directory,
       path   => "${::tomcat::catalina_home_real}/lib/extras";
-
-    'tomcat-juli.jar':
-      ensure => link,
-      path   => "${::tomcat::catalina_home_real}/bin/tomcat-juli.jar",
-      target => "${::tomcat::catalina_home_real}/lib/tomcat-juli-extras.jar",
-      backup => true;
 
     'catalina-jmx-remote.jar':
       ensure => link,
@@ -56,15 +40,5 @@ class tomcat::extras {
       ensure => link,
       path   => "${::tomcat::catalina_home_real}/lib/catalina-ws.jar",
       target => "extras/catalina-ws-${::tomcat::version_real}.jar";
-
-    'tomcat-juli-adapters.jar':
-      ensure => link,
-      path   => "${::tomcat::catalina_home_real}/lib/tomcat-juli-adapters.jar",
-      target => "extras/tomcat-juli-adapters-${::tomcat::version_real}.jar";
-
-    'tomcat-juli-extras.jar':
-      ensure => link,
-      path   => "${::tomcat::catalina_home_real}/lib/tomcat-juli-extras.jar",
-      target => "extras/tomcat-juli-extras-${::tomcat::version_real}.jar"
   }
 }

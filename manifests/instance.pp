@@ -1296,27 +1296,12 @@ define tomcat::instance (
         "instance ${name} catalina-ws.jar":
           path   => "${catalina_base_real}/lib/extras/catalina-ws-${version_real}.jar",
           source => "${extras_source_real}/catalina-ws.jar"
-        ;
-
-        "instance ${name} tomcat-juli-adapters.jar":
-          path   => "${catalina_base_real}/lib/extras/tomcat-juli-adapters-${version_real}.jar",
-          source => "${extras_source_real}/tomcat-juli-adapters.jar"
-        ;
-
-        "instance ${name} tomcat-juli-extras.jar":
-          path   => "${catalina_base_real}/lib/extras/tomcat-juli-extras-${version_real}.jar",
-          source => "${extras_source_real}/tomcat-juli.jar"
       }
 
       file {
         "instance ${name} extras directory":
           ensure => directory,
           path   => "${catalina_base_real}/lib/extras";
-
-        "instance ${name} tomcat-juli.jar":
-          ensure => link,
-          path   => "${catalina_base_real}/bin/tomcat-juli.jar",
-          target => "${catalina_base_real}/lib/tomcat-juli-extras.jar";
 
         "instance ${name} catalina-jmx-remote.jar":
           ensure => link,
@@ -1327,16 +1312,6 @@ define tomcat::instance (
           ensure => link,
           path   => "${catalina_base_real}/lib/catalina-ws.jar",
           target => "extras/catalina-ws-${version_real}.jar";
-
-        "instance ${name} tomcat-juli-adapters.jar":
-          ensure => link,
-          path   => "${catalina_base_real}/lib/tomcat-juli-adapters.jar",
-          target => "extras/tomcat-juli-adapters-${version_real}.jar";
-
-        "instance ${name} tomcat-juli-extras.jar":
-          ensure => link,
-          path   => "${catalina_base_real}/lib/tomcat-juli-extras.jar",
-          target => "extras/tomcat-juli-extras-${version_real}.jar"
       }
     }
   }
