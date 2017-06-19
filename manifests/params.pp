@@ -165,6 +165,12 @@ class tomcat::params {
       case $::operatingsystem {
         'Debian' : {
           case $::operatingsystemmajrelease {
+            # stretch
+            # https://packages.debian.org/stretch/tomcat8
+            '9'     : {
+              $version = '8.5.14-1'
+              $package_name = 'tomcat8'
+            }
             # jessie
             # https://packages.debian.org/jessie/tomcat8
             '8'     : {
