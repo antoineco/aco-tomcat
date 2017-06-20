@@ -261,6 +261,7 @@ class tomcat (
   # host valves
   $singlesignon_valve         = false,
   $accesslog_valve            = true,
+  $accesslog_valve_pattern    = '%h %l %u %t &quot;%r&quot; %s %b',
   $valves                     = [],
   # engine valves
   $engine_valves              = [],

@@ -4,7 +4,7 @@
 <% if @accesslog_valve %>
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
                prefix="<%= @host_name %>_access_log<% if scope.function_versioncmp([@maj_version, '7']) <= 0 -%>.<% end -%>" suffix=".txt"
-               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+               pattern="<%= @accesslog_valve_pattern %>" />
 <% end -%>
 <%- if @valves and ! @valves.empty? -%>
   <%- [@valves].flatten.compact.each do |valve| -%>
