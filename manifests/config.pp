@@ -61,6 +61,7 @@ class tomcat::config {
   $realms = $::tomcat::realms
   $singlesignon_valve = $::tomcat::singlesignon_valve
   $accesslog_valve = $::tomcat::accesslog_valve
+  $accesslog_valve_pattern = $::tomcat::accesslog_valve_pattern
   $valves = $::tomcat::valves
   $engine_valves = $::tomcat::engine_valves
   $globalnaming_environments = $::tomcat::globalnaming_environments
@@ -289,6 +290,7 @@ class tomcat::config {
   # Template uses:
   # - $singlesignon_valve
   # - $accesslog_valve
+  # - $accesslog_valve_pattern
   # - $valves
   # - $host_name
   # - $maj_version

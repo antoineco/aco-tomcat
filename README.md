@@ -601,6 +601,9 @@ Whether to enable the [Single Sign On Valve](http://tomcat.apache.org/tomcat-9.0
 ##### `accesslog_valve`
 Whether to enable the [Access Log Valve](http://tomcat.apache.org/tomcat-9.0-doc/config/valve.html#Access_Log_Valve). Boolean value. Defaults to `true`.
 
+##### `accesslog_valve_pattern`
+Pattern to use for the [Access Log Valve](http://tomcat.apache.org/tomcat-9.0-doc/config/valve.html#Access_Log_Valve).
+
 ##### `valves`
 An array of custom `Valve` entries to be added to the `Host` container. Each entry is to be supplied as a hash of attributes/values for the `Valve` XML node. See [Valve](http://tomcat.apache.org/tomcat-9.0-doc/config/valve.html) for the list of possible attributes.
 

@@ -235,6 +235,7 @@ define tomcat::instance (
   # host valves
   $singlesignon_valve         = false,
   $accesslog_valve            = true,
+  $accesslog_valve_pattern    = '%h %l %u %t &quot;%r&quot; %s %b',
   $valves                     = [],
   # engine valves
   $engine_valves              = [],
@@ -476,7 +477,7 @@ define tomcat::instance (
           default => 'start'
         }
         # catalina.sh in archive takes -security option to enable security manager
-        # module currently does not put catalina.policy in ${catalina_base}/conf folder  
+        # module currently does not put catalina.policy in ${catalina_base}/conf folder
         $security_arg = $security_manager ? {
           true    => ' -security',
           default => ''
@@ -1092,6 +1093,7 @@ define tomcat::instance (
   # Template uses:
   # - $singlesignon_valve
   # - $accesslog_valve
+  # - $accesslog_valve_pattern
   # - $valves
   # - $host_name
   # - $maj_version
