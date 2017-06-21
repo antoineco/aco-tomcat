@@ -290,6 +290,7 @@ class tomcat::config {
   # Template uses:
   # - $singlesignon_valve
   # - $accesslog_valve
+  # - $accesslog_valve_pattern
   # - $valves
   # - $host_name
   # - $maj_version
