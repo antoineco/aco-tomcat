@@ -78,7 +78,7 @@ class tomcat::install::archive {
     file { $::tomcat::log_path_real:
       ensure => directory,
       path   => $::tomcat::log_path_real,
-      mode   => '0660',
+      mode   => $::tomcat::log_folder_mode,
       alias  => 'tomcat logs directory',
       tag    => 'tomcat_tree'
     }

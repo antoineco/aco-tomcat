@@ -115,6 +115,7 @@ define tomcat::instance (
   # logging
   #..................................................................................
   $log_path                   = undef,
+  $log_folder_mode            = '0660',
   #..................................................................................
   # server configuration
   #..................................................................................
@@ -744,7 +745,7 @@ define tomcat::instance (
     file { $log_path_real:
       ensure => directory,
       path   => $log_path_real,
-      mode   => '0660',
+      mode   => $log_folder_mode,
       alias  => "instance ${name} logs directory",
       tag    => "instance_${name}_tree"
     }

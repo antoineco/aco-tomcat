@@ -717,6 +717,9 @@ Hash of custom environment variables.
 ##### `log_path`
 Absolute path to the log directory. Defaults to `/var/log/${service_name}`.
 
+##### `log_folder_mode`
+Mode for log folder, in case of archive install. Defaults to '0660'.
+
 #### Define: `tomcat::userdb_entry`
 
 Create Tomcat UserDatabase user entries. For creating a `tomcat::userdb_entry` using Hiera, see parameter `tomcat_users`.
