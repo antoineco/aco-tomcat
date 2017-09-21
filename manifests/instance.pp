@@ -98,7 +98,7 @@ define tomcat::instance (
   $extras_enable              = false,
   $extras_source              = undef,
   $manage_firewall            = false,
-  $ulimit              = undef,
+  $ulimit                     = undef,
   #..................................................................................
   # checksum for archive file
   #..................................................................................
