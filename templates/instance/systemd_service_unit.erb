@@ -15,7 +15,8 @@ ExecStop=<%= @service_stop_real %>
 SuccessExitStatus=143
 User=<%= @tomcat_user %>
 Group=<%= @tomcat_group %>
-
+<% if @ulimit %>LimitNOFILE=<%= @ulimit %>
+<% end -%>
 
 [Install]
 WantedBy=multi-user.target

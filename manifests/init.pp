@@ -52,6 +52,8 @@
 #   install extras from given package(s)
 # [*manage_firewall*]
 #   manage firewall rules (boolean)
+# [*ulimit*]
+#   limit for open files
 # [*checksum_verify*]
 #   verify the checksum if tomcat is installed from an archive (boolean)
 # [*checksum_type*]
@@ -125,6 +127,7 @@ class tomcat (
   $extras_source              = undef,
   $extras_package_name        = undef,
   $manage_firewall            = false,
+  $ulimit                     = undef,
   #..................................................................................
   # checksum for archive file
   #..................................................................................

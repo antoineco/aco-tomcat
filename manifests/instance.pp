@@ -40,6 +40,8 @@
 #   base path to tomcat extra libraries
 # [*manage_firewall*]
 #   manage firewall rules (boolean)
+# [*ulimit*]
+#   limit for open files
 # [*checksum_verify*]
 #   verify the checksum if tomcat is installed from an archive (boolean)
 # [*checksum_type*]
@@ -96,6 +98,7 @@ define tomcat::instance (
   $extras_enable              = false,
   $extras_source              = undef,
   $manage_firewall            = false,
+  $ulimit                     = undef,
   #..................................................................................
   # checksum for archive file
   #..................................................................................
