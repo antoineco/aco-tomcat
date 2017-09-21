@@ -456,6 +456,9 @@ Base path of the source of the Tomcat extra libraries. Supports local files, pup
 ##### `manage_firewall`
 Whether to automatically manage firewall rules. Boolean value. Defaults to `false`.
 
+##### `ulimit`
+Limit for open files. Interger value. Defaults to `undef`.
+
 **Security and administration**
 
 ##### `admin_webapps`
