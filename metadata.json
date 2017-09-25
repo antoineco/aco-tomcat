@@ -71,8 +71,6 @@
     {
       "operatingsystem": "Fedora",
       "operatingsystemrelease": [
-        "23",
-        "24",
         "25",
         "26"
       ]
@@ -82,7 +80,8 @@
       "operatingsystemrelease": [
         "13.2",
         "42.1",
-        "42.2"
+        "42.2",
+        "42.3"
       ]
     },
     {
@@ -126,10 +125,6 @@
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "12.04",
-        "12.10",
-        "13.04",
-        "13.10",
         "14.04",
         "14.10",
         "15.04",

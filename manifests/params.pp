@@ -6,23 +6,14 @@ class tomcat::params {
       case $::operatingsystem {
         'Fedora' : {
           case $::operatingsystemmajrelease {
+            # https://dl.fedoraproject.org/pub/fedora/linux/updates/26/x86_64/t/
             '26'    : {
-              $version = '1:8.0.43'
+              $version = '1:8.0.46'
               $package_name = 'tomcat'
             }
             # https://dl.fedoraproject.org/pub/fedora/linux/updates/25/x86_64/t/
             '25'    : {
-              $version = '1:8.0.43'
-              $package_name = 'tomcat'
-            }
-            # https://dl.fedoraproject.org/pub/fedora/linux/updates/24/x86_64/t/
-            '24'    : {
-              $version = '1:8.0.43'
-              $package_name = 'tomcat'
-            }
-            # https://dl.fedoraproject.org/pub/fedora/linux/updates/23/x86_64/t/
-            '23'    : {
-              $version = '1:8.0.39'
+              $version = '1:8.0.46'
               $package_name = 'tomcat'
             }
             default : {
@@ -33,9 +24,9 @@ class tomcat::params {
         }
         'Amazon' : {
           # https://alas.aws.amazon.com
-          $version = '8.0.43'           # ALAS-2017-822
+          $version = '8.0.45'           # ALAS-2017-862
           $package_name = 'tomcat8'
-          # $version = '7.0.77'         # ALAS-2017-822
+          # $version = '7.0.79'         # ALAS-2017-873
           # $package_name = 'tomcat7'
           # $version = '6.0.53'         # ALAS-2017-821
           # $package_name = 'tomcat6'
@@ -88,6 +79,12 @@ class tomcat::params {
       case $::operatingsystem {
         'OpenSuSE'           : {
           case $::operatingsystemrelease {
+            '42.3'  : {
+              # http://download.opensuse.org/distribution/leap/42.3/repo/oss/suse/noarch/
+              # http://download.opensuse.org/update/leap/42.3/oss/noarch/
+              $version = '8.0.43'
+              $package_name = 'tomcat'
+            }
             '42.2'  : {
               # http://download.opensuse.org/distribution/leap/42.2/repo/oss/suse/noarch/
               # http://download.opensuse.org/update/leap/42.2/oss/noarch/
@@ -168,13 +165,13 @@ class tomcat::params {
             # stretch
             # https://packages.debian.org/stretch/tomcat8
             '9'     : {
-              $version = '8.5.14-1'
+              $version = '8.5.14-1+deb9u2'
               $package_name = 'tomcat8'
             }
             # jessie
             # https://packages.debian.org/jessie/tomcat8
             '8'     : {
-              $version = '8.0.14-1+deb8u9'
+              $version = '8.0.14-1+deb8u11'
               $package_name = 'tomcat8'
               # $version = '7.0.56-3+deb8u10'
               # $package_name = 'tomcat7'
@@ -182,7 +179,7 @@ class tomcat::params {
             # wheezy
             # https://packages.debian.org/wheezy/tomcat7
             '7'     : {
-              $version = '7.0.28-4+deb7u13'
+              $version = '7.0.28-4+deb7u15'
               $package_name = 'tomcat7'
               # $version = '6.0.45+dfsg-1~deb7u5'
               # $package_name = 'tomcat6'
@@ -197,11 +194,11 @@ class tomcat::params {
             # artful
             # https://packages.ubuntu.com/artful/tomcat8
             '17.10' : {
-              $version = '8.0.38-2ubuntu2'
+              $version = '8.5.21-1'
               $package_name = 'tomcat8'
             }
             # zesty
-            # http://packages.ubuntu.com/zesty/amd64/tomcat8/download
+            # http://packages.ubuntu.com/zesty/tomcat8
             '17.04' : {
               $version = '8.0.38-2ubuntu2'
               $package_name = 'tomcat8'
@@ -251,35 +248,6 @@ class tomcat::params {
               $version = '7.0.52-1ubuntu0.11'
               $package_name = 'tomcat7'
               # $version = '6.0.39-1'
-              # $package_name = 'tomcat6'
-            }
-            # saucy
-            '13.10' : {
-              $version = '7.0.42-1ubuntu0.1'
-              $package_name = 'tomcat7'
-              # $version = '6.0.37-1'
-              # $package_name = 'tomcat6'
-            }
-            # raring
-            '13.04' : {
-              $version = '7.0.35-1~exp2ubuntu1.1'
-              $package_name = 'tomcat7'
-              # $version = '6.0.35-6'
-              # $package_name = 'tomcat6'
-            }
-            # quantal
-            '12.10' : {
-              $version = '7.0.30-0ubuntu1.3'
-              $package_name = 'tomcat7'
-              # $version = '6.0.35-5ubuntu0.1'
-              # $package_name = 'tomcat6'
-            }
-            # precise
-            # http://packages.ubuntu.com/precise/amd64/tomcat7/download
-            '12.04' : {
-              $version = '7.0.26-1ubuntu1.2'
-              $package_name = 'tomcat7'
-              # $version = '6.0.35-1ubuntu3.10'
               # $package_name = 'tomcat6'
             }
             default : {
