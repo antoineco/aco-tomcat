@@ -1,3 +1,10 @@
+### 1.8.2
+
+* New parameters `log_folder_mode` and `accesslog_valve_pattern` ([HerveMARTIN](https://github.com/HerveMARTIN))
+* Add support for Debian 9, OpenSuSE 42.3
+* Drop support for Ubuntu 12.04, 12.10, 13.04, 13.10, Fedora 23, 24
+* Update default package versions
+
 ### 1.8.1
 
 Hotfix: remove references to tomcat-juli extra libraries

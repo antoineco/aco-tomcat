@@ -2,7 +2,7 @@
   "name": "aco-tomcat",
   "summary": "Puppet module for Tomcat",
   "author": "Antoine Cotten",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "license": "Apache-2.0",
   "project_page": "https://github.com/antoineco/aco-tomcat",
   "source": "git://github.com/antoineco/aco-tomcat.git",
@@ -22,7 +22,7 @@
     },
     {
       "name": "puppet/archive",
-      "version_requirement": ">= 0.4.4 < 2.0.0"
+      "version_requirement": ">= 0.4.4 < 3.0.0"
     }
   ],
   "operatingsystem_support": [
