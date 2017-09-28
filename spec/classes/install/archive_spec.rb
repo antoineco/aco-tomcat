@@ -5,6 +5,7 @@ describe 'tomcat::install::archive' do
   let :facts do
     {
       :osfamily                  => 'RedHat',
+      :os                        => {:family => 'RedHat'},
       :operatingsystemmajrelease => '7',
       :operatingsystem           => 'RedHat',
       :concat_basedir            => '/puppetconcat'
@@ -33,6 +34,7 @@ describe 'tomcat::install::archive' do
       let :facts do
         {
           :osfamily       => 'RedHat',
+          :os             => {:family => 'RedHat'},
           :concat_basedir => '/puppetconcat'
         }
       end
@@ -84,8 +86,9 @@ describe 'tomcat::install::archive' do
     describe 'SuSE family' do
       let :facts do
         {
-          :osfamily               => 'Suse',
-          :concat_basedir         => '/puppetconcat',
+          :osfamily        => 'Suse',
+          :os              => {:family => 'Suse'},
+          :concat_basedir  => '/puppetconcat',
         }
       end
       context 'on OpenSuSE' do
@@ -125,8 +128,9 @@ describe 'tomcat::install::archive' do
     describe 'Debian family' do
       let :facts do
         {
-          :osfamily               => 'Debian',
-          :concat_basedir         => '/puppetconcat',
+          :osfamily       => 'Debian',
+          :os             => {:family => 'Debian'},
+          :concat_basedir => '/puppetconcat',
         }
       end
       context 'on Ubuntu 15.04' do

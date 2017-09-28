@@ -5,6 +5,7 @@ describe 'tomcat::install' do
   let :facts do
     {
       :osfamily                  => 'RedHat',
+      :os                        => {:family => 'RedHat'},
       :operatingsystemmajrelease => '7',
       :operatingsystem           => 'RedHat',
       :concat_basedir            => '/puppetconcat',
