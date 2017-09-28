@@ -296,6 +296,26 @@ class { 'tomcat':
 }
 ```
 
+Configure security constraints (web.xml)
+
+```puppet
+class { 'tomcat':
+  …
+  security_constraints => [
+    { 'display-name'            => 'Security constraint 1',
+      'auth-constraint'         => { 'role-name' => ['admin', 'authenticated'] },
+      'web-resource-collection' => { 'web-resource-name' => 'My sample web resource',
+                                     'url-pattern'       => ['/example', '*.gif'],
+                                     'http-method'       => ['GET', 'POST'] }
+    },
+    { 'display-name'            => 'Security constraint 2',
+      'web-resource-collection' => { 'url-pattern'          => ['/protected/*'],
+                                     'http-method-omission' => ['DELETE', 'PUT'] }
+    }
+  ]
+}
+```
+
 Add an additional admin for the manager using a defined type
 
 ```puppet
