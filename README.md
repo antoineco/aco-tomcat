@@ -226,7 +226,8 @@ class { 'tomcat':
   host_autodeploy      => false,
   host_deployonstartup => false,
   host_unpackwars      => true,
-  host_params          => { createDirs => true }
+  host_params          => { createDirs => true },
+  host_context         => [{ path => '', docBase => '/home/app', crossContext => true }],
 }
 ```
 
@@ -594,6 +595,9 @@ Name of the default [Host](http://tomcat.apache.org/tomcat-9.0-doc/config/host.h
  - `host_undeployoldversions`: whether to clean unused versions of web applications deployed using parallel deployment
  - `host_unpackwars`: whether to unpack web application archive (WAR) files
  - `host_params`: optional hash of additional attributes/values to put in the Host container
+
+##### `host_context`
+List of nested [Context](http://tomcat.apache.org/tomcat-9.0-doc/config/context.html) elements to add in the [Host](http://tomcat.apache.org/tomcat-9.0-doc/config/host.html) element. This context elements can be configured via an array of hash of attributes/values.
 
 ##### `singlesignon_valve`
 Whether to enable the [Single Sign On Valve](http://tomcat.apache.org/tomcat-9.0-doc/config/valve.html#Single_Sign_On_Valve). Boolean value. Defaults to `false`.
