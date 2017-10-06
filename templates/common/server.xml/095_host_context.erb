@@ -1,8 +1,10 @@
   <%- if @host_context and ! @host_context.empty? -%>
     <%- @host_context.each do |params| -%>
-        <Context
-          <%- params.each_pair do |attrib, value| -%>
-            <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
-          <%- end -%>
+      <%- params.each_pair do |attrib, value| %>
+        <%- if attrib == params.keys.first -%>
+        <Context <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+        <%- else -%>
+                 <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+        <%- end -%>
     <%- end %>/>
   <%- end %>
