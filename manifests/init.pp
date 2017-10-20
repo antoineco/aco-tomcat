@@ -259,6 +259,9 @@ class tomcat (
   $host_unpackwars            = undef,
   $host_params                = {},
   #..................................................................................
+  # host contexts
+  $contexts                   = [],
+  #..................................................................................
   # host valves
   $singlesignon_valve         = false,
   $accesslog_valve            = true,

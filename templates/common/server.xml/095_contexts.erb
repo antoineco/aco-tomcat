@@ -1,0 +1,11 @@
+  <%- if @contexts and ! @contexts.empty? -%>
+    <%- @contexts.each do |params| -%>
+      <%- params.each_pair do |attrib, value| %>
+        <%- if attrib == params.keys.first -%>
+        <Context <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+        <%- else -%>
+                 <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+        <%- end -%>
+      <%- end -%> />
+    <%- end -%>
+  <%- end -%>

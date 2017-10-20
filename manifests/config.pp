@@ -44,6 +44,7 @@ class tomcat::config {
   $engine_params_real = $::tomcat::engine_params_real
   $host_name = $::tomcat::host_name
   $host_params_real = $::tomcat::host_params_real
+  $contexts = $::tomcat::contexts
   $use_simpletcpcluster = $::tomcat::use_simpletcpcluster
   $cluster_membership_port = $::tomcat::cluster_membership_port
   $cluster_membership_bind_address = $::tomcat::cluster_membership_bind_address
@@ -284,6 +285,14 @@ class tomcat::config {
   concat::fragment { 'server.xml host':
     order   => 90,
     content => template("${module_name}/common/server.xml/090_host.erb"),
+    target  => 'tomcat server configuration'
+  }
+
+  # Template uses:
+  # - $contexts
+  concat::fragment { 'server.xml contexts':
+    order   => 95,
+    content => template("${module_name}/common/server.xml/095_contexts.erb"),
     target  => 'tomcat server configuration'
   }
 
