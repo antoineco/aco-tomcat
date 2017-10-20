@@ -23,9 +23,6 @@ define tomcat::context (
     fail('You must include the tomcat base class before using any tomcat defined resources')
   }
 
-  # parameters validation
-  validate_absolute_path($path)
-
   # generate and manage context configuration
   concat { "${name} tomcat context":
     path  => $path,
