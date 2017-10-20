@@ -24,9 +24,9 @@ class tomcat::params {
         }
         'Amazon' : {
           # https://alas.aws.amazon.com
-          $version = '8.0.45'           # ALAS-2017-862
+          $version = '8.0.46'           # ALAS-2017-903
           $package_name = 'tomcat8'
-          # $version = '7.0.79'         # ALAS-2017-873
+          # $version = '7.0.81'         # ALAS-2017-903
           # $package_name = 'tomcat7'
           # $version = '6.0.53'         # ALAS-2017-821
           # $package_name = 'tomcat6'
@@ -34,11 +34,13 @@ class tomcat::params {
         }
         default  : {
           case $::operatingsystemmajrelease {
+            # http://mirror.centos.org/centos-7/7/updates/x86_64/Packages/
             '7'     : {
-              $version = '7.0.69'
+              $version = '7.0.76'
               $package_name = 'tomcat'
               $systemd = true
             }
+            # http://mirror.centos.org/centos-6/6/updates/x86_64/Packages/
             '6'     : {
               $version = '6.0.24'
               $package_name = 'tomcat6'
@@ -56,6 +58,7 @@ class tomcat::params {
               # $package_name = 'tomcat7'
               $systemd = false
             }
+            # http://vault.centos.org/5.11/os/x86_64/CentOS/
             '5'     : {
               $version = '5.5.23'
               $package_name = 'tomcat5'
@@ -119,6 +122,11 @@ class tomcat::params {
         /^(SLES|SLED|SuSE)$/ : {
           # https://download.suse.com/patch/finder
           case $::operatingsystemrelease {
+            '12.3'  : {
+              $version = '8.0.43'
+              $package_name = 'tomcat'
+              $systemd = true
+            }
             '12.2'  : {
               $version = '8.0.43'
               $package_name = 'tomcat'
@@ -194,7 +202,7 @@ class tomcat::params {
             # artful
             # https://packages.ubuntu.com/artful/tomcat8
             '17.10' : {
-              $version = '8.5.21-1'
+              $version = '8.5.21-1ubuntu1'
               $package_name = 'tomcat8'
             }
             # zesty

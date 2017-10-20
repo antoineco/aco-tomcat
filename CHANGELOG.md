@@ -1,3 +1,11 @@
+### 1.8.3
+
+* Add configuration of
+  - nested Host contexts (`contexts` parameter) ([HerveMARTIN](https://github.com/HerveMARTIN))
+  - global security constraints (`security_constraints` parameter)
+* Update default package versions
+* Add support for SuSE 12.3
+
 ### 1.8.2
 
 * New parameters `log_folder_mode` and `accesslog_valve_pattern` ([HerveMARTIN](https://github.com/HerveMARTIN))
