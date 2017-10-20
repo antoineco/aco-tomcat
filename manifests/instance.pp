@@ -234,7 +234,7 @@ define tomcat::instance (
   $host_params                = {},
   #..................................................................................
   # host context
-  $host_context        = undef,
+  $host_context               = undef,
   #..................................................................................
   # host valves
   $singlesignon_valve         = false,
@@ -1091,6 +1091,14 @@ define tomcat::instance (
   concat::fragment { "instance ${name} server.xml host":
     order   => 90,
     content => template("${module_name}/common/server.xml/090_host.erb"),
+    target  => "instance ${name} server configuration"
+  }
+
+  # Template uses:
+  # - $host_context
+  concat::fragment { "instance ${name} server.xml host context":
+    order   => 95,
+    content => template("${module_name}/common/server.xml/095_host_context.erb"),
     target  => "instance ${name} server configuration"
   }
 

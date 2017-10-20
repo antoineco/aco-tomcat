@@ -260,7 +260,7 @@ class tomcat (
   $host_params                = {},
   #..................................................................................
   # host context
-  $host_context        = undef,
+  $host_context               = undef,
   #..................................................................................
   # host valves
   $singlesignon_valve         = false,
