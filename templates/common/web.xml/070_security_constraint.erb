@@ -1,0 +1,41 @@
+
+  <!-- ======================== Security constraints ====================== -->
+
+<%- [@security_constraints].flatten.compact.each do |sc| -%>
+  <%- @wrc = sc.fetch('web-resource-collection', {}) -%>
+  <%- @ac = sc.fetch('auth-constraint', {}) -%>
+  <%- @udc = sc.fetch('user-data-constraint', {}) -%>
+    <security-constraint>
+        <display-name><%= sc['display-name'].encode(:xml => :text) %></display-name>
+        <%- if ! @wrc.empty? -%>
+        <web-resource-collection>
+            <%- if @wrc.has_key?('web-resource-name') -%>
+            <web-resource-name><%= @wrc['web-resource-name'].encode(:xml => :text) %></web-resource-name>
+            <%- end -%>
+            <%- @wrc.fetch('url-pattern', []).each do |value| -%>
+            <url-pattern><%= "#{value}".encode(:xml => :text) %></url-pattern>
+            <%- end -%>
+            <%- @wrc.fetch('http-method', []).each do |value| -%>
+            <http-method><%= "#{value}".encode(:xml => :text) %></http-method>
+            <%- end -%>
+            <%- @wrc.fetch('http-method-omission', []).each do |value| -%>
+            <http-method-omission><%= "#{value}".encode(:xml => :text) %></http-method-omission>
+            <%- end -%>
+        </web-resource-collection>
+        <%- end -%>
+        <%- if ! @ac.empty? -%>
+        <auth-constraint>
+            <%- @ac.fetch('role-name', []).each do |value| -%>
+            <role-name><%= "#{value}".encode(:xml => :text) %></role-name>
+            <%- end -%>
+        </auth-constraint>
+        <%- end -%>
+        <%- if ! @udc.empty? -%>
+        <user-data-constraint>
+            <%- if @udc.has_key?('transport-guarantee') -%>
+            <transport-guarantee><%= udc['transport-guarantee'].encode(:xml => :text) %></transport-guarantee>
+            <%- end -%>
+        </user-data-constraint>
+        <%- end -%>
+    </security-constraint>
+<%- end -%>

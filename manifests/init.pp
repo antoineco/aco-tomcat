@@ -323,6 +323,9 @@ class tomcat (
   # welcome-file-list
   $welcome_file_list                    = ['index.html', 'index.htm', 'index.jsp' ],
   #..................................................................................
+  # security-constraint
+  $security_constraints                 = [],
+  #..................................................................................
   # environment variables
   #..................................................................................
   $config_path                = undef,

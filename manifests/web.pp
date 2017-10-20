@@ -12,6 +12,7 @@ define tomcat::web (
   $sessionconfig_sessiontimeout       = undef,
   $sessionconfig_trackingmode         = undef,
   $welcome_file_list                  = [],
+  $security_constraints               = [],
   $version                            = $::tomcat::version_real
   ) {
   # The base class must be included first
@@ -120,6 +121,16 @@ define tomcat::web (
     concat::fragment { "${name} tomcat web welcome-file-list":
       order   => 060,
       content => template("${module_name}/common/web.xml/060_welcome_file_list.erb"),
+      target  => "${name} tomcat web"
+    }
+  }
+
+  # Template uses:
+  # - $security_constraints
+  if $security_constraints and $security_constraints != [] {
+    concat::fragment { "${name} tomcat web security-constraint":
+      order   => 070,
+      content => template("${module_name}/common/web.xml/070_security_constraint.erb"),
       target  => "${name} tomcat web"
     }
   }

@@ -297,6 +297,27 @@ class { 'tomcat':
 }
 ```
 
+Configure security constraints (web.xml)
+
+```puppet
+class { 'tomcat':
+  …
+  security_constraints => [
+    { 'display-name'            => 'Security constraint 1',
+      'auth-constraint'         => { 'role-name' => ['admin', 'authenticated'] },
+      'web-resource-collection' => { 'web-resource-name' => 'My sample web resource',
+                                     'url-pattern'       => ['/example', '*.gif'],
+                                     'http-method'       => ['GET', 'POST'] }
+    },
+    { 'display-name'            => 'Security constraint 2',
+      'user-data-constraint'    => { 'transport-guarantee' => 'CONFIDENTIAL',
+      'web-resource-collection' => { 'url-pattern'          => ['/protected/*'],
+                                     'http-method-omission' => ['DELETE', 'PUT'] }
+    }
+  ]
+}
+```
+
 Add an additional admin for the manager using a defined type
 
 ```puppet
@@ -652,7 +673,7 @@ initParameters for the `jsp` servlet. Generate a single hash for the [`${jsp_ser
  - `jsp_servlet_xpoweredby`: whether X-Powered-By response header is added by servlet. Defaults to `false`.
  - `jsp_servlet_params`: optional hash of additional attributes/values to configure the `jsp` servlet
 
-##### `default_servletmapping_urlpatterns`, `jsp_servletmapping_urlpatterns`, `sessionconfig_sessiontimeout`, `sessionconfig_trackingmode`, `welcome_file_list`
+##### `default_servletmapping_urlpatterns`, `jsp_servletmapping_urlpatterns`, `sessionconfig_sessiontimeout`, `sessionconfig_trackingmode`, `welcome_file_list`, `security_constraints`
 See [tomcat::web](#define-tomcatweb) defined type.
 
 **Global configuration file / environment variables**
@@ -848,6 +869,12 @@ Default session tracking mode for applications. See [Enum SessionTrackingMode](h
 
 ##### `welcome_file_list`
 List of file names to look up and serve when a request URI refers to a directory. Defaults to `['index.html', 'index.htm', 'index.jsp' ]`.
+
+##### `security_constraints`
+List of nested Hashs describing global [Security Constraints](https://javaee.github.io/tutorial/security-webtier002.html#specifying-security-constraints). The following keys accept an Array value:
+ - `role-name` (child of `auth-constraint`)
+ - `url-pattern` (child of `web-resource-collection`)
+ - `http-method` (child of `web-resource-collection`)
 
 ## Testing
 

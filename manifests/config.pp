@@ -347,6 +347,7 @@ class tomcat::config {
     sessionconfig_sessiontimeout       => $::tomcat::sessionconfig_sessiontimeout,
     sessionconfig_trackingmode         => $::tomcat::sessionconfig_trackingmode,
     welcome_file_list                  => $::tomcat::welcome_file_list,
+    security_constraints               => $::tomcat::security_constraints,
     notify                             => $notify_service
   }
 
