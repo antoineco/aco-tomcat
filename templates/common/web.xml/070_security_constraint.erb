@@ -4,6 +4,7 @@
 <%- [@security_constraints].flatten.compact.each do |sc| -%>
   <%- @wrc = sc.fetch('web-resource-collection', {}) -%>
   <%- @ac = sc.fetch('auth-constraint', {}) -%>
+  <%- @udc = sc.fetch('user-data-constraint', {}) -%>
     <security-constraint>
         <display-name><%= sc['display-name'].encode(:xml => :text) %></display-name>
         <%- if ! @wrc.empty? -%>
@@ -28,6 +29,13 @@
             <role-name><%= "#{value}".encode(:xml => :text) %></role-name>
             <%- end -%>
         </auth-constraint>
+        <%- end -%>
+        <%- if ! @udc.empty? -%>
+        <user-data-constraint>
+            <%- if @udc.has_key?('transport-guarantee') -%>
+            <transport-guarantee><%= udc['transport-guarantee'].encode(:xml => :text) %></transport-guarantee>
+            <%- end -%>
+        </user-data-constraint>
         <%- end -%>
     </security-constraint>
 <%- end -%>

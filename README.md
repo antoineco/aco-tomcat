@@ -309,6 +309,7 @@ class { 'tomcat':
                                      'http-method'       => ['GET', 'POST'] }
     },
     { 'display-name'            => 'Security constraint 2',
+      'user-data-constraint'    => { 'transport-guarantee' => 'CONFIDENTIAL',
       'web-resource-collection' => { 'url-pattern'          => ['/protected/*'],
                                      'http-method-omission' => ['DELETE', 'PUT'] }
     }
@@ -864,6 +865,12 @@ Default session tracking mode for applications. See [Enum SessionTrackingMode](h
 
 ##### `welcome_file_list`
 List of file names to look up and serve when a request URI refers to a directory. Defaults to `['index.html', 'index.htm', 'index.jsp' ]`.
+
+##### `security_constraints`
+List of nested Hashs describing global [Security Constraints](https://javaee.github.io/tutorial/security-webtier002.html#specifying-security-constraints). The following keys accept an Array value:
+ - `role-name` (child of `auth-constraint`)
+ - `url-pattern` (child of `web-resource-collection`)
+ - `http-method` (child of `web-resource-collection`)
 
 ## Testing
 
