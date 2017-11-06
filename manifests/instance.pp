@@ -1280,7 +1280,7 @@ define tomcat::instance (
       # ordering
       File <| tag == "instance_${name}_catalina_tree" |>
       -> Tomcat::Context <| tag == "instance_${name}_admin_context" |>
-      
+
     } else {
       # warn if admin webapps were selected for installation in a multi-version setup
       if $admin_webapps {
