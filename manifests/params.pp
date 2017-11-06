@@ -24,9 +24,9 @@ class tomcat::params {
         }
         'Amazon' : {
           # https://alas.aws.amazon.com
-          $version = '8.0.46'           # ALAS-2017-903
+          $version = '8.5.23'           # ALAS-2017-913
           $package_name = 'tomcat8'
-          # $version = '7.0.81'         # ALAS-2017-903
+          # $version = '7.0.82'         # ALAS-2017-913
           # $package_name = 'tomcat7'
           # $version = '6.0.53'         # ALAS-2017-821
           # $package_name = 'tomcat6'
@@ -212,7 +212,6 @@ class tomcat::params {
               $package_name = 'tomcat8'
             }
             # yakkety
-            # https://packages.ubuntu.com/yakkety-updates/tomcat8
             '16.10' : {
               $version = '8.0.37-1ubuntu0.1'
               $package_name = 'tomcat8'

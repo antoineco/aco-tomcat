@@ -909,6 +909,7 @@ Check the [puppetlabs_spec_helper](https://github.com/puppetlabs/puppetlabs_spec
 * [Martin Zehetmayer](https://github.com/angrox)
 * [Rurik Ylä-Onnenvuori](https://github.com/ruriky)
 * [Hal Deadman](https://github.com/hdeadman)
-* [HerveMARTIN](https://github.com/HerveMARTIN)
+* [Hervé Martin](https://github.com/HerveMARTIN)
+* [Alessandro Franceschi](https://github.com/alvagante)
 
 Features request and contributions are always welcome!

@@ -1,3 +1,8 @@
+### 1.8.4
+
+* Fix admin contexts resources ordering ([alvagante](https://github.com/alvagante))
+* Update default package versions
+
 ### 1.8.3
 
 * Add configuration of
