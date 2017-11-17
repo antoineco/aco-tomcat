@@ -33,7 +33,7 @@
         <%- if ! @udc.empty? -%>
         <user-data-constraint>
             <%- if @udc.has_key?('transport-guarantee') -%>
-            <transport-guarantee><%= udc['transport-guarantee'].encode(:xml => :text) %></transport-guarantee>
+            <transport-guarantee><%= @udc['transport-guarantee'].encode(:xml => :text) %></transport-guarantee>
             <%- end -%>
         </user-data-constraint>
         <%- end -%>
