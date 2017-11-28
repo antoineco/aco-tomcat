@@ -16,7 +16,8 @@ define tomcat::context (
   $listeners        = [],
   $valves           = [],
   $resourcedefs     = [],
-  $resourcelinks    = []
+  $resourcelinks    = [],
+  $jarscanner       = [],
   ) {
   # The base class must be included first
   if !defined(Class['tomcat']) {
@@ -146,6 +147,16 @@ define tomcat::context (
     concat::fragment { "${name} tomcat context resourcelinks":
       order   => 070,
       content => template("${module_name}/common/context.xml/070_resourcelinks.erb"),
+      target  => "${name} tomcat context"
+    }
+  }
+
+  # Template uses:
+  # - $jarscanner
+  if $jarscanner and $jarscanner != [] {
+    concat::fragment { "${name} tomcat context jarscanner":
+      order   => 030,
+      content => template("${module_name}/common/context.xml/015_jarscanner.erb"),
       target  => "${name} tomcat context"
     }
   }

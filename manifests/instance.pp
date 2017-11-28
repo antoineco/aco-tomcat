@@ -262,6 +262,7 @@ define tomcat::instance (
   $context_valves             = [],
   $context_resourcedefs       = [],
   $context_resourcelinks      = [],
+  $context_jarscanner         = [],
   #..................................................................................
   # web apps configuration
   #..................................................................................
@@ -1141,6 +1142,7 @@ define tomcat::instance (
     valves           => $context_valves,
     resourcedefs     => $context_resourcedefs,
     resourcelinks    => $context_resourcelinks,
+    jarscanner       => $context_jarscanner,
     require          => File["${catalina_base_real}/conf"],
     notify           => $notify_service
   }

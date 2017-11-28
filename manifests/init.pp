@@ -288,6 +288,7 @@ class tomcat (
   $context_valves             = [],
   $context_resourcedefs       = [],
   $context_resourcelinks      = [],
+  $context_jarscanner         = [],
   #..................................................................................
   # web apps configuration
   #..................................................................................

@@ -813,6 +813,9 @@ A hash of attributes/values for the `Resources` nested component. See [Resources
 ##### `watchedresource`
 An array of `WatchedResource` entries to be added to the `Context` container. Each entry is to be supplied as a string. Defaults to `['WEB-INF/web.xml','${catalina.base}/conf/web.xml']`.
 
+##### `jarscanner`
+An array of `JarScanner` entries to be added to the `Context` container. Each entry is to be supplied as a string.
+
 ##### `parameters`
 An array of `Parameter` entries to be added to the `Context` container. Each entry is to be supplied as a hash of attributes/values for the `Parameter` XML node. See [Context Parameters](http://tomcat.apache.org/tomcat-9.0-doc/config/context.html#Context_Parameters) for the list of possible attributes.
 

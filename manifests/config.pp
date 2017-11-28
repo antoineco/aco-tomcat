@@ -79,6 +79,7 @@ class tomcat::config {
   $context_valves = $::tomcat::context_valves
   $context_resourcedefs = $::tomcat::context_resourcedefs
   $context_resourcelinks = $::tomcat::context_resourcelinks
+  $context_jarscanner = $::tomcat::context_jarscanner
   $java_home = $::tomcat::java_home
   $catalina_base_real = $::tomcat::catalina_base_real
   $catalina_home_real = $::tomcat::catalina_home_real
@@ -327,6 +328,7 @@ class tomcat::config {
     realm            => $context_realm,
     resources        => $context_resources,
     watchedresources => $context_watchedresources,
+    jarscanner       => $context_jarscanner,
     parameters       => $context_parameters,
     environments     => $context_environments,
     listeners        => $context_listeners,
