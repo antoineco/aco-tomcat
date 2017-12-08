@@ -175,7 +175,6 @@ class tomcat::params {
             '9'     : {
               $version = '8.5.14-1+deb9u2'
               $package_name = 'tomcat8'
-              $systemd = true
             }
             # jessie
             # https://packages.debian.org/jessie/tomcat8
@@ -184,7 +183,6 @@ class tomcat::params {
               $package_name = 'tomcat8'
               # $version = '7.0.56-3+deb8u10'
               # $package_name = 'tomcat7'
-              $systemd = true
             }
             # wheezy
             # https://packages.debian.org/wheezy/tomcat7
