@@ -1,0 +1,9 @@
+<%- [@jarscanner].flatten.compact.each do |jarscanner| -%>
+  <%- jarscanner.each_pair do |attrib, value| %>
+    <%- if attrib == jarscanner.keys.first -%>
+    <JarScanner <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+    <%- else -%>
+                 <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+    <%- end -%>
+  <%- end %> />
+<%- end -%>
