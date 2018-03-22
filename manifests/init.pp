@@ -23,7 +23,7 @@
 # [*service_name*]
 #   tomcat service name
 # [*service_ensure*]
-#   whether the service should be running (valid: 'stopped'|'running')
+#   whether the service should be running (valid: 'stopped'|'running'|undef)
 # [*service_enable*]
 #   enable service (boolean)
 # [*systemd_service_type*]
@@ -357,9 +357,6 @@ class tomcat (
   }
   if $version !~ /^([0-9]{1,2}:)?[0-9]\.[0-9]\.[0-9]{1,2}(\.M[0-9]{1,2})?(-.*)?$/ {
     fail('incorrect tomcat version number')
-  }
-  if $service_ensure !~ /^(stopped|running)$/ {
-    fail('$service_ensure must be either \'stopped\' or \'running\'')
   }
   if $checksum_type !~ /^(none|md5|sha1|sha2|sh256|sha384|sha512)$/ {
     fail('$checksum can only be one of: none|md5|sha1|sha2|sh256|sha384|sha512')
