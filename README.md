@@ -418,10 +418,10 @@ Must include the full package suffix on Debian variants.
 Base path of the source of the Tomcat installation archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `${archive_mirror}/dist/tomcat/tomcat-<maj_version>/v<version>/bin`.
 
 ##### `archive_filename`
-File name of the Tomcat installation archive, if installed from archive. Defaults to `apache-tomcat-<version>.tar.gz`
+File name of the Tomcat installation archive, if installed from archive. Defaults to `apache-tomcat-<version>.tar.gz`.
 
 ##### `archive_mirror`
-Mirror to use if installed from archive and no archive source was provided but version was. Defaults to `http://archive.apache.org`
+Mirror to use if installed from archive and no archive source was provided but version was. Defaults to `http://archive.apache.org`.
 
 ##### `proxy_server`
 URL of a proxy server used for downloading Tomcat archives
