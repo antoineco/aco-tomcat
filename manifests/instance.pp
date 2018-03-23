@@ -12,6 +12,8 @@
 #   base path to the archive to download (only if installed from archive)
 # [*archive_filename*]
 #   file name of the archive to download (only if installed from archive)
+# [*archive_mirror*]
+#   mirror to use if installed from archive and no archive source was provided but version was
 # [*proxy_server*]
 #   proxy server url
 # [*proxy_type*]
@@ -81,6 +83,7 @@ define tomcat::instance (
   $version                    = $::tomcat::version_real,
   $archive_source             = undef,
   $archive_filename           = undef,
+  $archive_mirror             = 'http://archive.apache.org',
   $proxy_server               = undef,
   $proxy_type                 = undef,
   $service_name               = undef,
@@ -362,7 +365,7 @@ define tomcat::instance (
   }
 
   if $archive_source == undef {
-    $archive_source_real = "http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version_real}/bin"
+    $archive_source_real = "${archive_mirror}/dist/tomcat/tomcat-${maj_version}/v${version_real}/bin"
   } else {
     $archive_source_real = $archive_source
   }
@@ -374,7 +377,7 @@ define tomcat::instance (
   }
 
   if $extras_source == undef {
-    $extras_source_real = "http://archive.apache.org/dist/tomcat/tomcat-${maj_version}/v${version_real}/bin/extras"
+    $extras_source_real = "${archive_mirror}/dist/tomcat/tomcat-${maj_version}/v${version_real}/bin/extras"
   } else {
     $extras_source_real = $extras_source
   }

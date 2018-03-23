@@ -415,10 +415,13 @@ Must include the full package suffix on Debian variants.
 *Note:* multi-version only supported if installed from archive
 
 ##### `archive_source`
-Base path of the source of the Tomcat installation archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin`.
+Base path of the source of the Tomcat installation archive, if installed from archive. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `${archive_mirror}/dist/tomcat/tomcat-<maj_version>/v<version>/bin`.
 
 ##### `archive_filename`
 File name of the Tomcat installation archive, if installed from archive. Defaults to `apache-tomcat-<version>.tar.gz`.
+
+##### `archive_mirror`
+Mirror to use if installed from archive and no archive source was provided but version was. Defaults to `http://archive.apache.org`.
 
 ##### `proxy_server`
 URL of a proxy server used for downloading Tomcat archives
@@ -473,7 +476,7 @@ Whether to install Tomcat extra libraries. Boolean value. Defaults to `false`.
 *Warning:* extra libraries are enabled globally if defined within the global context
 
 ##### `extras_source`
-Base path of the source of the Tomcat extra libraries. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `http://archive.apache.org/dist/tomcat/tomcat-<maj_version>/v<version>/bin/extras`.
+Base path of the source of the Tomcat extra libraries. Supports local files, puppet://, http://, https:// and ftp://. Defaults to `${archive_mirror}/dist/tomcat/tomcat-<maj_version>/v<version>/bin/extras`.
 
 ##### `manage_firewall`
 Whether to automatically manage firewall rules. Boolean value. Defaults to `false`.
