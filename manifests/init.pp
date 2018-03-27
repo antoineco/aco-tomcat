@@ -277,6 +277,7 @@ class tomcat (
   # context configuration
   #..................................................................................
   $context_params             = {},
+  $context_cookieprocessor    = {},
   $context_loader             = {},
   $context_manager            = {},
   $context_realm              = {},
