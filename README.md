@@ -646,7 +646,7 @@ An array of `Resource` entries to be added to the `GlobalNamingResources` compon
 
 **Context configuration**
 
-##### `context_params`, `context_loader`, `context_manager`, `context_realm`, `context_resources`, `context_watchedresource`, `context_parameters`, `context_environments`, `context_listeners`, `context_valves`, `context_resourcedefs`, `context_resourcelinks`
+##### `context_params`, `context_cookieprocessor`, `context_loader`, `context_manager`, `context_realm`, `context_resources`, `context_watchedresource`, `context_parameters`, `context_environments`, `context_listeners`, `context_valves`, `context_resourcedefs`, `context_resourcelinks`
 See [tomcat::context](#define-tomcatcontext) defined type.
 
 **Servlets configuration**
@@ -798,6 +798,9 @@ File mode. Defaults to [`${file_mode}`](#file_mode).
 
 ##### `params`
 A hash of attributes/values for the `Context` container. See [Context](http://tomcat.apache.org/tomcat-9.0-doc/config/context.html#Attributes) for the list of possible attributes.
+
+##### `cookieprocessor`
+A hash of attributes/values for the `CookieProcessor` nested component. See [CookieProcessor](https://tomcat.apache.org/tomcat-9.0-doc/config/cookie-processor.html) for the list of possible attributes.
 
 ##### `loader`
 A hash of attributes/values for the `Loader` nested component. See [Loader](http://tomcat.apache.org/tomcat-9.0-doc/config/loader.html) for the list of possible attributes.

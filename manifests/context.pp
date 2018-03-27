@@ -6,6 +6,7 @@ define tomcat::context (
   $group            = $::tomcat::tomcat_group_real,
   $file_mode        = $::tomcat::file_mode,
   $params           = {},
+  $cookieprocessor  = {},
   $loader           = {},
   $manager          = {},
   $realm            = {},
@@ -38,6 +39,16 @@ define tomcat::context (
     order   => 0,
     content => template("${module_name}/common/context.xml/000_header.erb"),
     target  => "${name} tomcat context"
+  }
+
+  # Template uses:
+  # - $cookieprocessor
+  if $cookieprocessor and $cookieprocessor != {} {
+    concat::fragment { "${name} tomcat context cookieprocessor":
+      order   => 005,
+      content => template("${module_name}/common/context.xml/005_cookieprocessor.erb"),
+      target  => "${name} tomcat context"
+    }
   }
 
   # Template uses:
