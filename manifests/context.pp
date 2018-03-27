@@ -42,21 +42,21 @@ define tomcat::context (
   }
 
   # Template uses:
-  # - $loader
-  if $loader and $loader != {} {
-    concat::fragment { "${name} tomcat context loader":
-      order   => 010,
-      content => template("${module_name}/common/context.xml/010_loader.erb"),
-      target  => "${name} tomcat context"
-    }
-  }
-
-  # Template uses:
   # - $cookieprocessor
   if $cookieprocessor and $cookieprocessor != {} {
     concat::fragment { "${name} tomcat context cookieprocessor":
       order   => 005,
       content => template("${module_name}/common/context.xml/005_cookieprocessor.erb"),
+      target  => "${name} tomcat context"
+    }
+  }
+
+  # Template uses:
+  # - $loader
+  if $loader and $loader != {} {
+    concat::fragment { "${name} tomcat context loader":
+      order   => 010,
+      content => template("${module_name}/common/context.xml/010_loader.erb"),
       target  => "${name} tomcat context"
     }
   }
