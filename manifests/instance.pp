@@ -235,6 +235,7 @@ define tomcat::instance (
   $host_undeployoldversions   = undef,
   $host_unpackwars            = undef,
   $host_params                = {},
+  $hosts                      = {},
   #..................................................................................
   # host contexts
   $contexts                   = [],
@@ -514,13 +515,21 @@ define tomcat::instance (
     $security_manager_real = $security_manager ? {
       true    => 'yes',
       default => 'no'
-    } } else {
+    }
+  } else {
     $security_manager_real = $security_manager
   }
 
-  $engine_defaulthost_real = $engine_defaulthost ? {
-    undef   => $host_name,
-    default => $engine_defaulthost
+  if (empty($hosts)) {
+    $engine_defaulthost_real = $engine_defaulthost ? {
+      undef   => $host_name,
+      default => $engine_defaulthost
+    }
+  } else {
+    $engine_defaulthost_real = $engine_defaulthost ? {
+      undef   => $hosts[0]['name'],
+      default => $engine_defaulthost
+    }
   }
 
   $java_opts_real = join($java_opts, ' ')
