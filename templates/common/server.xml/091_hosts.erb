@@ -8,6 +8,11 @@
       <%- end -%>
     <%- end -%>
   <%- end -%>>
+  <%- if host['aliases'] and ! host['aliases'].empty? -%>
+    <%- host['aliases'].each do |alias| -%>
+        <Alias><%= alias %></Alias>
+    <%- end -%>
+  <%- end -%>
   <%- if host['contexts'] and ! host['contexts'].empty? -%>
     <%- host['contexts'].each do |context| -%>
       <%- context.each_pair do |context_attrib, context_value| %>
