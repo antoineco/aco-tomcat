@@ -9,8 +9,8 @@
     <%- end -%>
   <%- end -%>>
   <%- if host['aliases'] and ! host['aliases'].empty? -%>
-    <%- host['aliases'].each do |alias| -%>
-        <Alias><%= alias %></Alias>
+    <%- host['aliases'].each do |al| -%>
+        <Alias><%= al %></Alias>
     <%- end -%>
   <%- end -%>
   <%- if host['contexts'] and ! host['contexts'].empty? -%>
