@@ -24,6 +24,7 @@ class tomcat::install::archive {
   if !defined(User[$::tomcat::tomcat_user_real]) {
     user { $::tomcat::tomcat_user_real:
       ensure => present,
+      uid    => $::tomcat::tomcat_user_id,
       gid    => $::tomcat::tomcat_group_real,
       home   => $::tomcat::catalina_home_real,
       system => true

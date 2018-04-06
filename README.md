@@ -491,6 +491,9 @@ Optional override command for stopping the service. Default depends on the platf
 ##### `tomcat_user`
 Tomcat user. Defaults to [`${service_name}`](#service_name) (Debian) / `tomcat` (all other distributions).
 
+##### `tomcat_user_id`
+Tomcat user id. Defaults to undef, will be generated at user creation.
+
 ##### `tomcat_group`
 Tomcat group. Defaults to [`${tomcat_user}`](#tomcat_user).
 

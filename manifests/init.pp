@@ -38,6 +38,8 @@
 #   override service shutdown command
 # [*tomcat_user*]
 #   service user
+# [*tomcat_user_id*]
+#   service user id
 # [*tomcat_group*]
 #   service group
 # [*file_mode*]
@@ -120,6 +122,7 @@ class tomcat (
   $service_start              = undef,
   $service_stop               = undef,
   $tomcat_user                = undef,
+  $tomcat_user_id             = undef,
   $tomcat_group               = undef,
   $file_mode                  = '0600',
   $tomcat_native              = false,

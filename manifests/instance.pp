@@ -32,6 +32,8 @@
 #   override service shutdown command
 # [*tomcat_user*]
 #   service user
+# [*tomcat_user_id*]
+#   service user id
 # [*tomcat_group*]
 #   service group
 # [*file_mode*]
@@ -94,6 +96,7 @@ define tomcat::instance (
   $service_start              = undef,
   $service_stop               = undef,
   $tomcat_user                = $::tomcat::tomcat_user_real,
+  $tomcat_user_id             = undef,
   $tomcat_group               = $::tomcat::tomcat_group_real,
   $file_mode                  = '0600',
   $extras_enable              = false,
@@ -671,6 +674,7 @@ define tomcat::instance (
   if !defined(User[$tomcat_user]) {
     user { $tomcat_user:
       ensure => present,
+      uid    => $tomcat_user_id,
       gid    => $tomcat_group,
       home   => $catalina_home_real,
       system => true
