@@ -842,7 +842,7 @@ define tomcat::instance (
     }
     # Refresh systemd configuration
     exec { "refresh ${service_name_real}":
-      path        => ['usr/bin/','/bin/'],
+      path        => ['/usr/bin/','/bin/'],
       command     => 'systemctl daemon-reload',
       refreshonly => true,
       subscribe   => File["${service_name_real} service unit"],
