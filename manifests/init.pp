@@ -42,6 +42,8 @@
 #   service user id
 # [*tomcat_group*]
 #   service group
+# [*tomcat_group_id*]
+#   service group id
 # [*file_mode*]
 #   mode for configuration files
 # [*tomcat_native*]
@@ -124,6 +126,7 @@ class tomcat (
   $tomcat_user                = undef,
   $tomcat_user_id             = undef,
   $tomcat_group               = undef,
+  $tomcat_group_id            = undef,
   $file_mode                  = '0600',
   $tomcat_native              = false,
   $tomcat_native_package_name = $::tomcat::params::tomcat_native_package_name,
