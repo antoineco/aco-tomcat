@@ -69,6 +69,7 @@ class tomcat::config {
   $globalnaming_environments = $::tomcat::globalnaming_environments
   $globalnaming_resources = $::tomcat::globalnaming_resources
   $context_params = $::tomcat::context_params
+  $context_cookieprocessor = $::tomcat::context_cookieprocessor
   $context_loader = $::tomcat::context_loader
   $context_manager = $::tomcat::context_manager
   $context_realm = $::tomcat::context_realm
@@ -340,6 +341,7 @@ class tomcat::config {
     path             => "${::tomcat::catalina_base_real}/conf/context.xml",
     file_mode        => $::tomcat::file_mode,
     params           => $context_params,
+    cookieprocessor  => $context_cookieprocessor,
     loader           => $context_loader,
     manager          => $context_manager,
     realm            => $context_realm,
