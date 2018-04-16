@@ -17,6 +17,7 @@ class tomcat::install::archive {
   if !defined(Group[$::tomcat::tomcat_group_real]) {
     group { $::tomcat::tomcat_group_real:
       ensure => present,
+      gid    => $::tomcat::tomcat_group_id,
       system => true
     }
   }

@@ -36,6 +36,8 @@
 #   service user id
 # [*tomcat_group*]
 #   service group
+# [*tomcat_group_id*]
+#   service group id
 # [*file_mode*]
 #   mode for configuration files
 # [*extras_enable*]
@@ -98,6 +100,7 @@ define tomcat::instance (
   $tomcat_user                = $::tomcat::tomcat_user_real,
   $tomcat_user_id             = undef,
   $tomcat_group               = $::tomcat::tomcat_group_real,
+  $tomcat_group_id            = undef,
   $file_mode                  = '0600',
   $extras_enable              = false,
   $extras_source              = undef,
@@ -667,6 +670,7 @@ define tomcat::instance (
   if !defined(Group[$tomcat_group]) {
     group { $tomcat_group:
       ensure => present,
+      gid    => $tomcat_group_id,
       system => true
     }
   }

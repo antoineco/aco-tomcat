@@ -497,6 +497,9 @@ Tomcat user id. Defaults to undef, will be generated at user creation.
 ##### `tomcat_group`
 Tomcat group. Defaults to [`${tomcat_user}`](#tomcat_user).
 
+##### `tomcat_group_id`
+Tomcat group id. Defaults to undef, will be generated at group creation.
+
 ##### `file_mode`
 File mode for certain configuration xml files. Defaults to '0600'.
 
