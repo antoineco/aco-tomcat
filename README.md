@@ -441,6 +441,9 @@ Checksum to test against. Defaults to `undef`.
 ##### `service_name`
 Tomcat service name. Defaults to [`${package_name}`](#package_name) (global) / `${package_name}_${title}` (instance).
 
+##### `service_manage`
+Wether the service should be managed. Boolean value. Defaults to `true`.
+
 ##### `service_ensure`
 Whether the service should be running. Valid values are `stopped` and `running`. Defaults to `running`.
 

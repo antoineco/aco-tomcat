@@ -68,9 +68,11 @@ class tomcat::service::archive {
     }
   }
 
-  service { $service_name_real:
-    ensure  => $::tomcat::service_ensure,
-    enable  => $::tomcat::service_enable,
-    require => File["${service_name_real} service unit"];
+  if $::tomcat::service_manage {
+    service { $service_name_real:
+      ensure  => $::tomcat::service_ensure,
+      enable  => $::tomcat::service_enable,
+      require => File["${service_name_real} service unit"];
+    }
   }
 }
