@@ -41,7 +41,8 @@ class tomcat::service::archive {
     }
     # Refresh systemd configuration
     exec { "refresh ${service_name_real}":
-      command     => '/usr/bin/systemctl daemon-reload',
+      path        => ['/usr/bin/','/bin/'],
+      command     => 'systemctl daemon-reload',
       refreshonly => true,
       subscribe   => File["${service_name_real} service unit"],
       notify      => $notify_service
