@@ -1,0 +1,2 @@
+
+    <CookieProcessor<%- @cookieprocessor.each_pair do |attrib, value| -%> <%= attrib %>=<%= "#{value}".encode(:xml => :attr) %><%- end -%> />
