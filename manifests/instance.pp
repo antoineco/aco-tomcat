@@ -20,6 +20,8 @@
 #   proxy server type (valid: 'none'|'http'|'https'|'ftp')
 # [*service_name*]
 #   tomcat service name
+# [*service_manage*]
+#   wether the service should be managed through puppet (boolean, defaults to true)
 # [*service_ensure*]
 #   whether the service should be running (valid: 'stopped'|'running'|undef)
 # [*service_enable*]
@@ -87,6 +89,7 @@ define tomcat::instance (
   $proxy_server               = undef,
   $proxy_type                 = undef,
   $service_name               = undef,
+  $service_manage             = true,
   $service_ensure             = 'running',
   $service_enable             = true,
   $restart_on_change          = $::tomcat::restart_on_change,
@@ -898,10 +901,12 @@ define tomcat::instance (
   $cluster_farm_deployer_watchdir_real = pick($cluster_farm_deployer_watchdir,"${catalina_base_real}/deploy")
   $cluster_farm_deployer_deploydir_real = pick($cluster_farm_deployer_deploydir, "${catalina_base_real}/webapps")
 
-  service { $service_name_real:
-    ensure  => $service_ensure,
-    enable  => $service_enable,
-    require => File["${service_name_real} service unit"];
+  if $::tomcat::service_manage {
+    service { $service_name_real:
+      ensure  => $service_ensure,
+      enable  => $service_enable,
+      require => File["${service_name_real} service unit"];
+    }
   }
 
   # --------------------#

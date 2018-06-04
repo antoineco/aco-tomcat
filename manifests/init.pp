@@ -24,6 +24,8 @@
 #   tomcat package 'ensure' attribute (falls back to value of '$version')
 # [*service_name*]
 #   tomcat service name
+# [*service_manage*]
+#   wether the service should be managed through puppet (boolean, defaults to true)
 # [*service_ensure*]
 #   whether the service should be running (valid: 'stopped'|'running'|undef)
 # [*service_enable*]
@@ -112,6 +114,7 @@ class tomcat (
   $package_name               = $::tomcat::params::package_name,
   $package_ensure             = undef,
   $service_name               = undef,
+  $service_manage             = true,
   $service_ensure             = 'running',
   $service_enable             = true,
   $restart_on_change          = true,

@@ -9,8 +9,10 @@ class tomcat::service::package {
   }
 
   # tomcat service
-  service { $::tomcat::service_name_real:
-    ensure => $::tomcat::service_ensure,
-    enable => $::tomcat::service_enable
+  if $::tomcat::service_manage {
+    service { $::tomcat::service_name_real:
+      ensure => $::tomcat::service_ensure,
+      enable => $::tomcat::service_enable
+    }
   }
 }
