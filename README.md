@@ -231,6 +231,32 @@ class { 'tomcat':
 }
 ```
 
+or for more complex setup
+```puppet
+class { 'tomcat':
+  …
+  hosts                => [
+    {
+      name            => 'www.example.org',
+      deployonstartup => false,
+      unpackwars      => true,
+      createDirs      => true,
+      contexts        => [{ path => '', docBase => '/home/app', crossContext => true }],
+      valves          => [{ className => 'org.apache.catalina.valves.AccessLogValve', directory => 'logs', prefix => 'app_access_log', suffix => '.txt', pattern => '%h %l %u %t &quot;%r&quot; %s %b'}]
+    },
+    {
+      name            => 'cas.example.org',
+      deployonstartup => false,
+      unpackwars      => true,
+      createDirs      => true,
+      contexts        => [{ path => '', docBase => '/home/cas', crossContext => true }],
+      valves          => [{ className => 'org.apache.catalina.valves.AccessLogValve', directory => 'logs', prefix => 'cas_access_log', suffix => '.txt', pattern => '%h %l %u %t &quot;%r&quot; %s %b'}]
+    }
+  ]
+  
+}
+```
+
 Enable the remote [JMX listener](http://tomcat.apache.org/tomcat-9.0-doc/config/listeners.html#JMX_Remote_Lifecycle_Listener_-_org.apache.catalina.mbeans.JmxRemoteLifecycleListener) and remote JVM monitoring
 
 ```puppet
@@ -465,8 +491,14 @@ Optional override command for stopping the service. Default depends on the platf
 ##### `tomcat_user`
 Tomcat user. Defaults to [`${service_name}`](#service_name) (Debian) / `tomcat` (all other distributions).
 
+##### `tomcat_user_id`
+Tomcat user id. Defaults to undef, will be generated at user creation.
+
 ##### `tomcat_group`
 Tomcat group. Defaults to [`${tomcat_user}`](#tomcat_user).
+
+##### `tomcat_group_id`
+Tomcat group id. Defaults to undef, will be generated at group creation.
 
 ##### `file_mode`
 File mode for certain configuration xml files. Defaults to '0600'.
@@ -619,6 +651,10 @@ Name of the default [Host](http://tomcat.apache.org/tomcat-9.0-doc/config/host.h
  - `host_undeployoldversions`: whether to clean unused versions of web applications deployed using parallel deployment
  - `host_unpackwars`: whether to unpack web application archive (WAR) files
  - `host_params`: optional hash of additional attributes/values to put in the Host container
+
+##### `hosts`
+An array of `Host` entries. Use this if you need more complex setup. You can nest valves and contexts with their parameters.
+See [Host](http://tomcat.apache.org/tomcat-9.0-doc/config/host.html) for the list of possible attributes.
 
 ##### `contexts`
 An array of custom `Context` entries to be added to the `Host` container. Each entry is to be supplied as a hash of attributes/values for the `Context` XML node. See [Context](http://tomcat.apache.org/tomcat-9.0-doc/config/context.html) for the list of possible attributes.

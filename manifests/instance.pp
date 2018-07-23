@@ -32,8 +32,12 @@
 #   override service shutdown command
 # [*tomcat_user*]
 #   service user
+# [*tomcat_user_id*]
+#   service user id
 # [*tomcat_group*]
 #   service group
+# [*tomcat_group_id*]
+#   service group id
 # [*file_mode*]
 #   mode for configuration files
 # [*extras_enable*]
@@ -94,7 +98,9 @@ define tomcat::instance (
   $service_start              = undef,
   $service_stop               = undef,
   $tomcat_user                = $::tomcat::tomcat_user_real,
+  $tomcat_user_id             = undef,
   $tomcat_group               = $::tomcat::tomcat_group_real,
+  $tomcat_group_id            = undef,
   $file_mode                  = '0600',
   $extras_enable              = false,
   $extras_source              = undef,
@@ -235,6 +241,7 @@ define tomcat::instance (
   $host_undeployoldversions   = undef,
   $host_unpackwars            = undef,
   $host_params                = {},
+  $hosts                      = {},
   #..................................................................................
   # host contexts
   $contexts                   = [],
@@ -514,13 +521,21 @@ define tomcat::instance (
     $security_manager_real = $security_manager ? {
       true    => 'yes',
       default => 'no'
-    } } else {
+    }
+  } else {
     $security_manager_real = $security_manager
   }
 
-  $engine_defaulthost_real = $engine_defaulthost ? {
-    undef   => $host_name,
-    default => $engine_defaulthost
+  if (empty($hosts)) {
+    $engine_defaulthost_real = $engine_defaulthost ? {
+      undef   => $host_name,
+      default => $engine_defaulthost
+    }
+  } else {
+    $engine_defaulthost_real = $engine_defaulthost ? {
+      undef   => $hosts[0]['name'],
+      default => $engine_defaulthost
+    }
   }
 
   $java_opts_real = join($java_opts, ' ')
@@ -655,6 +670,7 @@ define tomcat::instance (
   if !defined(Group[$tomcat_group]) {
     group { $tomcat_group:
       ensure => present,
+      gid    => $tomcat_group_id,
       system => true
     }
   }
@@ -662,6 +678,7 @@ define tomcat::instance (
   if !defined(User[$tomcat_user]) {
     user { $tomcat_user:
       ensure => present,
+      uid    => $tomcat_user_id,
       gid    => $tomcat_group,
       home   => $catalina_home_real,
       system => true

@@ -38,8 +38,12 @@
 #   override service shutdown command
 # [*tomcat_user*]
 #   service user
+# [*tomcat_user_id*]
+#   service user id
 # [*tomcat_group*]
 #   service group
+# [*tomcat_group_id*]
+#   service group id
 # [*file_mode*]
 #   mode for configuration files
 # [*tomcat_native*]
@@ -120,7 +124,9 @@ class tomcat (
   $service_start              = undef,
   $service_stop               = undef,
   $tomcat_user                = undef,
+  $tomcat_user_id             = undef,
   $tomcat_group               = undef,
+  $tomcat_group_id            = undef,
   $file_mode                  = '0600',
   $tomcat_native              = false,
   $tomcat_native_package_name = $::tomcat::params::tomcat_native_package_name,
@@ -261,6 +267,7 @@ class tomcat (
   $host_undeployoldversions   = undef,
   $host_unpackwars            = undef,
   $host_params                = {},
+  $hosts                      = {},
   #..................................................................................
   # host contexts
   $contexts                   = [],
@@ -559,13 +566,21 @@ class tomcat (
     $security_manager_real = $security_manager ? {
       true    => 'yes',
       default => 'no'
-    } } else {
+    }
+  } else {
     $security_manager_real = $security_manager
   }
 
-  $engine_defaulthost_real = $engine_defaulthost ? {
-    undef   => $host_name,
-    default => $engine_defaulthost
+  if (empty($hosts)) {
+    $engine_defaulthost_real = $engine_defaulthost ? {
+      undef   => $host_name,
+      default => $engine_defaulthost
+    }
+  } else {
+    $engine_defaulthost_real = $engine_defaulthost ? {
+      undef   => $hosts[0]['name'],
+      default => $engine_defaulthost
+    }
   }
 
   $java_opts_real = join($java_opts, ' ')

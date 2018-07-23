@@ -1,0 +1,39 @@
+<%- @hosts.each do |host| %>
+  <%- host.each_pair do |attrib, value| -%>
+    <%- if ! ['valves', 'contexts', 'aliases'].include? attrib -%>
+      <%- if attrib == host.keys.first -%>
+      <Host <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+      <%- else %>
+            <%= attrib %>=<%= "#{value}".encode(:xml => :attr) -%>
+      <%- end -%>
+    <%- end -%>
+  <%- end -%>>
+  <%- if host['aliases'] and ! host['aliases'].empty? -%>
+    <%- host['aliases'].each do |al| -%>
+        <Alias><%= al %></Alias>
+    <%- end -%>
+  <%- end -%>
+  <%- if host['contexts'] and ! host['contexts'].empty? -%>
+    <%- host['contexts'].each do |context| -%>
+      <%- context.each_pair do |context_attrib, context_value| %>
+        <%- if context_attrib == context.keys.first -%>
+        <Context <%= context_attrib %>=<%= "#{context_value}".encode(:xml => :attr) -%>
+        <%- else -%>
+                 <%= context_attrib %>=<%= "#{context_value}".encode(:xml => :attr) -%>
+        <%- end -%>
+      <%- end -%> />
+    <%- end -%>
+  <%- end -%>
+  <%- if host['valves'] and ! host['valves'].empty? -%>
+    <%- host['valves'].each do |valve| -%>
+      <%- valve.each_pair do |valve_attrib, valve_value| %>
+        <%- if valve_attrib == valve.keys.first -%>
+        <Valve <%= valve_attrib %>=<%= "#{valve_value}".encode(:xml => :attr) -%>
+        <%- else -%>
+               <%= valve_attrib %>=<%= "#{valve_value}".encode(:xml => :attr) -%>
+        <%- end -%>
+      <%- end -%> />
+    <%- end -%>
+  <%- end -%>
+      </Host>
+<%- end -%>

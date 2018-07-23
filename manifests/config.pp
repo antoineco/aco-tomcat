@@ -44,6 +44,7 @@ class tomcat::config {
   $engine_params_real = $::tomcat::engine_params_real
   $host_name = $::tomcat::host_name
   $host_params_real = $::tomcat::host_params_real
+  $hosts = $::tomcat::hosts
   $contexts = $::tomcat::contexts
   $use_simpletcpcluster = $::tomcat::use_simpletcpcluster
   $cluster_membership_port = $::tomcat::cluster_membership_port
@@ -68,6 +69,7 @@ class tomcat::config {
   $globalnaming_environments = $::tomcat::globalnaming_environments
   $globalnaming_resources = $::tomcat::globalnaming_resources
   $context_params = $::tomcat::context_params
+  $context_cookieprocessor = $::tomcat::context_cookieprocessor
   $context_loader = $::tomcat::context_loader
   $context_manager = $::tomcat::context_manager
   $context_realm = $::tomcat::context_realm
@@ -279,34 +281,51 @@ class tomcat::config {
     }
   }
 
-  # Template uses:
-  # - $host_name
-  # - $host_params_real
-  concat::fragment { 'server.xml host':
-    order   => 90,
-    content => template("${module_name}/common/server.xml/090_host.erb"),
-    target  => 'tomcat server configuration'
-  }
+  if (empty($hosts)) {
+    # Template uses:
+    # - $host_name
+    # - $host_params_real
+    concat::fragment { 'server.xml host':
+      order   => 90,
+      content => template("${module_name}/common/server.xml/090_host.erb"),
+      target  => 'tomcat server configuration'
+    }
 
-  # Template uses:
-  # - $contexts
-  concat::fragment { 'server.xml contexts':
-    order   => 95,
-    content => template("${module_name}/common/server.xml/095_contexts.erb"),
-    target  => 'tomcat server configuration'
-  }
+    # Template uses:
+    # - $contexts
+    concat::fragment { 'server.xml contexts':
+      order   => 95,
+      content => template("${module_name}/common/server.xml/095_contexts.erb"),
+      target  => 'tomcat server configuration'
+    }
 
-  # Template uses:
-  # - $singlesignon_valve
-  # - $accesslog_valve
-  # - $accesslog_valve_pattern
-  # - $valves
-  # - $host_name
-  # - $maj_version
-  if $singlesignon_valve or $accesslog_valve or ($valves and $valves != []) {
-    concat::fragment { 'server.xml valves':
-      order   => 100,
-      content => template("${module_name}/common/server.xml/100_valves.erb"),
+    # Template uses:
+    # - $singlesignon_valve
+    # - $accesslog_valve
+    # - $accesslog_valve_pattern
+    # - $valves
+    # - $host_name
+    # - $maj_version
+    if $singlesignon_valve or $accesslog_valve or ($valves and $valves != []) {
+      concat::fragment { 'server.xml valves':
+        order   => 100,
+        content => template("${module_name}/common/server.xml/100_valves.erb"),
+        target  => 'tomcat server configuration'
+      }
+    }
+
+    # Template uses no variable, just </Host>
+    concat::fragment { 'server.xml host close':
+      order   => 190,
+      content => template("${module_name}/common/server.xml/190_host_close.erb"),
+      target  => 'tomcat server configuration'
+    }
+  } else {
+    # Template uses :
+    # - $hosts
+    concat::fragment { 'server.xml hosts':
+      order   => 91,
+      content => template("${module_name}/common/server.xml/091_hosts.erb"),
       target  => 'tomcat server configuration'
     }
   }
@@ -322,6 +341,7 @@ class tomcat::config {
     path             => "${::tomcat::catalina_base_real}/conf/context.xml",
     file_mode        => $::tomcat::file_mode,
     params           => $context_params,
+    cookieprocessor  => $context_cookieprocessor,
     loader           => $context_loader,
     manager          => $context_manager,
     realm            => $context_realm,
