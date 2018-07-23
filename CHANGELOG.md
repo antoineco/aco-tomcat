@@ -1,3 +1,13 @@
+### 1.9.0
+
+* Add support for nested Host elements, controlled via the `hosts` parameter ([HerveMARTIN](https://github.com/HerveMARTIN))
+* New parameters:
+  - `tomcat_user_id` ([HerveMARTIN](https://github.com/HerveMARTIN))
+  - `tomcat_group_id` ([HerveMARTIN](https://github.com/HerveMARTIN))
+  - `context_cookieprocessor` ([HerveMARTIN](https://github.com/HerveMARTIN))
+  - `archive_mirror` ([azryelryvel](https://github.com/azryelryvel))
+* Fix usage of 'user-data-constraint' key in `security_constraints` hash ([ronnbcnews](https://github.com/ronnbcnews))
+
 ### 1.8.4
 
 * Fix admin contexts resources ordering ([alvagante](https://github.com/alvagante))

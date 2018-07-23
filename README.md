@@ -953,5 +953,7 @@ Check the [puppetlabs_spec_helper](https://github.com/puppetlabs/puppetlabs_spec
 * [Hal Deadman](https://github.com/hdeadman)
 * [Hervé Martin](https://github.com/HerveMARTIN)
 * [Alessandro Franceschi](https://github.com/alvagante)
+* [Daryl Piffre](https://github.com/azryelryvel)
+* [ronnbcnews](https://github.com/ronnbcnews)
 
 Features request and contributions are always welcome!
